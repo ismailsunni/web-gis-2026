@@ -35,6 +35,18 @@ By the end of this session, you should be able to:
 
 ---
 
+# Session Outline
+
+1. **Architecture** — WebGIS structure & why client-side matters
+2. **JavaScript Concepts** — Variables, Functions, Objects
+3. **OOP & Classes** — Modeling spatial entities
+4. **Event-Driven Systems** — How interaction works
+5. **DOM Mastery** — Manipulating the browser
+6. **Hands-on Coding** — Build a mini WebGIS from scratch
+7. **Reflection & Next Steps** — Key takeaways
+
+---
+
 # WebGIS Architecture Overview
 
 ## Client Side
@@ -50,6 +62,11 @@ By the end of this session, you should be able to:
 ---
 
 ## Focus: Client-Side Logic
+
+---
+
+# 1️⃣ JavaScript Concepts
+## Foundation for WebGIS Programming
 
 ---
 
@@ -113,6 +130,38 @@ let marker = {
 
 ---
 
+# 2️⃣ Object-Oriented Programming (OOP)
+## Modeling Spatial Systems
+
+---
+
+# What is OOP?
+
+**Object-Oriented Programming** is a design approach that organizes code around **objects** (things) rather than just functions (actions).
+
+## Key Principles:
+- **Encapsulation** — Bundle data + behavior together
+- **Properties** — What an object has (state)
+- **Methods** — What an object does (behavior)
+
+---
+
+# OOP Examples
+
+## Real-world Analogy:
+A **Car** (object) has:
+- Properties: color, speed, fuel
+- Methods: start(), drive(), brake()
+
+## In WebGIS:
+A **Layer** object has:
+- Properties: name, visibility
+- Methods: toggle(), zoomTo()
+
+**Objects bundle related data and behavior together.**
+
+---
+
 # Why OOP Matters in GIS
 
 Spatial systems have complexity:
@@ -125,14 +174,28 @@ Spatial systems have complexity:
 
 ---
 
-# Why DOM is Critical
+# Class as Blueprint
 
-Because the map lives in a `<div>`, and everything is manipulated dynamically:
-- Markers are DOM elements
-- Popups appear/disappear
-- Layers are toggled on/off
+```javascript
+class Layer {
+    constructor(name) {
+        this.name = name;
+        this.visible = false;
+    }
 
-**Without DOM manipulation → no interactivity**
+    toggle() {
+        this.visible = !this.visible;
+    }
+}
+
+let roadLayer = new Layer("Roads");
+roadLayer.toggle();
+```
+
+---
+
+# 3️⃣ Event-Driven Systems
+## How WebGIS Responds to Users
 
 ---
 
@@ -160,41 +223,135 @@ document
 
 ---
 
-# Class as Blueprint
+# 4️⃣ DOM Mastery
+## Manipulating the Browser
+
+---
+
+# What is DOM?
+
+**Document Object Model (DOM)** is a programming interface that represents HTML as a tree of **accessible objects**.
+
+## Key Concept:
+- **HTML** = Static text markup
+- **DOM** = Live, interactive object representation
+
+```html
+<!-- HTML: just text -->
+<div id="map"></div>
+
+<!-- Every HTML element becomes a DOM object -->
+<button id="toggleLayers">Toggle</button>
+```
+
+**Think of DOM as the "API" to interact with HTML dynamically.**
+
+---
+
+# DOM in Practice
+
+Four essential operations:
 
 ```javascript
-class Layer {
-    constructor(name) {
-        this.name = name;
-        this.visible = false;
-    }
+// 1. Access an element
+document.getElementById("map");
 
-    toggle() {
-        this.visible = !this.visible;
-    }
-}
+// 2. Read/Modify content
+map.innerHTML = "<h3>Layers</h3>";
 
-let roadLayer = new Layer("Roads");
-roadLayer.toggle();
+// 3. Control classes
+map.classList.add("active");
+
+// 4. Change styles
+map.style.display = "none";
+```
+
+**These operations make WebGIS interactive!**
+
+---
+
+# Why DOM is Critical
+
+Because the map lives in a `<div>`, and everything is manipulated dynamically:
+- Markers are DOM elements
+- Popups appear/disappear
+- Layers are toggled on/off
+
+**Without DOM manipulation → no interactivity**
+
+---
+
+# The DOM Tree Structure
+
+HTML becomes a **tree of accessible objects:**
+
+```
+document
+  └── html
+      ├── head
+      │   └── title
+      └── body
+          ├── div#map
+          ├── button#btnZoom
+          └── div#legend
+              └── p
+```
+
+Each element is an **object with properties and methods**
+
+---
+
+# Essential DOM Methods
+
+```javascript
+// Find elements
+document.getElementById("map");
+document.querySelector(".layer");
+document.querySelectorAll("button");
+
+// Modify content
+element.textContent = "New text";
+element.innerHTML = "<span>HTML</span>";
+
+// Add/remove classes
+element.classList.add("active");
+element.classList.toggle("hidden");
+
+// Change styles
+element.style.display = "none";
+element.style.backgroundColor = "blue";
 ```
 
 ---
 
-# DOM (Document Object Model)
+# DOM in WebGIS Context
 
-Browser transforms HTML into programmable objects.
+Real WebGIS example:
 
 ```html
-<!-- HTML -->
 <div id="map"></div>
+<button id="toggleLayers">Toggle Layers</button>
+<div id="info">Select a feature</div>
 ```
 
 ```javascript
-// JavaScript
-document.getElementById("map");
+// When user clicks button → update map div → layers change
+document.getElementById("toggleLayers").addEventListener("click", () => {
+    document.getElementById("map").innerHTML = updateLayers();
+});
+
+// When user clicks marker → update info div
+map.on("click", (feature) => {
+    document.getElementById("info").textContent = feature.properties.name;
+});
 ```
 
-**DOM = HTML as interactive objects**
+**The DOM is your WebGIS interface to the browser.**
+
+---
+
+# 5️⃣ Hands-on Coding
+## Building a Mini WebGIS from Scratch
 
 ---
 
@@ -311,6 +468,11 @@ m2.addTo(map);
 ```
 
 **Now we think architecturally.**
+
+---
+
+# 6️⃣ Reflection & Next Steps
+## Integrating Everything Together
 
 ---
 
