@@ -3,24 +3,23 @@ marp: true
 theme: default
 paginate: true
 size: 16:9
+author: Ismail Sunni
+date: March 2, 2026
 ---
 
 # Client-Side Programming in WebGIS
 ## From Markup to Interactive Architecture
 
-Ismail Sunni
-Geospatial Software Engineer
-Camptocamp DE
+**Ismail Sunni** | Geospatial Software Engineer | Camptocamp DE
 
 ---
 
-# Ismail Sunni
+# About Me
 
-- Jump into open source geospatial in 2012
-- Developing almost all GIS application (library, desktop, web, etc...)
-- Currently working for Camptocamp DE
-- [ismailsunni.id](ismailsunni.id)
-- [github.com/ismailsunni](github.com/ismailsunni)
+- 🌍 Open source geospatial since 2012
+- 🛠️ Full-stack GIS development (library, desktop, web, etc.)
+- 💼 Currently @ Camptocamp DE
+- 🔗 [ismailsunni.id](https://ismailsunni.id) | [github.com/ismailsunni](https://github.com/ismailsunni)
 
 ---
 
@@ -28,62 +27,48 @@ Camptocamp DE
 
 By the end of this session, you should be able to:
 
-- Explain the role of JavaScript in WebGIS
-- Understand DOM manipulation
-- Understand event-driven systems
-- Explain why OOP is important in WebGIS
-- Build a simple interactive mini WebGIS
+✅ Explain the role of **JavaScript in WebGIS**
+✅ Understand **DOM manipulation**
+✅ Understand **event-driven systems**
+✅ Explain why **OOP is important in WebGIS**
+✅ Build a **simple interactive mini WebGIS**
 
 ---
-<!--
-# Opening Question
-
-- Is WebGIS just a map inside a browser?
-- If we remove JavaScript, is it still WebGIS?
-- What makes a map interactive?
-
-Discuss in chat.
-
---- -->
 
 # WebGIS Architecture Overview
 
-Client Side:
-- HTML (Structure)
-- CSS (Style)
-- JavaScript (Logic)
-- GIS Library (Leaflet / OpenLayers)
+## Client Side
+- **HTML** — Structure
+- **CSS** — Style
+- **JavaScript** — Logic & Interaction
+- **GIS Library** — Leaflet / OpenLayers
 
-Server Side:
-- Database
-- Spatial API
+## Server Side
+- Database & Spatial API
 - GeoServer
 
-Today: Focus on **Client-Side Logic**
+---
+
+## Focus: Client-Side Logic
 
 ---
 
-# Without JavaScript
+# The Power of JavaScript
 
-HTML only:
+| Without JavaScript | With JavaScript |
+|---|---|
+| Static layout | Zoom & pan |
+| No interaction | Click events |
+| No dynamic updates | Add/remove layers |
+| | Popups & feedback |
 
-- Static layout
-- No interaction
-- No dynamic update
-
-With JavaScript:
-
-- Zoom
-- Click events
-- Add/remove layers
-- Popups
-
-JavaScript makes WebGIS alive.
+**JavaScript makes WebGIS alive.**
 
 ---
 
-# JavaScript Refresher
-## Variables in GIS Context
+# JavaScript Fundamentals for GIS
+
+## Variables in Spatial Context
 
 ```javascript
 let layerName = "Roads";
@@ -91,15 +76,11 @@ let featureCount = 120;
 let isVisible = true;
 ```
 
-Why are data types important in spatial systems?
-
-- Coordinates must be numbers
-- Attributes may be strings
-- Visibility is boolean
+**Why types matter:** Coordinates must be numbers, attributes are strings, visibility is boolean.
 
 ---
 
-# Functions = Actions in GIS
+# Functions = System Behavior
 
 ```javascript
 function toggleLayer() {
@@ -107,134 +88,75 @@ function toggleLayer() {
 }
 ```
 
-In WebGIS:
-
-- zoomIn()
-- zoomOut()
-- addLayer()
-- removeLayer()
-
-Function = behavior of the system.
+Common GIS functions:
+- `zoomIn()` | `zoomOut()`
+- `addLayer()` | `removeLayer()`
+- `panTo()`
 
 ---
 
-# Object = Spatial Entity Representation
+# Objects = Spatial Entities
 
 ```javascript
 let layer = {
     name: "Roads",
     visible: false
 };
-```
 
-Another example:
-
-```javascript
 let marker = {
     lat: -7.5,
     lng: 110.3
 };
 ```
 
-WebGIS = Collection of interacting objects.
+**WebGIS = collection of interacting objects**
 
 ---
 
-# Why Objects Matter
+# Why OOP Matters in GIS
 
-In GIS we have:
+Spatial systems have complexity:
+- Map, Layer, Marker, Feature, Control
+- Each has **properties** and **behaviors**
 
-- Map
-- Layer
-- Marker
-- Feature
-- Control
+**Problem:** Managing 10+ layers without structure → chaos
 
-Each has:
-
-- Properties
-- Behaviors
-
-That is Object-Oriented Thinking.
+**Solution:** Object-Oriented Design
 
 ---
 
-# DOM (Document Object Model)
+# Why DOM is Critical
 
-Browser transforms HTML into objects.
-
-HTML:
-
-```html
-<div id="map"></div>
-```
-
-JavaScript:
-
-```javascript
-document.getElementById("map");
-```
-
-DOM = HTML represented as programmable objects.
-
----
-
-# Why DOM is Critical in WebGIS
-
-Because:
-
-- The map is rendered inside a `<div>`
+Because the map lives in a `<div>`, and everything is manipulated dynamically:
 - Markers are DOM elements
-- Popups are dynamic elements
+- Popups appear/disappear
+- Layers are toggled on/off
 
-Without DOM manipulation → no interactivity.
+**Without DOM manipulation → no interactivity**
 
 ---
 
-# Event-Driven System
+# Event-Driven Architecture
 
 WebGIS reacts to user actions:
 
-- Click
-- Zoom
-- Drag
-- Hover
+```
+User Action → Event → Event Listener → Function → DOM Update
+```
 
-Structure:
-
-User Action
-→ Event
-→ Function
-→ Update UI
+Examples: click, zoom, drag, hover
 
 ---
 
-# Example: Event Listener
+# Event Listener Example
 
 ```javascript
 document
   .getElementById("btnLayer")
   .addEventListener("click", function() {
-      alert("Layer activated");
+      toggleLayer();
   });
 ```
-
-Event → Listener → Action
-
----
-
-# Why OOP in WebGIS?
-
-Imagine 10 layers:
-
-Without structure → messy code
-With OOP → clean architecture
-
-We need:
-
-- Blueprint
-- Instances
-- Encapsulation
 
 ---
 
@@ -251,46 +173,38 @@ class Layer {
         this.visible = !this.visible;
     }
 }
-```
 
----
-
-# Creating Instances
-
-```javascript
 let roadLayer = new Layer("Roads");
-let riverLayer = new Layer("Rivers");
-
 roadLayer.toggle();
 ```
 
-Each layer becomes an independent object.
+---
+
+# DOM (Document Object Model)
+
+Browser transforms HTML into programmable objects.
+
+```html
+<!-- HTML -->
+<div id="map"></div>
+```
+
+```javascript
+// JavaScript
+document.getElementById("map");
+```
+
+**DOM = HTML as interactive objects**
 
 ---
 
-# Mental Model
+# 🔨 Live Coding: Mini WebGIS
 
-WebGIS =
-
-- Objects
-- Events
-- DOM Manipulation
-- Rendering Engine
-
-Library (Leaflet) only wraps these concepts.
+Build a simple interactive map **without libraries** to understand the architecture.
 
 ---
 
-# Live Coding Project
-## Mini WebGIS (Without Library)
-
-Goal:
-
-Understand the architecture before using Leaflet.
-
----
-
-# Step 1 — Basic HTML
+# Step 1: HTML Structure
 
 ```html
 <!DOCTYPE html>
@@ -301,25 +215,24 @@ Understand the architecture before using Leaflet.
         #map {
             width: 100%;
             height: 400px;
-            background-color: lightblue;
+            background: linear-gradient(to bottom, lightblue, lightgreen);
             position: relative;
+            border: 1px solid #ccc;
         }
-
         .marker {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             background: red;
             position: absolute;
             border-radius: 50%;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-
 <h2>Mini WebGIS</h2>
 <button id="btnAdd">Add Marker</button>
 <div id="map"></div>
-
 <script src="app.js"></script>
 </body>
 </html>
@@ -327,7 +240,7 @@ Understand the architecture before using Leaflet.
 
 ---
 
-# Step 2 — JavaScript Logic
+# Step 2: JavaScript Logic
 
 ```javascript
 let map = document.getElementById("map");
@@ -335,7 +248,6 @@ let map = document.getElementById("map");
 document
   .getElementById("btnAdd")
   .addEventListener("click", function() {
-
     let marker = document.createElement("div");
     marker.className = "marker";
 
@@ -343,37 +255,27 @@ document
     marker.style.top = Math.random() * 380 + "px";
 
     map.appendChild(marker);
+
+    marker.addEventListener("click", function() {
+        alert("Marker clicked!");
+    });
 });
 ```
 
 ---
 
-# What Just Happened?
+# What We Demonstrated
 
-We performed:
+✅ DOM creation
+✅ Event handling
+✅ Object generation
+✅ Dynamic rendering
 
-- DOM creation
-- Event handling
-- Object generation
-- Dynamic rendering
-
-This simulates how GIS libraries work internally.
+**This is how GIS libraries work internally!**
 
 ---
 
-# Upgrade: Add Click Event to Marker
-
-```javascript
-marker.addEventListener("click", function() {
-    alert("This is a marker");
-});
-```
-
-Now we have nested events.
-
----
-
-# Upgrade: Using OOP for Marker
+# Step 3: OOP Refactor
 
 ```javascript
 class Marker {
@@ -382,6 +284,12 @@ class Marker {
         this.element.className = "marker";
         this.element.style.left = x + "px";
         this.element.style.top = y + "px";
+        this.element.addEventListener("click",
+            () => this.onClick());
+    }
+
+    onClick() {
+        alert("Marker at " + this.element.style.left);
     }
 
     addTo(map) {
@@ -392,65 +300,69 @@ class Marker {
 
 ---
 
-# Using the Marker Class
+# Using the Class
 
 ```javascript
-let m = new Marker(100, 150);
-m.addTo(map);
+let m1 = new Marker(100, 150);
+let m2 = new Marker(200, 250);
+
+m1.addTo(map);
+m2.addTo(map);
 ```
 
-Now we think architecturally.
+**Now we think architecturally.**
 
 ---
 
-# Reflection Questions
+# Reflection
 
-- Why is WebGIS event-driven?
-- Why is everything modeled as objects?
-- What problem does OOP solve?
-- What do GIS libraries abstract away?
+🤔 Why is WebGIS event-driven?
+🤔 Why is everything modeled as objects?
+🤔 What problem does OOP solve?
+🤔 What do GIS libraries abstract away?
 
 ---
 
 # Key Takeaways
 
-- WebGIS is not just HTML
-- JavaScript controls interaction
-- DOM enables rendering
-- Events drive behavior
-- OOP structures complexity
+1. WebGIS ≠ just HTML
+2. JavaScript controls **all interaction**
+3. DOM enables **dynamic rendering**
+4. Events **drive behavior**
+5. OOP **structures complexity**
 
 ---
 
 # Next Session
 
 We will use:
-
-- Leaflet
-- Real spatial layers
-- GeoJSON
-- Layer control
-
-Today → Understanding the engine
-Next → Using the engine
+- **Leaflet** library
+- **Real spatial layers**
+- **GeoJSON data**
+- **Layer control UI**
 
 ---
 
-# Mini Assignment
+## Today → Understanding the engine
+## Next → Using the engine
 
-Modify the project:
+---
 
-- Add 3 different marker colors
-- Add "Clear All Markers" button
-- Convert marker logic fully into class
-- Add simple layer visibility toggle
+# 📋 Mini Assignment
+
+Extend your project:
+
+1. Add **3 different marker colors** (use a marker type parameter)
+2. Add a **"Clear All Markers"** button
+3. Refactor marker logic fully into a class
+4. Add a **simple layer visibility toggle**
 
 ---
 
 # Final Thought
 
-JavaScript in WebGIS is not about syntax.
+JavaScript in WebGIS is **not about syntax**.
 
 It is about:
 
-Interactive Spatial System Architecture.
+## **Interactive Spatial System Architecture**
