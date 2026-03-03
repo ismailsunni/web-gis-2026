@@ -10,11 +10,17 @@ date: March 2, 2026
 # Programming Logic for GIS
 ## From Markup to Interactive Architecture
 
+Program Sarjana Terapan Teknologi Survei dan Pemetaan Dasar
+Departemen Teknologi Kebumian
+Sekolah Vokasi, UGM
+
+<hr>
+
 **Ismail Sunni** | Geospatial Software Engineer | Camptocamp DE
 
 ---
 
-## This Presentation
+# This Presentation
 
 [https://github.com/ismailsunni/web-gis-2026](https://github.com/ismailsunni/web-gis-2026)
 
