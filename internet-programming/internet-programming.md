@@ -7,10 +7,18 @@ author: Ismail Sunni
 date: March 2, 2026
 ---
 
-# Client-Side Programming in WebGIS
+# Programming Logic for GIS
 ## From Markup to Interactive Architecture
 
 **Ismail Sunni** | Geospatial Software Engineer | Camptocamp DE
+
+---
+
+## This Presentation
+
+[https://github.com/ismailsunni/web-gis-2026](https://github.com/ismailsunni/web-gis-2026)
+
+![QR code](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/ismailsunni/web-gis-2026)
 
 ---
 
@@ -18,7 +26,8 @@ date: March 2, 2026
 
 - 🌍 Open source geospatial since 2012
 - 🛠️ Full-stack GIS development (library, desktop, web, etc.)
-- 💼 Currently @ Camptocamp DE
+- 💼 Currently @ [Camptocamp DE](https://camptocamp.com/en)
+- 👥 Founder of [**QGIS ID**](https://qgis-id.github.io/) and [**Python Jogja**](https://www.instagram.com/pyjogja)
 - 🔗 [ismailsunni.id](https://ismailsunni.id) | [github.com/ismailsunni](https://github.com/ismailsunni)
 
 ---
@@ -47,6 +56,11 @@ By the end of this session, you should be able to:
 
 ---
 
+# 1️⃣ Architecture
+## WebGIS Structure & Client-Side Logic
+
+---
+
 # WebGIS Architecture Overview
 
 ## Client Side
@@ -65,7 +79,7 @@ By the end of this session, you should be able to:
 
 ---
 
-# 1️⃣ JavaScript Concepts
+# 2️⃣ JavaScript Concepts
 ## Foundation for WebGIS Programming
 
 ---
@@ -130,7 +144,7 @@ let marker = {
 
 ---
 
-# 2️⃣ Object-Oriented Programming (OOP)
+# 3️⃣ Object-Oriented Programming (OOP)
 ## Modeling Spatial Systems
 
 ---
@@ -194,7 +208,7 @@ roadLayer.toggle();
 
 ---
 
-# 3️⃣ Event-Driven Systems
+# 4️⃣ Event-Driven Systems
 ## How WebGIS Responds to Users
 
 ---
@@ -223,7 +237,7 @@ document
 
 ---
 
-# 4️⃣ DOM Mastery
+# 5️⃣ DOM Mastery
 ## Manipulating the Browser
 
 ---
@@ -350,7 +364,7 @@ map.on("click", (feature) => {
 
 ---
 
-# 5️⃣ Hands-on Coding
+# 6️⃣ Hands-on Coding
 ## Building a Mini WebGIS from Scratch
 
 ---
@@ -366,32 +380,32 @@ Build a simple interactive map **without libraries** to understand the architect
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Mini WebGIS</title>
-    <style>
-        #map {
-            width: 100%;
-            height: 400px;
-            background: linear-gradient(to bottom, lightblue, lightgreen);
-            position: relative;
-            border: 1px solid #ccc;
-        }
-        .marker {
-            width: 12px;
-            height: 12px;
-            background: red;
-            position: absolute;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-<h2>Mini WebGIS</h2>
-<button id="btnAdd">Add Marker</button>
-<div id="map"></div>
-<script src="app.js"></script>
-</body>
+    <head>
+        <title>Mini WebGIS</title>
+        <style>
+            #map {
+                width: 100%;
+                height: 400px;
+                background: linear-gradient(to bottom, lightblue, lightgreen);
+                position: relative;
+                border: 1px solid #ccc;
+            }
+            .marker {
+                width: 12px;
+                height: 12px;
+                background: red;
+                position: absolute;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Mini WebGIS</h2>
+        <button id="btnAdd">Add Marker</button>
+        <div id="map"></div>
+        <script src="app.js"></script>
+    </body>
 </html>
 ```
 
@@ -471,7 +485,7 @@ m2.addTo(map);
 
 ---
 
-# 6️⃣ Reflection & Next Steps
+# 7️⃣ Reflection & Next Steps
 ## Integrating Everything Together
 
 ---
@@ -495,16 +509,6 @@ m2.addTo(map);
 
 ---
 
-# Next Session
-
-We will use:
-- **Leaflet** library
-- **Real spatial layers**
-- **GeoJSON data**
-- **Layer control UI**
-
----
-
 ## Today → Understanding the engine
 ## Next → Using the engine
 
@@ -516,8 +520,10 @@ Extend your project:
 
 1. Add **3 different marker colors** (use a marker type parameter)
 2. Add a **"Clear All Markers"** button
-3. Refactor marker logic fully into a class
+3. **Refactor** marker logic fully into a class
 4. Add a **simple layer visibility toggle**
+5. Or do other **creative things**
+6. **Deploy** it (e.g. use [GitHub Pages](pages.github.com), [netlify](https://www.netlify.com/), ...)
 
 ---
 
@@ -528,3 +534,13 @@ JavaScript in WebGIS is **not about syntax**.
 It is about:
 
 ## **Interactive Spatial System Architecture**
+
+---
+
+# 📚 Further Reading & References
+
+- [MDN: DOM Introduction](https://developer.mozilla.org/docs/Web/API/Document_Object_Model/Introduction)
+- [MDN: OOP in JavaScript](https://developer.mozilla.org/docs/Learn/JavaScript/Objects/Object-oriented_JS)
+- [This presentation and example](https://github.com/ismailsunni/web-gis-2026)
+
+> Feel free to explore and bring questions to the next session!
