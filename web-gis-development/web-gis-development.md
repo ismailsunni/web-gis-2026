@@ -8,7 +8,7 @@ date: April 2026
 ---
 
 # Pembangunan SIG Web
-## WebGIS vs Desktop GIS & Maps API
+## WebGIS vs Desktop GIS, Maps API, & Publikasi
 
 Program Sarjana Terapan Teknologi Survei dan Pemetaan Dasar
 Departemen Teknologi Kebumian
@@ -32,404 +32,297 @@ Sekolah Vokasi, UGM
 
 Setelah sesi ini, mahasiswa mampu:
 
-✅ Membandingkan **WebGIS vs Desktop GIS**
-✅ Menjelaskan **keunggulan WebGIS**
-✅ Mengenal **ragam Maps API** (Leaflet, Google Maps, OpenLayers)
-✅ Memahami **strategi publikasi** peta interaktif
-✅ Membangun **peta web pertama** menggunakan Maps API
+✅ Membandingkan **WebGIS vs Desktop GIS** secara mendalam
+✅ Menjelaskan **arsitektur & komponen** sistem WebGIS
+✅ Membandingkan **Maps API** (Leaflet, OpenLayers, Google Maps) untuk kasus nyata
+✅ Mendemonstrasikan **OpenLayers** untuk WebGIS profesional
+✅ Mempublikasi peta interaktif ke **GitHub Pages**
+
+---
+
+# Recap: Minggu 5
+
+Yang sudah dipelajari:
+- JavaScript objects, methods, properties
+- Pengenalan **Leaflet** & **OpenLayers** sebagai library
+- Client-side scripting dasar
+
+**Hari ini:** Naik level — dari *library* ke *sistem*
 
 ---
 
 # Outline
 
-1. **WebGIS vs Desktop GIS** — Perbandingan & evolusi
-2. **Keunggulan WebGIS** — Mengapa beralih ke web?
-3. **Arsitektur WebGIS** — Bagaimana data sampai ke browser?
-4. **Maps API** — Leaflet, Google Maps, OpenLayers
-5. **Hands-on** — Peta interaktif pertama
-6. **Strategi Publikasi** — Deploy ke web
+1. **WebGIS vs Desktop GIS** — Perbandingan mendalam
+2. **Arsitektur WebGIS** — Stack & komponen
+3. **Deep Dive: Maps API** — Leaflet vs OpenLayers vs Google Maps
+4. **Hands-on: OpenLayers** — WebGIS profesional dari nol
+5. **Strategi Publikasi** — Deploy & distribusi
+6. **Studi Kasus** — WebGIS di dunia nyata
 7. **Refleksi & Tugas**
 
 ---
 
 # 1️⃣ WebGIS vs Desktop GIS
-## Perbandingan & Evolusi
+## Lebih dari Sekadar "Bisa Online"
 
 ---
 
-# Desktop GIS
+# Desktop GIS: Kekuatan Utama
 
-## Contoh: QGIS, ArcGIS Desktop
+## QGIS / ArcGIS Desktop / GRASS
 
-- Install di komputer lokal
-- Data disimpan di hard drive
-- Analisis berat (geoprocessing)
-- Satu pengguna per instalasi
-- Update manual
+- **Analisis spasial lengkap** — buffer, overlay, network analysis
+- **Editing geometri** presisi tinggi
+- **Cartographic production** — peta cetak berkualitas
+- **Processing pipeline** — batch geoprocessing
+- **Data format beragam** — Shapefile, GeoPackage, GDB, raster
 
-![bg right:35% 80%](https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/QGIS_logo_new.svg/1200px-QGIS_logo_new.svg.png)
-
----
-
-# Web GIS
-
-## Contoh: Google Maps, OpenStreetMap, Mapbox
-
-- Akses via browser — **tanpa install**
-- Data di server / cloud
-- Visualisasi & interaksi ringan
-- **Multi-user** secara bersamaan
-- Update otomatis
-
-![bg right:35% 80%](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Google_Maps_Logo_2020.svg/512px-Google_Maps_Logo_2020.svg.png)
+**Desktop GIS = laboratorium analisis spasial**
 
 ---
 
-# Perbandingan
+# Web GIS: Kekuatan Utama
+
+## Google Maps / Mapbox / Custom WebGIS
+
+- **Zero install** — akses via URL
+- **Multi-platform** — desktop, tablet, HP
+- **Kolaborasi real-time** — banyak user bersamaan
+- **Integrasi** — embed di website, dashboard, CMS
+- **Update sentral** — data berubah, semua user dapat
+
+**Web GIS = media komunikasi & distribusi spasial**
+
+---
+
+# Perbandingan Mendalam
 
 | Aspek | Desktop GIS | Web GIS |
 |---|---|---|
-| **Akses** | Install lokal | Browser saja |
-| **Data** | Lokal / LAN | Server / Cloud |
-| **Analisis** | Lengkap & berat | Ringan & terbatas |
-| **Pengguna** | 1 per lisensi | Multi-user |
-| **Kolaborasi** | Sulit | Mudah (real-time) |
-| **Distribusi** | Kirim file | Share URL |
-| **Biaya** | Lisensi mahal* | Gratis / murah |
-
-\* *kecuali QGIS — free & open source!*
+| **Analisis** | Lengkap (500+ tools) | Terbatas (client-side) |
+| **Data size** | GB–TB lokal | MB–ratusan MB streaming |
+| **CRS** | Semua CRS | Umumnya Web Mercator |
+| **Rendering** | GPU lokal | Browser (Canvas/WebGL) |
+| **Offline** | ✅ Penuh | ⚠️ Terbatas |
+| **Kolaborasi** | ❌ File-based | ✅ Real-time |
+| **Distribusi** | Email/FTP file | Share URL |
+| **Maintenance** | Update per mesin | Update 1× di server |
 
 ---
 
-# Evolusi: Desktop → Web
+# Hybrid Approach: Best of Both Worlds
 
 ```
-1990s: Desktop GIS (ArcView, MapInfo)
-         ↓
-2000s: Server GIS (ArcIMS, MapServer)
-         ↓
-2005+: Web Map Services (WMS, WFS, Google Maps API)
-         ↓
-2010+: Modern WebGIS (Leaflet, OpenLayers, Mapbox GL)
-         ↓
-2020+: Cloud-native GIS (STAC, COG, PMTiles)
+┌──────────────┐                    ┌──────────────┐
+│  QGIS        │  → Export data →   │  Web Server   │
+│  (Analisis)  │  → Styling    →   │  (GeoServer)  │
+│              │  → QA/QC     →   │              │
+└──────────────┘                    └──────┬───────┘
+                                           │ WMS/WFS/API
+                                    ┌──────▼───────┐
+                                    │   Browser     │
+                                    │  (WebGIS)     │
+                                    └──────────────┘
 ```
 
----
-
-# Kapan Pakai Desktop vs Web?
-
-## 🖥️ Desktop GIS:
-- Analisis spasial kompleks (buffer, overlay, routing berat)
-- Editing data besar
-- Cartographic production
-
-## 🌐 Web GIS:
-- Visualisasi & sharing
-- Dashboard publik
-- Monitoring real-time
-- Kolaborasi tim
-
-**Keduanya saling melengkapi!**
-
----
-
-# 2️⃣ Keunggulan WebGIS
-## Mengapa Beralih ke Web?
-
----
-
-# 7 Keunggulan WebGIS
-
-1. **Aksesibilitas** — Cukup browser, tanpa install
-2. **Cross-platform** — Desktop, tablet, HP
-3. **Kolaborasi** — Banyak user bersamaan
-4. **Real-time** — Data update otomatis
-5. **Distribusi mudah** — Share link, bukan file
-6. **Biaya rendah** — Open source tools tersedia
-7. **Integrasi** — Gabung dengan web app lain
-
----
-
-# Contoh Penggunaan Nyata
-
-| Use Case | Contoh |
-|---|---|
-| Peta bencana | BNPB Geoportal, InaSAFE |
-| Monitoring hutan | Global Forest Watch |
-| Transportasi | Google Maps, Grab |
-| Smart city | Dashboard kota |
-| Pariwisata | Peta wisata daerah |
-| Survei lahan | Peta bidang tanah BPN |
-
----
-
-# 3️⃣ Arsitektur WebGIS
-## Bagaimana Data Sampai ke Browser?
-
----
-
-# Arsitektur Umum
-
-```
-┌─────────┐     HTTP Request      ┌──────────┐     SQL Query     ┌──────────┐
-│ Browser  │  ──────────────────→  │  Server  │  ──────────────→  │ Database │
-│ (Client) │  ←──────────────────  │ (GeoServer│  ←──────────────  │(PostGIS) │
-└─────────┘     JSON / Tiles      └──────────┘     Spatial Data   └──────────┘
-```
-
----
-
-# Komponen Client-Side
-
-```
-Browser
-├── HTML          → Struktur halaman
-├── CSS           → Tampilan & layout
-├── JavaScript    → Logika & interaksi
-└── Maps Library  → Render peta
-    ├── Leaflet
-    ├── OpenLayers
-    └── Mapbox GL JS
-```
-
----
-
-# Data yang Ditampilkan
-
-| Tipe | Format | Contoh |
-|---|---|---|
-| **Base map** | Raster tiles (PNG/JPG) | OSM, Google, Bing |
-| **Vector** | GeoJSON, WFS | Batas wilayah, jalan |
-| **Raster** | WMS, COG | Citra satelit |
-| **Marker** | Lat/Lon dari API | Lokasi tempat |
-
----
-
-# 4️⃣ Maps API
-## Leaflet, Google Maps, OpenLayers
-
----
-
-# Apa itu Maps API?
-
-**Maps API** = Library JavaScript yang menyediakan:
-- Render peta di browser
-- Pan, zoom, interaksi
-- Marker, popup, layer
-- Akses tile server
-
-**Kita tidak perlu menulis rendering engine dari nol!**
-
----
-
-# 3 Maps API Utama
-
-| | Leaflet | Google Maps | OpenLayers |
-|---|---|---|---|
-| **Lisensi** | Open source (BSD) | Proprietary | Open source (BSD) |
-| **Ukuran** | ~40 KB | N/A (hosted) | ~180 KB |
-| **Kompleksitas** | Simpel | Medium | Lengkap |
-| **Terbaik untuk** | Peta ringan | Integrasi Google | GIS profesional |
-| **API key?** | Tidak | Ya (berbayar) | Tidak |
-| **Mobile** | Baik | Sangat baik | Baik |
-
----
-
-# Leaflet 🍃
-
-## Ringan, simpel, populer
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-<div id="map" style="height: 400px;"></div>
-
-<script>
-    let map = L.map('map').setView([-7.79, 110.36], 13);
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    L.marker([-7.79, 110.36])
-        .addTo(map)
-        .bindPopup('<b>Yogyakarta</b>')
-        .openPopup();
-</script>
-```
-
----
-
-# Leaflet — Kelebihan
-
-✅ Sangat ringan (~40 KB)
-✅ API intuitif — mudah dipelajari
-✅ Ekosistem plugin besar (500+ plugin)
-✅ Mobile-friendly
-✅ Dokumentasi bagus
-
-❌ Terbatas untuk GIS kompleks
-❌ Tidak mendukung CRS selain Web Mercator (tanpa plugin)
-
----
-
-# Google Maps API 🗺️
-
-## Familiar, kuat, tapi berbayar
-
-```html
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY"></script>
-
-<div id="map" style="height: 400px;"></div>
-
-<script>
-    let map = new google.maps.Map(
-        document.getElementById('map'), {
-            center: { lat: -7.79, lng: 110.36 },
-            zoom: 13
-        }
-    );
-
-    new google.maps.Marker({
-        position: { lat: -7.79, lng: 110.36 },
-        map: map,
-        title: 'Yogyakarta'
-    });
-</script>
-```
-
----
-
-# Google Maps — Kelebihan
-
-✅ Data lengkap (Street View, traffic, transit)
-✅ Geocoding & routing built-in
-✅ Familiar bagi pengguna
-✅ 3D maps & indoor mapping
-
-❌ **Berbayar** setelah free tier ($200/bulan)
-❌ API key wajib
-❌ Tidak open source — vendor lock-in
-❌ Tidak bisa custom tile server
-
----
-
-# OpenLayers 🌍
-
-## Lengkap, profesional, GIS-grade
-
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/dist/ol.css" />
-<script src="https://cdn.jsdelivr.net/npm/ol/dist/ol.js"></script>
-
-<div id="map" style="height: 400px;"></div>
-
-<script>
-    let map = new ol.Map({
-        target: 'map',
-        layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM()
-            })
-        ],
-        view: new ol.View({
-            center: ol.proj.fromLonLat([110.36, -7.79]),
-            zoom: 13
-        })
-    });
-</script>
-```
-
----
-
-# OpenLayers — Kelebihan
-
-✅ Mendukung semua CRS (EPSG:4326, EPSG:32749, dll)
-✅ WMS, WFS, WMTS, WPS native
-✅ Vektor, raster, dan 3D
-✅ Fitur editing & drawing tools
-✅ Production-ready untuk enterprise
-
-❌ Lebih kompleks dari Leaflet
-❌ Learning curve lebih tinggi
-
----
-
-# Perbandingan Kode: Menambah Marker
-
-## Leaflet
-```javascript
-L.marker([-7.79, 110.36]).addTo(map).bindPopup('Yogya');
-```
-
-## Google Maps
-```javascript
-new google.maps.Marker({position: {lat: -7.79, lng: 110.36}, map: map});
-```
-
-## OpenLayers
-```javascript
-let marker = new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat([110.36, -7.79]))
-});
-vectorSource.addFeature(marker);
-```
-
-**Leaflet = paling ringkas, OpenLayers = paling eksplisit**
+**Workflow modern: Analisis di desktop → Publikasi di web**
 
 ---
 
 # Kapan Pakai Yang Mana?
 
-## 🍃 Leaflet — jika:
-- Peta sederhana, cepat
-- Prototype / demo
-- Proyek kecil
+## 🖥️ Desktop GIS:
+- Analisis kompleks (interpolasi, network, 3D)
+- Digitasi presisi
+- Peta cetak / kartografi
 
-## 🗺️ Google Maps — jika:
-- Butuh Street View / routing
-- Budget tersedia
-- Target: end-user umum
+## 🌐 Web GIS:
+- Dashboard monitoring
+- Informasi publik
+- Kolaborasi tim
+- Aplikasi mobile/field
 
-## 🌍 OpenLayers — jika:
-- Butuh WMS/WFS/OGC
-- Multi-CRS
-- Proyek enterprise / pemerintah
-
----
-
-# 5️⃣ Hands-on
-## Peta Interaktif Pertama dengan Leaflet
+## 🔄 Hybrid:
+- Analisis di QGIS → publish ke GeoServer → tampilkan di WebGIS
 
 ---
 
-# 🔨 Live Coding: Peta Leaflet
-
-Kita akan membuat peta interaktif Yogyakarta dengan:
-- Base map OSM
-- Beberapa marker
-- Popup informasi
-- Layer control
+# 2️⃣ Arsitektur WebGIS
+## Dari Database ke Browser
 
 ---
 
-# Step 1: Struktur HTML
+# Full Stack WebGIS
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    CLIENT (Browser)                  │
+│  HTML + CSS + JavaScript + Maps Library (OL/Leaflet) │
+└──────────────────────┬──────────────────────────────┘
+                       │ HTTP (REST API / OGC Services)
+┌──────────────────────▼──────────────────────────────┐
+│                    SERVER                            │
+│  GeoServer / MapServer / pg_tileserv / custom API    │
+└──────────────────────┬──────────────────────────────┘
+                       │ SQL
+┌──────────────────────▼──────────────────────────────┐
+│                    DATABASE                          │
+│  PostgreSQL + PostGIS / SQLite + SpatiaLite          │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+# Alternatif: Serverless WebGIS
+
+Tidak semua WebGIS butuh backend!
+
+```
+┌─────────────────────────────────┐
+│           Browser               │
+│  OL/Leaflet + GeoJSON + tiles   │
+└────────────┬────────────────────┘
+             │ Fetch static files
+┌────────────▼────────────────────┐
+│    GitHub Pages / Netlify       │
+│    (static hosting)             │
+│    ├── index.html               │
+│    ├── data.geojson             │
+│    └── tiles/ (PMTiles/MBTiles) │
+└─────────────────────────────────┘
+```
+
+**Gratis, cepat, tanpa server!**
+
+---
+
+# Format Data di WebGIS
+
+| Format | Tipe | Cocok untuk |
+|---|---|---|
+| **GeoJSON** | Vektor | Fitur kecil–sedang (<10 MB) |
+| **TopoJSON** | Vektor (compressed) | Fitur besar, batas wilayah |
+| **XYZ Tiles** | Raster | Base map (OSM, satellite) |
+| **PMTiles** | Vektor tiles | Offline / static hosting |
+| **WMS** | Raster | Server-rendered map image |
+| **WFS** | Vektor | Server feature access |
+| **COG** | Raster (cloud) | Citra satelit besar |
+
+---
+
+# 3️⃣ Deep Dive: Maps API
+## Perbandingan untuk Kasus Nyata
+
+---
+
+# Recap: 3 Maps API Utama
+
+Dari minggu 5, kalian sudah kenal:
+
+- **Leaflet** 🍃 — ringan, simpel
+- **OpenLayers** 🌍 — lengkap, GIS-grade
+- **Google Maps** 🗺️ — familiar, proprietary
+
+Sekarang kita bandingkan untuk **kasus nyata**.
+
+---
+
+# Kasus 1: Peta Wisata Desa
+
+**Kebutuhan:** Marker lokasi wisata, foto popup, mobile-friendly
+
+| Kriteria | Leaflet | OpenLayers | Google Maps |
+|---|---|---|---|
+| Complexity | ⭐ Simpel | ⭐⭐ Overkill | ⭐⭐ Perlu API key |
+| Mobile | ✅ Baik | ✅ Baik | ✅ Sangat baik |
+| Biaya | Gratis | Gratis | Berbayar* |
+
+**Pilihan: Leaflet** ← paling efisien untuk kasus ini
+
+---
+
+# Kasus 2: Monitoring Bencana (BPBD)
+
+**Kebutuhan:** WMS dari GeoServer, real-time update, multi-layer, CRS lokal
+
+| Kriteria | Leaflet | OpenLayers | Google Maps |
+|---|---|---|---|
+| WMS/WFS | ⚠️ Plugin | ✅ Native | ❌ Tidak ada |
+| CRS lokal | ❌ Tanpa plugin | ✅ Semua CRS | ❌ Hanya EPSG:3857 |
+| Layer control | Dasar | Lengkap | Dasar |
+
+**Pilihan: OpenLayers** ← mendukung OGC standards natively
+
+---
+
+# Kasus 3: Aplikasi Ride-hailing
+
+**Kebutuhan:** Routing, geocoding, traffic, familiar UI
+
+| Kriteria | Leaflet | OpenLayers | Google Maps |
+|---|---|---|---|
+| Routing | Plugin (OSRM) | Plugin | ✅ Built-in |
+| Geocoding | Plugin (Nominatim) | Plugin | ✅ Built-in |
+| Traffic | ❌ | ❌ | ✅ Built-in |
+
+**Pilihan: Google Maps** ← kalau budget ada & butuh data Google
+
+---
+
+# Keputusan Cepat
+
+```
+Proyek sederhana, gratis?
+  → Leaflet
+
+Butuh WMS/WFS/OGC, multi-CRS?
+  → OpenLayers
+
+Butuh routing/geocoding Google?
+  → Google Maps API
+
+Butuh visualisasi 3D, vector tiles?
+  → Mapbox GL JS / MapLibre GL JS
+```
+
+---
+
+# 4️⃣ Hands-on: OpenLayers
+## WebGIS Profesional dari Nol
+
+---
+
+# Mengapa OpenLayers Hari Ini?
+
+Minggu 5: sudah coba Leaflet
+**Hari ini:** OpenLayers — library yang dipakai di:
+
+- 🌍 GeoNode (BNPB, BIG)
+- 🇨🇭 map.geo.admin.ch (Swiss topo)
+- 🇫🇷 IGN Géoportail (Prancis)
+- 🏛️ Banyak portal pemerintah
+
+**Kalau mau kerja di enterprise GIS → harus tahu OpenLayers**
+
+---
+
+# Step 1: HTML + OpenLayers via CDN
 
 ```html
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Peta Yogyakarta</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>WebGIS Yogyakarta - OpenLayers</title>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/ol@10/dist/ol.css" />
     <style>
-        #map { height: 100vh; width: 100%; }
+        #map { width: 100%; height: 100vh; }
     </style>
 </head>
 <body>
     <div id="map"></div>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol@10/dist/ol.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
@@ -440,146 +333,231 @@ Kita akan membuat peta interaktif Yogyakarta dengan:
 # Step 2: Inisialisasi Peta
 
 ```javascript
-// app.js
-let map = L.map('map').setView([-7.7956, 110.3695], 14);
-
-// Base map: OpenStreetMap
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap contributors'
-}).addTo(map);
+const map = new ol.Map({
+    target: 'map',
+    layers: [
+        new ol.layer.Tile({
+            source: new ol.source.OSM()
+        })
+    ],
+    view: new ol.View({
+        center: ol.proj.fromLonLat([110.3695, -7.7956]),
+        zoom: 14
+    })
+});
 ```
 
-**3 baris kode = peta interaktif!**
+**Perhatikan:** `ol.proj.fromLonLat()` — OL menggunakan proyeksi EPSG:3857
 
 ---
 
-# Step 3: Menambahkan Marker
+# Step 3: Multiple Base Maps
 
 ```javascript
-let landmarks = [
-    { name: "Tugu Yogyakarta",   lat: -7.7828, lng: 110.3672, desc: "Ikon kota Yogyakarta" },
-    { name: "Malioboro",         lat: -7.7925, lng: 110.3655, desc: "Jalan belanja terkenal" },
-    { name: "Kraton Yogyakarta", lat: -7.8053, lng: 110.3642, desc: "Istana Kesultanan" },
-    { name: "Taman Sari",        lat: -7.8098, lng: 110.3590, desc: "Taman air kerajaan" },
-    { name: "UGM",               lat: -7.7703, lng: 110.3780, desc: "Universitas Gadjah Mada" },
-];
+const osmSource = new ol.source.OSM();
+const cartoSource = new ol.source.XYZ({
+    url: 'https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
+});
 
-landmarks.forEach(lm => {
-    L.marker([lm.lat, lm.lng])
-        .addTo(map)
-        .bindPopup(`<b>${lm.name}</b><br>${lm.desc}`);
+const baseLayer = new ol.layer.Tile({ source: osmSource });
+// Switch: baseLayer.setSource(cartoSource)
+```
+
+**Berbeda dari Leaflet** yang membuat layer baru —
+OpenLayers bisa **ganti source** pada layer yang sama
+
+---
+
+# Step 4: Markers via Vector Layer
+
+```javascript
+const markerSource = new ol.source.Vector();
+
+function addMarker(lon, lat, name) {
+    const feature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
+        name: name
+    });
+    feature.setStyle(new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 8,
+            fill: new ol.style.Fill({ color: '#e63946' }),
+            stroke: new ol.style.Stroke({ color: '#fff', width: 2 })
+        })
+    }));
+    markerSource.addFeature(feature);
+}
+
+const markerLayer = new ol.layer.Vector({ source: markerSource });
+map.addLayer(markerLayer);
+```
+
+---
+
+# Step 5: Popup via Overlay
+
+```javascript
+const popup = document.createElement('div');
+popup.className = 'ol-popup';
+document.body.appendChild(popup);
+
+const overlay = new ol.Overlay({ element: popup, positioning: 'bottom-center' });
+map.addOverlay(overlay);
+
+map.on('click', (e) => {
+    const feature = map.forEachFeatureAtPixel(e.pixel, f => f);
+    if (feature) {
+        popup.innerHTML = `<b>${feature.get('name')}</b>`;
+        overlay.setPosition(e.coordinate);
+    } else {
+        overlay.setPosition(undefined);
+    }
 });
 ```
 
 ---
 
-# Step 4: Layer Control
+# Step 6: GeoJSON Layer
 
 ```javascript
-// Base maps
-let osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png');
-let satellite = L.tileLayer(
-    'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-    'World_Imagery/MapServer/tile/{z}/{y}/{x}'
-);
-
-let map = L.map('map', { layers: [osmLayer] }).setView([-7.7956, 110.3695], 14);
-
-// Marker group
-let markerGroup = L.layerGroup();
-landmarks.forEach(lm => {
-    L.marker([lm.lat, lm.lng]).bindPopup(`<b>${lm.name}</b>`).addTo(markerGroup);
+const geojsonLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({
+        url: 'data.geojson',           // file lokal atau URL
+        format: new ol.format.GeoJSON()
+    }),
+    style: new ol.style.Style({
+        stroke: new ol.style.Stroke({ color: '#2563eb', width: 2 }),
+        fill: new ol.style.Fill({ color: 'rgba(37,99,235,0.15)' })
+    })
 });
-markerGroup.addTo(map);
-
-// Control
-L.control.layers(
-    { "OSM": osmLayer, "Satelit": satellite },
-    { "Landmarks": markerGroup }
-).addTo(map);
+map.addLayer(geojsonLayer);
 ```
 
 ---
 
-# Step 5: GeoJSON Data
+# Leaflet vs OpenLayers: Side-by-Side
 
-```javascript
-// Data GeoJSON — bisa dari file atau API
-let geojsonData = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "properties": { "nama": "Area Malioboro" },
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[110.364, -7.790], [110.367, -7.790],
-                                 [110.367, -7.795], [110.364, -7.795],
-                                 [110.364, -7.790]]]
-            }
-        }
-    ]
-};
+| Aksi | Leaflet | OpenLayers |
+|---|---|---|
+| Buat peta | `L.map('map')` | `new ol.Map({target:'map'})` |
+| Set view | `.setView([-7.79, 110.36], 13)` | `view: new ol.View({center:..., zoom:13})` |
+| Tambah tile | `L.tileLayer(url).addTo(map)` | `new ol.layer.Tile({source:...})` |
+| Marker | `L.marker([lat,lng])` | `new ol.Feature({geometry: new ol.geom.Point(...)})` |
+| Popup | `.bindPopup(html)` | `new ol.Overlay({element:...})` |
+| GeoJSON | `L.geoJSON(data)` | `new ol.source.Vector({format: new ol.format.GeoJSON()})` |
 
-L.geoJSON(geojsonData, {
-    style: { color: "#ff7800", weight: 2, fillOpacity: 0.3 }
-}).addTo(map);
-```
+**Leaflet = lebih ringkas. OpenLayers = lebih eksplisit & powerful.**
 
 ---
 
-# Hasil Demo
-
-Dalam ~30 baris kode, kita punya:
-
-✅ Peta interaktif
-✅ Multiple marker dengan popup
-✅ Layer control (OSM / Satelit)
-✅ GeoJSON overlay
-
-**Bayangkan butuh berapa lama di Desktop GIS untuk berbagi ini!**
+# 5️⃣ Strategi Publikasi
+## Dari Laptop ke Internet
 
 ---
 
-# 6️⃣ Strategi Publikasi
-## Deploy Peta ke Web
+# 3 Tingkat Publikasi
 
----
+## Level 1: Static (gratis)
+- GitHub Pages, Netlify, Vercel
+- File HTML + JS + GeoJSON saja
+- ✅ Cocok untuk: portfolio, demo, peta sederhana
 
-# Cara Mempublikasi WebGIS
+## Level 2: Server GIS
+- VPS + GeoServer + PostGIS
+- WMS/WFS untuk data dinamis
+- ✅ Cocok untuk: instansi, monitoring
 
-| Metode | Gratis? | Kompleksitas | Cocok untuk |
-|---|---|---|---|
-| **GitHub Pages** | ✅ | Mudah | Peta statis, portfolio |
-| **Netlify** | ✅ | Mudah | Peta statis, preview |
-| **Vercel** | ✅ | Mudah | React/Next.js apps |
-| **VPS (DigitalOcean)** | ❌ | Menengah | Full backend + DB |
-| **Cloud (AWS/GCP)** | ❌ | Tinggi | Enterprise, scaling |
+## Level 3: Cloud Platform
+- Mapbox, CARTO, ArcGIS Online
+- Managed service, bayar sesuai pemakaian
+- ✅ Cocok untuk: enterprise, scaling tinggi
 
 ---
 
 # Deploy ke GitHub Pages
 
-## Langkah:
+## Langkah Praktis:
 
-1. Buat repository di GitHub
-2. Upload file HTML + JS + CSS
-3. Settings → Pages → Source: `main` branch
-4. Akses di `https://username.github.io/repo-name`
+```bash
+# 1. Buat repo
+git init
+git add .
+git commit -m "first webgis"
 
-**Gratis, otomatis, HTTPS!**
+# 2. Push ke GitHub
+git remote add origin https://github.com/user/repo.git
+git push -u origin main
+
+# 3. Aktifkan Pages
+# Settings → Pages → Source: main branch → /root
+
+# 4. Akses di:
+# https://user.github.io/repo/
+```
 
 ---
 
-# Tips Publikasi
+# Tips Publikasi Profesional
 
-- **Gunakan CDN** untuk library (tidak perlu upload Leaflet/OL)
-- **Optimasi ukuran** — compress gambar, minify JS
-- **Responsive design** — test di mobile
-- **CORS** — perhatikan akses data cross-origin
-- **HTTPS** — wajib untuk geolocation API
-- **README** — dokumentasi cara menggunakan
+1. **README.md** — jelaskan proyek, screenshot, link demo
+2. **Responsive** — test di mobile (DevTools → toggle device)
+3. **HTTPS** — GitHub Pages sudah otomatis
+4. **Loading speed** — pakai CDN, compress gambar
+5. **Metadata** — title, description, og:image
+6. **Lisensi** — cantumkan sumber data & library
+
+---
+
+# 6️⃣ Studi Kasus
+## WebGIS di Dunia Nyata
+
+---
+
+# Studi Kasus: map.geo.admin.ch
+
+🇨🇭 **Geoportal nasional Swiss** — dibangun dengan OpenLayers
+
+Fitur:
+- 800+ layer data nasional
+- 2D dan 3D view
+- WMS/WMTS dari swisstopo
+- Pencarian alamat & koordinat
+- Cetak peta & share URL
+- Open source!
+
+🔗 [map.geo.admin.ch](https://map.geo.admin.ch)
+
+---
+
+# Studi Kasus: Peta Interaktif Routing
+
+🛣️ **Route Finder** — contoh WebGIS dengan routing nyata
+
+Fitur:
+- Pencarian lokasi (Photon geocoding)
+- Routing jalan nyata via pgRouting
+- TSP solver (Held-Karp)
+- Multiple kota (Yogyakarta & München)
+
+🔗 [ismailsunni.id/map/route-finder](https://ismailsunni.id/map/route-finder/)
+
+*Dibangun dengan OpenLayers + Supabase + PostgreSQL*
+
+---
+
+# Studi Kasus: Peta dari Google Sheet
+
+📊 **Sheet Map** — WebGIS tanpa backend
+
+Fitur:
+- Data dari Google Sheet publik
+- Clustering otomatis
+- Warna per kategori
+- Zero server — 100% client-side
+
+🔗 [ismailsunni.id/map/sheet-map](https://ismailsunni.id/map/sheet-map/)
+
+*Cocok untuk: survei, data crowdsource, tugas mahasiswa*
 
 ---
 
@@ -589,64 +567,46 @@ Dalam ~30 baris kode, kita punya:
 
 # Refleksi
 
-🤔 Kapan sebaiknya pakai WebGIS vs Desktop GIS?
-🤔 Library mana yang paling cocok untuk proyek Anda?
-🤔 Apa tantangan utama WebGIS?
-🤔 Bagaimana cara memilih base map yang tepat?
+🤔 Kapan sebaiknya pakai Desktop vs Web GIS?
+🤔 Library mana paling cocok untuk proyek Anda?
+🤔 Apakah semua WebGIS butuh server?
+🤔 Bagaimana strategi publikasi yang paling efisien?
 
 ---
 
 # Key Takeaways
 
-1. WebGIS = **aksesibilitas + kolaborasi**
-2. Desktop GIS tetap diperlukan untuk **analisis berat**
-3. Leaflet → simpel, OpenLayers → lengkap, Google Maps → familiar
-4. Maps API **mempercepat development** drastis
-5. GitHub Pages = cara termudah **publikasi gratis**
+1. Desktop GIS = **analisis**, Web GIS = **komunikasi & distribusi**
+2. **Hybrid workflow** paling efektif: analisis → publish → share
+3. Leaflet → simpel, OpenLayers → GIS-grade, Google Maps → data Google
+4. **Serverless WebGIS** bisa sangat powerful (GeoJSON + GitHub Pages)
+5. **Publikasi = bagian dari proyek** — bukan tambahan
 
 ---
 
 # 📋 Tugas
 
-Buat peta web interaktif dengan ketentuan:
+Buat **WebGIS interaktif** dengan ketentuan:
 
-1. Pilih **salah satu Maps API** (Leaflet / OpenLayers)
-2. Tampilkan **minimal 5 lokasi** di Yogyakarta (atau kota lain)
-3. Setiap marker memiliki **popup dengan informasi**
-4. Tambahkan **layer control** (minimal 2 base map)
-5. *(Bonus)* Tambahkan data **GeoJSON** (polygon / polyline)
-6. **Deploy** ke GitHub Pages
-7. Kumpulkan **link GitHub repo + link demo**
-
----
-
-# Contoh Referensi
-
-- 🗺️ [Leaflet Quick Start](https://leafletjs.com/examples/quick-start/)
-- 🌍 [OpenLayers Quick Start](https://openlayers.org/doc/quickstart.html)
-- 📊 [Peta dari Google Sheet](https://ismailsunni.id/map/sheet-map/)
-- 🛣️ [Route Finder Yogyakarta](https://ismailsunni.id/map/route-finder/)
-- 📝 [GeoJSON.io](https://geojson.io/) — Buat GeoJSON interaktif
-- 🚀 [GitHub Pages Docs](https://pages.github.com/)
-
----
-
-# Final Thought
-
-Desktop GIS = **alat analisis**
-Web GIS = **media komunikasi**
-
-## Keduanya saling melengkapi.
-## Yang penting: **data sampai ke yang membutuhkan.**
+1. Gunakan **OpenLayers** (bukan Leaflet — sudah minggu 5)
+2. Tampilkan **minimal 5 lokasi** (marker dengan popup)
+3. **Minimal 2 base map** (bisa switch)
+4. Tambahkan **1 layer GeoJSON** (polygon atau polyline)
+5. *(Bonus)* Tambahkan **interaksi**: click event, hover tooltip
+6. *(Bonus)* Buat data dari **Google Sheet** → GeoJSON
+7. **Deploy ke GitHub Pages**
+8. Kumpulkan: **link repo + link demo**
 
 ---
 
 # 📚 Referensi
 
-- [Leaflet Documentation](https://leafletjs.com/reference.html)
+- [OpenLayers Quick Start](https://openlayers.org/doc/quickstart.html)
 - [OpenLayers Examples](https://openlayers.org/en/latest/examples/)
-- [MDN: JavaScript Basics](https://developer.mozilla.org/docs/Learn/Getting_started_with_the_web/JavaScript_basics)
+- [Leaflet vs OpenLayers Comparison](https://mapscaping.com/leaflet-vs-openlayers/)
+- [GitHub Pages Docs](https://pages.github.com/)
+- [GeoJSON.io](https://geojson.io/) — buat GeoJSON interaktif
+- [Map Collection](https://ismailsunni.id/map/) — contoh proyek
 - [This presentation](https://github.com/ismailsunni/web-gis-2026)
-- [Map Collection](https://ismailsunni.id/map/)
 
-> Silakan eksplorasi dan bawa pertanyaan ke sesi berikutnya!
+> Eksplorasi dan bawa pertanyaan ke sesi berikutnya!

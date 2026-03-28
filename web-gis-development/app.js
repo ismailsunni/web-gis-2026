@@ -2,64 +2,66 @@
    BASE MAPS
 ========================= */
 
-const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-});
+const basemaps = {
+    osm: new ol.source.OSM(),
+    carto: new ol.source.XYZ({
+        url: 'https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+        attributions: '© CARTO © OSM'
+    }),
+    satellite: new ol.source.XYZ({
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        attributions: '© Esri'
+    })
+};
 
-const satellite = L.tileLayer(
-    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 18,
-    attribution: '© Esri'
-});
-
-const cartoLight = L.tileLayer('https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© <a href="https://carto.com/">CARTO</a> © OSM'
-});
-
-/* =========================
-   MAP INITIALIZATION
-========================= */
-
-const map = L.map('map', {
-    layers: [osmLayer]
-}).setView([-7.7956, 110.3695], 14);
+const baseLayer = new ol.layer.Tile({ source: basemaps.osm });
 
 /* =========================
    LANDMARKS DATA
 ========================= */
 
 const landmarks = [
-    { name: "Tugu Yogyakarta",   lat: -7.7828, lng: 110.3672, desc: "Ikon kota Yogyakarta, dibangun oleh Sultan HB I", category: "landmark" },
-    { name: "Malioboro",         lat: -7.7925, lng: 110.3655, desc: "Jalan belanja dan wisata paling terkenal", category: "street" },
-    { name: "Kraton Yogyakarta", lat: -7.8053, lng: 110.3642, desc: "Istana resmi Kesultanan Ngayogyakarta Hadiningrat", category: "landmark" },
-    { name: "Taman Sari",        lat: -7.8098, lng: 110.3590, desc: "Bekas taman kerajaan dengan kolam pemandian", category: "landmark" },
-    { name: "UGM",               lat: -7.7703, lng: 110.3780, desc: "Universitas Gadjah Mada — kampus tertua", category: "university" },
-    { name: "Benteng Vredeburg", lat: -7.7991, lng: 110.3656, desc: "Benteng peninggalan Belanda, kini museum", category: "museum" },
-    { name: "Pasar Beringharjo", lat: -7.7994, lng: 110.3663, desc: "Pasar tradisional sejak 1758", category: "market" },
+    { name: "Tugu Yogyakarta",   lon: 110.3672, lat: -7.7828, desc: "Ikon kota Yogyakarta", cat: "landmark" },
+    { name: "Malioboro",         lon: 110.3655, lat: -7.7925, desc: "Jalan belanja terkenal", cat: "street" },
+    { name: "Kraton Yogyakarta", lon: 110.3642, lat: -7.8053, desc: "Istana Kesultanan", cat: "landmark" },
+    { name: "Taman Sari",        lon: 110.3590, lat: -7.8098, desc: "Taman air kerajaan", cat: "landmark" },
+    { name: "UGM",               lon: 110.3780, lat: -7.7703, desc: "Universitas Gadjah Mada", cat: "university" },
+    { name: "Benteng Vredeburg", lon: 110.3656, lat: -7.7991, desc: "Benteng Belanda → museum", cat: "museum" },
+    { name: "Pasar Beringharjo", lon: 110.3663, lat: -7.7994, desc: "Pasar tradisional sejak 1758", cat: "market" },
 ];
 
 /* =========================
-   MARKERS WITH POPUPS
+   MARKER LAYER (Vector)
 ========================= */
 
-const markerGroup = L.layerGroup();
+const markerSource = new ol.source.Vector();
+
+const COLORS = {
+    landmark: '#e63946', street: '#f59e0b', university: '#2563eb',
+    museum: '#8b5cf6', market: '#059669'
+};
 
 landmarks.forEach(lm => {
-    const marker = L.marker([lm.lat, lm.lng])
-        .bindPopup(`
-            <b>${lm.name}</b><br>
-            <em>${lm.category}</em><br>
-            ${lm.desc}
-        `);
-    markerGroup.addLayer(marker);
+    const feature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([lm.lon, lm.lat])),
+        name: lm.name,
+        desc: lm.desc,
+        cat: lm.cat
+    });
+    feature.setStyle(new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 9,
+            fill: new ol.style.Fill({ color: COLORS[lm.cat] || '#e63946' }),
+            stroke: new ol.style.Stroke({ color: '#fff', width: 2.5 })
+        })
+    }));
+    markerSource.addFeature(feature);
 });
 
-markerGroup.addTo(map);
+const markerLayer = new ol.layer.Vector({ source: markerSource });
 
 /* =========================
-   GEOJSON DATA
+   GEOJSON LAYER
 ========================= */
 
 const geojsonData = {
@@ -67,61 +69,100 @@ const geojsonData = {
     "features": [
         {
             "type": "Feature",
-            "properties": { "nama": "Area Malioboro", "keterangan": "Zona pedestrian & belanja" },
+            "properties": { "nama": "Area Malioboro", "ket": "Zona pedestrian & belanja" },
             "geometry": {
                 "type": "Polygon",
-                "coordinates": [[[110.3640, -7.7880], [110.3670, -7.7880],
-                                 [110.3670, -7.7960], [110.3640, -7.7960],
-                                 [110.3640, -7.7880]]]
+                "coordinates": [[[110.3640,-7.7880],[110.3670,-7.7880],[110.3670,-7.7960],[110.3640,-7.7960],[110.3640,-7.7880]]]
             }
         },
         {
             "type": "Feature",
-            "properties": { "nama": "Area Kraton", "keterangan": "Kompleks keraton & alun-alun" },
+            "properties": { "nama": "Area Kraton", "ket": "Kompleks keraton & alun-alun" },
             "geometry": {
                 "type": "Polygon",
-                "coordinates": [[[110.3610, -7.7980], [110.3680, -7.7980],
-                                 [110.3680, -7.8120], [110.3610, -7.8120],
-                                 [110.3610, -7.7980]]]
+                "coordinates": [[[110.3610,-7.7980],[110.3680,-7.7980],[110.3680,-7.8120],[110.3610,-7.8120],[110.3610,-7.7980]]]
             }
         }
     ]
 };
 
-const geojsonLayer = L.geoJSON(geojsonData, {
-    style: {
-        color: "#ff7800",
-        weight: 2,
-        fillOpacity: 0.15
-    },
-    onEachFeature: (feature, layer) => {
-        if (feature.properties) {
-            layer.bindPopup(`<b>${feature.properties.nama}</b><br>${feature.properties.keterangan}`);
-        }
+const geojsonLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({
+        features: new ol.format.GeoJSON().readFeatures(geojsonData, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        })
+    }),
+    style: new ol.style.Style({
+        stroke: new ol.style.Stroke({ color: '#2563eb', width: 2 }),
+        fill: new ol.style.Fill({ color: 'rgba(37,99,235,0.12)' })
+    })
+});
+
+/* =========================
+   MAP
+========================= */
+
+const map = new ol.Map({
+    target: 'map',
+    layers: [baseLayer, geojsonLayer, markerLayer],
+    view: new ol.View({
+        center: ol.proj.fromLonLat([110.3695, -7.7956]),
+        zoom: 14,
+        maxZoom: 18
+    })
+});
+
+/* =========================
+   POPUP (Overlay)
+========================= */
+
+const popupEl = document.createElement('div');
+popupEl.className = 'ol-popup';
+document.body.appendChild(popupEl);
+
+const overlay = new ol.Overlay({
+    element: popupEl,
+    positioning: 'bottom-center'
+});
+map.addOverlay(overlay);
+
+map.on('click', (e) => {
+    const feature = map.forEachFeatureAtPixel(e.pixel, f => f);
+    if (feature && feature.get('name')) {
+        popupEl.innerHTML = `<b>${feature.get('name')}</b><br><em>${feature.get('cat')}</em><br>${feature.get('desc')}`;
+        overlay.setPosition(e.coordinate);
+    } else if (feature && feature.get('nama')) {
+        popupEl.innerHTML = `<b>${feature.get('nama')}</b><br>${feature.get('ket')}`;
+        overlay.setPosition(e.coordinate);
+    } else {
+        overlay.setPosition(undefined);
     }
 });
 
-geojsonLayer.addTo(map);
+// Cursor change on hover
+map.on('pointermove', (e) => {
+    const hit = map.hasFeatureAtPixel(e.pixel);
+    map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+});
 
 /* =========================
-   LAYER CONTROL
+   BASEMAP SWITCHER
 ========================= */
 
-const baseMaps = {
-    "OpenStreetMap": osmLayer,
-    "Satelit": satellite,
-    "Minimalis": cartoLight
-};
-
-const overlayMaps = {
-    "Landmarks": markerGroup,
-    "Area (GeoJSON)": geojsonLayer
-};
-
-L.control.layers(baseMaps, overlayMaps).addTo(map);
+document.querySelectorAll('#basemap-switcher button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const key = btn.dataset.basemap;
+        if (basemaps[key]) {
+            baseLayer.setSource(basemaps[key]);
+            document.querySelectorAll('#basemap-switcher button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    });
+});
 
 /* =========================
    SCALE BAR
 ========================= */
 
-L.control.scale({ imperial: false }).addTo(map);
+map.addControl(new ol.control.ScaleLine());
