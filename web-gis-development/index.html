@@ -1,50 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebGIS Yogyakarta - OpenLayers Demo</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.3.1/dist/ol.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.8.0/dist/ol.css" />
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; }
-        #map { height: 100vh; width: 100%; }
+        :root {
+            --panel-bg: rgba(255, 255, 255, 0.94);
+            --panel-border: rgba(15, 23, 42, 0.08);
+            --panel-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent: #0f172a;
+            --accent-soft: #f1f5f9;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+        }
+
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+
         .ol-popup {
             position: absolute;
             background: #fff;
             border-radius: 10px;
             padding: 10px 14px;
             font-size: 13px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
             max-width: 220px;
             pointer-events: none;
             transform: translate(-50%, -110%);
         }
-        .ol-popup b { font-size: 14px; }
-        .ol-popup em { color: #6b7280; font-size: 11px; }
+
+        .ol-popup b {
+            font-size: 14px;
+        }
+
+        .ol-popup em {
+            color: #6b7280;
+            font-size: 11px;
+        }
 
         /* Basemap switcher */
         #basemap-switcher {
-            position: fixed; top: 1rem; right: 1rem; z-index: 100;
-            display: flex; gap: 2px; background: #fff;
-            border: 1px solid #e5e7eb; border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1); overflow: hidden;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+            display: flex;
+            gap: 0.35rem;
+            padding: 0.35rem;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            box-shadow: var(--panel-shadow);
+            backdrop-filter: blur(10px);
         }
+
         #basemap-switcher button {
-            padding: 6px 12px; border: none; background: none;
-            font-size: 12px; font-weight: 600; color: #9ca3af; cursor: pointer;
+            padding: 0.55rem 0.85rem;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
         }
-        #basemap-switcher button.active { background: #1a1a1a; color: #fff; }
-        #basemap-switcher button:not(.active):hover { background: #f3f4f6; }
+
+        #basemap-switcher button.active {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        #basemap-switcher button:not(.active):hover {
+            background: var(--accent-soft);
+            color: var(--text-main);
+            transform: translateY(-1px);
+        }
+
+        #zoom-controls {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        #zoom-controls button {
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            background: var(--panel-bg);
+            box-shadow: var(--panel-shadow);
+            color: var(--text-main);
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        #zoom-controls button:hover {
+            background: #fff;
+        }
+
+        #map-footer {
+            position: fixed;
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+            z-index: 100;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1rem;
+            pointer-events: none;
+        }
+
+        #scale-display,
+        #attribution-display {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            box-shadow: var(--panel-shadow);
+            backdrop-filter: blur(10px);
+            pointer-events: auto;
+        }
+
+        #scale-display {
+            min-width: 108px;
+            padding: 0.45rem 0.7rem;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        #scale-bar {
+            height: 8px;
+            margin-top: 0.35rem;
+            border: 2px solid var(--text-main);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+        }
+
+        #attribution-display {
+            max-width: min(460px, calc(100vw - 10rem));
+            padding: 0.45rem 0.75rem;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        #attribution-display a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            #basemap-switcher {
+                top: auto;
+                right: 0.75rem;
+                left: 0.75rem;
+                bottom: 1rem;
+                justify-content: space-between;
+            }
+
+            #map-footer {
+                left: 0.75rem;
+                right: 0.75rem;
+                bottom: 4.8rem;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.6rem;
+            }
+
+            #attribution-display {
+                max-width: none;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div id="map"></div>
+    <div id="zoom-controls" aria-label="Zoom controls">
+        <button id="zoom-in" type="button" aria-label="Zoom in">+</button>
+        <button id="zoom-out" type="button" aria-label="Zoom out">−</button>
+    </div>
     <div id="basemap-switcher">
         <button data-basemap="osm" class="active">OSM</button>
         <button data-basemap="carto">Minimalis</button>
         <button data-basemap="satellite">Satelit</button>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/ol@10.3.1/dist/ol.js"></script>
+    <div id="map-footer">
+        <div id="scale-display">
+            <div id="scale-text">500 m</div>
+            <div id="scale-bar"></div>
+        </div>
+        <div id="attribution-display">© OpenStreetMap contributors</div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/ol@10.8.0/dist/ol.js"></script>
     <script src="app.js"></script>
 </body>
+
 </html>
