@@ -1,0 +1,5 @@
+flowchart TD
+    A["Browser\nOpenLayers + GeoJSON + Tiles"] -->|"Fetch static files"| B["Static Hosting\nGitHub Pages · Netlify · Vercel"]
+    B --- C["index.html"]
+    B --- D["data.geojson"]
+    B --- E["tiles/ (PMTiles)"]

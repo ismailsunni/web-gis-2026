@@ -48,23 +48,23 @@ Sekolah Vokasi, UGM
 Setelah sesi ini, mahasiswa mampu:
 
 ✅ Membandingkan **WebGIS vs Desktop GIS** secara mendalam
-✅ Memilih **Maps API yang tepat** untuk kasus nyata
-✅ Mengintegrasikan **layer WMS/WFS** dari server OGC
-✅ Memuat data dari **sumber eksternal** (Google Sheets, GeoJSON URL)
-✅ Men-deploy WebGIS ke **GitHub Pages** secara langsung
+✅ Memilih **Maps API yang tepat** (Leaflet, Google, OpenLayers)
+✅ Memahami strategi **publikasi & akses** peta interaktif di web
+✅ Mengintegrasikan **data eksternal** (Google Sheets, WMS/WFS)
+✅ Men-deploy WebGIS ke **GitHub Pages** atau **Vercel**
 
 ---
 
 # Outline
 
-1. **WebGIS vs Desktop GIS** — Perbandingan mendalam
+1. **WebGIS vs Desktop GIS** — Perbandingan mendalam (2 slide)
 2. **Arsitektur WebGIS** — Stack & komponen
-3. **Pilih Maps API yang Tepat** — Framework keputusan
-4. **Hands-on: Upgrade WebGIS** — WMS, data eksternal, filter
-5. **Deploy Live** — GitHub Pages step-by-step
-6. **Kenalan: MapLibre GL JS** — Selanjutnya
+3. **Ragam Maps API** — Leaflet, Google Maps, OpenLayers (3 slide)
+4. **Perbandingan Detail** — Teknis & decision matrix (2 slide)
+5. **Publikasi & Akses** — Platform, strategi, best practices
+6. **MapLibre GL JS** — Web mapping generasi berikutnya
 7. **Studi Kasus** — WebGIS di dunia nyata
-8. **Refleksi & Tugas**
+8. **Refleksi & Tugas** — Takeaways & assignment
 
 ---
 
@@ -91,38 +91,47 @@ Setelah sesi ini, mahasiswa mampu:
 
 ## Google Maps / Mapbox / Custom WebGIS
 
-- **Zero install** — akses via URL
-- **Multi-platform** — desktop, tablet, HP
-- **Kolaborasi real-time** — banyak user bersamaan
-- **Integrasi** — embed di website, dashboard, CMS
-- **Update sentral** — data berubah, semua user dapat
+- **Zero install** — akses via URL, tidak perlu instalasi software
+- **Multi-platform** — desktop, tablet, smartphone (responsive)
+- **Kolaborasi real-time** — banyak user akses bersamaan tanpa konflik
+- **Integrasi seamless** — embed di website, dashboard, CMS, aplikasi
+- **Update sentral** — data berubah satu kali, semua user dapat update
+- **Aksesibilitas** — publik bisa akses tanpa login atau izin khusus
+- **Mobile-first** — optimized untuk penggunaan di lapangan via smartphone
+- **Lightweight** — tidak butuh hardware canggih untuk client
 
-**Web GIS = media komunikasi & distribusi spasial**
+**Web GIS = media komunikasi, distribusi, dan publikasi spasial**
 
 ---
 
-# Perbandingan Mendalam
+# Perbandingan Mendalam - Part 1
 
 | Aspek | Desktop GIS | Web GIS |
 |---|---|---|
-| **Analisis** | Lengkap (500+ tools) | Terbatas (client-side) |
+| **Analisis** | Lengkap (500+ tools) | Terbatas visualisasi & query |
 | **Data size** | GB–TB lokal | MB–ratusan MB streaming |
 | **CRS** | Semua CRS | Umumnya Web Mercator |
 | **Rendering** | GPU lokal | Browser (Canvas/WebGL) |
-| **Offline** | ✅ Penuh | ⚠️ Terbatas |
+| **Offline** | ✅ Penuh | ⚠️ Perlu caching |
 | **Kolaborasi** | ❌ File-based | ✅ Real-time |
-| **Distribusi** | Email/FTP file | Share URL |
-| **Maintenance** | Update per mesin | Update 1× di server |
+
+---
+
+# Perbandingan Mendalam - Part 2
+
+| Aspek | Desktop GIS | Web GIS |
+|---|---|---|
+| **Distribusi** | Email/FTP | Share URL instant |
+| **Maintenance** | Update per mesin | 1× di server |
+| **Learning curve** | Curam (~40 jam) | Ringan (~4 jam) |
+| **Biaya** | Lisensi mahal | Mostly gratis |
+| **User target** | GIS analyst | Publik/stakeholder |
 
 ---
 
 # Hybrid Approach: Best of Both Worlds
 
-```mermaid
-flowchart LR
-    A["🖥️ QGIS\n(Analisis, Digitasi, QA)"] -->|"Export data\nStyling"| B["⚙️ GeoServer\n(WMS / WFS / API)"]
-    B -->|"HTTP OGC"| C["🌐 Browser\n(WebGIS)"]
-```
+![Hybrid Workflow](diagrams/hybrid-workflow.png)
 
 **Workflow modern: Analisis di desktop → Publikasi di web**
 
@@ -130,19 +139,11 @@ flowchart LR
 
 # Kapan Pakai Yang Mana?
 
-## 🖥️ Desktop GIS:
-- Analisis kompleks (interpolasi, network, 3D)
-- Digitasi presisi
-- Peta cetak / kartografi
-
-## 🌐 Web GIS:
-- Dashboard monitoring
-- Informasi publik
-- Kolaborasi tim
-- Aplikasi mobile/field
-
-## 🔄 Hybrid:
-- Analisis di QGIS → publish ke GeoServer → tampilkan di WebGIS
+| Pilihan | Pakai Saat | Contoh |
+|---|---|---|
+| 🖥️ **Desktop GIS** | Analisis kompleks, editing presisi | Buffer, network, peta cetak |
+| 🌐 **Web GIS** | Publikasi, dashboard, kolaborasi | Portal publik, monitoring |
+| 🔄 **Hybrid** | Analisis + distribusi online | QGIS -> GeoServer -> WebGIS |
 
 ---
 
@@ -153,11 +154,7 @@ flowchart LR
 
 # Full Stack WebGIS
 
-```mermaid
-flowchart TD
-    A["🌐 Browser\nHTML + CSS + JS + OpenLayers"] -->|"HTTP · REST API · OGC Services"| B["⚙️ Server\nGeoServer · MapServer · pg_tileserv"]
-    B -->|SQL| C["🗄️ Database\nPostgreSQL + PostGIS · SQLite + SpatiaLite"]
-```
+![Full Stack WebGIS](diagrams/fullstack.png)
 
 ---
 
@@ -165,13 +162,7 @@ flowchart TD
 
 Tidak semua WebGIS butuh backend!
 
-```mermaid
-flowchart TD
-    A["🌐 Browser\nOpenLayers + GeoJSON + Tiles"] -->|"Fetch static files"| B["☁️ Static Hosting\nGitHub Pages · Netlify · Vercel"]
-    B --- C["📄 index.html"]
-    B --- D["📍 data.geojson"]
-    B --- E["🗺️ tiles/ (PMTiles)"]
-```
+![Serverless WebGIS](diagrams/serverless.png)
 
 **Gratis, cepat, tanpa server!**
 
@@ -191,26 +182,131 @@ flowchart TD
 
 ---
 
-# 3️⃣ Pilih Maps API yang Tepat
+# 3️⃣ Ragam Maps API
+## Perbandingan & Pemilihan
+
+---
+
+# Maps API #1: Leaflet.js
+## "Ringan & Cepat"
+
+**Kelebihan utama:**
+- Kecil, cepat dipelajari, banyak plugin
+- Cocok untuk peta interaktif ringan
+
+**Cocok untuk:**
+- Website peta sederhana
+- Dashboard monitoring
+- Prototype cepat
+
+**Biaya:** Gratis (open source)
+
+---
+
+# Maps API #2: Google Maps API
+## "Siap Pakai & Powerful"
+
+**Kelebihan utama:**
+- Basemap premium dan data POI kuat
+- Fitur siap pakai: Directions, Places, Street View
+
+**Cocok untuk:**
+- Aplikasi komersial
+- Produk consumer (non-GIS user)
+- Kebutuhan routing/geocoding cepat
+
+**Biaya:** Berbayar (metered billing)
+
+---
+
+# Maps API #3: OpenLayers
+## "Professional & Standard"
+
+**Kelebihan utama:**
+- Dukungan OGC native (WMS/WFS)
+- Multi-CRS dan kontrol layer detail
+
+**Cocok untuk:**
+- Geoportal profesional
+- Integrasi GeoServer/QGIS Server
+- Dashboard spasial skala menengah-besar
+
+**Biaya:** Gratis (open source)
 
 ---
 
 # Framework Keputusan
 
-```mermaid
-flowchart TD
-    A[Proyek Baru] --> B{Butuh WMS/WFS\natau multi-CRS?}
-    B -->|Ya| C[OpenLayers]
-    B -->|Tidak| D{Butuh routing,\ngeocoding, traffic?}
-    D -->|Ya| E[Google Maps API]
-    D -->|Tidak| F{Butuh 3D\natau vector tiles?}
-    F -->|Ya| G[MapLibre GL JS]
-    F -->|Tidak| H[Leaflet]
-```
+| Kondisi Kebutuhan | API Disarankan |
+|---|---|
+| Belajar cepat, proyek sederhana | **Leaflet** |
+| Perlu fitur Google siap pakai | **Google Maps API** |
+| Perlu WMS/WFS, CRS kompleks, OGC | **OpenLayers** |
+
+**Rule of thumb:** simple -> Leaflet, consumer app -> Google, GIS profesional -> OpenLayers.
 
 ---
 
-# Leaflet vs OpenLayers: Side-by-Side
+# Leaflet vs Google Maps vs OpenLayers - Part 1
+
+| Kriteria | Leaflet | Google Maps | OpenLayers |
+|---|---|---|---|
+| **Setup** | Import CDN | API key | Import CDN |
+| **Learning curve** | Mudah (2–4 jam) | Mudah (2–4 jam) | Menengah (6–10 jam) |
+| **Basemap** | Plugin | Built-in premium | Open (OSM/CARTO) |
+| **Customization** | Baik | Terbatas | Sangat baik |
+| **WMS/WFS** | Plugin/sulit | ❌ Tidak | ✅ Built-in |
+
+---
+
+# Leaflet vs Google Maps vs OpenLayers - Part 2
+
+| Kriteria | Leaflet | Google Maps | OpenLayers |
+|---|---|---|---|
+| **Multi-CRS** | Dengan plugin | Mercator saja | ✅ Semua EPSG |
+| **3D/Terrain** | ❌ | ✅ Ada | Limited |
+| **Biaya** | Gratis | ~$7-10 per 1K | Gratis |
+| **Offline** | SDK ada | ❌ Tidak | Dengan cache |
+
+---
+
+# Google Maps: Kapan Pakai?
+
+✅ **Gunakan jika:**
+- Aplikasi **commercial/berbayar**
+- Target **non-GIS user** (consumer)
+- Perlu **Street View** atau **Directions API**
+- Budget ada untuk API cost
+
+❌ **Hindari jika:**
+- Data proyeksi custom (non-Web Mercator)
+- Butuh WMS/WFS dari server pemetaan lokal
+- Budget terbatas, traffic tinggi
+- Perlu open source untuk compliance
+
+---
+
+# Contoh: Google Maps API
+
+```javascript
+const map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 14,
+    center: { lat: -7.7956, lng: 110.3695 }
+});
+
+const marker = new google.maps.Marker({
+    position: { lat: -7.7956, lng: 110.3695 },
+    map: map,
+    title: 'Yogyakarta'
+});
+```
+
+**Keuntungan:** Instant, polished, banyak plugin
+**Kerugian:** API key required, metered billing
+
+---
+
+# Leaflet vs OpenLayers: Teknis
 
 | Aksi | Leaflet | OpenLayers |
 |---|---|---|
@@ -219,61 +315,52 @@ flowchart TD
 | Tambah tile | `L.tileLayer(url).addTo(map)` | `new ol.layer.Tile({source:...})` |
 | Marker | `L.marker([lat,lng])` | `new ol.Feature({geometry: Point})` |
 | Popup | `.bindPopup(html)` | `new ol.Overlay({element:...})` |
-| WMS | Plugin | ✅ `ol.source.TileWMS` built-in |
-| CRS lain | Plugin | ✅ `ol.proj` + proj4 built-in |
+| WMS | Plugin (sulit) | ✅ `ol.source.TileWMS` (mudah) |
+| CRS lain | Dengan proj4 plugin | ✅ `ol.proj.fromLonLat()` native |
 
-**Leaflet = ringkas. OpenLayers = eksplisit, GIS-grade, OGC-native.**
-
----
-
-# 4️⃣ Hands-on: Upgrade WebGIS
-## Dari Pengenalan ke Sistem Nyata
+**Leaflet = ringkas & intuitif. OpenLayers = verbose tapi profesional.**
 
 ---
 
-# Yang Sudah Ada (Minggu 5)
+# 4️⃣ Hands-on: Praktik WebGIS dengan Strategi Publikasi
+## Dari Local → Public dengan Akses Terkontrol
 
-```javascript
-const map = new ol.Map({
-    target: 'map',
-    layers: [ new ol.layer.Tile({ source: new ol.source.OSM() }) ],
-    view: new ol.View({
-        center: ol.proj.fromLonLat([110.3695, -7.7956]),
-        zoom: 14
-    })
-});
-```
+---
 
-**Hari ini kita tambahkan:**
-1. Layer WMS dari server OGC
-2. Data dari Google Sheets (sumber eksternal)
-3. Filter kategori interaktif
-4. Deploy langsung ke GitHub Pages
+# Pilihan Skenario Praktik
+
+## Opsi A (yang dipraktikkan di kelas)
+- OpenLayers + Google Sheets
+- Basemap switcher + filter kategori
+- Deploy ke GitHub Pages
+
+## Opsi B (pengembangan mandiri)
+- Leaflet + API + autentikasi sederhana
+- Deploy ke Vercel
+
+**Fokus kelas:** Opsi A dulu, Opsi B untuk eksplorasi.
 
 ---
 
 # Upgrade 1: WMS Layer dari Server OGC
 
-OpenLayers bisa langsung bicara dengan GeoServer, QGIS Server, BIG, dsb.
+OpenLayers bisa langsung konek ke GeoServer/QGIS Server/BIG.
 
 ```javascript
 const wmsLayer = new ol.layer.Tile({
     source: new ol.source.TileWMS({
-        url: 'https://geoserver.example.com/wfs',
+        url: 'https://geoserver.example.com/wms',
         params: {
             'LAYERS': 'nama:layer',
-            'TILED': true,
-            'FORMAT': 'image/png',
-            'TRANSPARENT': true
+            'TILED': true
         },
         serverType: 'geoserver'
-    }),
-    opacity: 0.7
+    })
 });
 map.addLayer(wmsLayer);
 ```
 
-> 💡 Coba dengan WMS publik: BIG (ina-geoportal.go.id), BMKG, atau GeoServer demo
+> Coba WMS publik: BIG, BMKG, atau GeoServer demo.
 
 ---
 
@@ -288,15 +375,7 @@ document.getElementById('toggle-wms').addEventListener('click', () => {
 });
 ```
 
-Struktur layer dalam OpenLayers:
-
-```mermaid
-flowchart LR
-    M[ol.Map] --> L1[Basemap Tile]
-    M --> L2[WMS Layer]
-    M --> L3[GeoJSON Vector]
-    M --> L4[Marker Vector]
-```
+Intinya: layer WMS bisa dihidupkan/dimatikan tanpa reload peta.
 
 ---
 
@@ -329,19 +408,17 @@ async function loadFromSheet(url) {
     const rows = text.split('\n').slice(1); // skip header
 
     rows.forEach(row => {
-        const [nama, lon, lat, kategori, deskripsi] = row.split(',');
+        const [nama, lon, lat, kategori] = row.split(',');
         if (!lon || !lat) return;
-
         const feature = new ol.Feature({
             geometry: new ol.geom.Point(
                 ol.proj.fromLonLat([parseFloat(lon), parseFloat(lat)])
             ),
-            nama, kategori, deskripsi
+            nama, kategori
         });
         markerSource.addFeature(feature);
     });
 }
-
 loadFromSheet(SHEET_CSV_URL);
 ```
 
@@ -350,7 +427,6 @@ loadFromSheet(SHEET_CSV_URL);
 # Upgrade 3: Filter Kategori
 
 ```html
-<!-- Tambah di HTML -->
 <div id="filter">
     <button data-cat="all">Semua</button>
     <button data-cat="landmark">Landmark</button>
@@ -364,9 +440,9 @@ document.querySelectorAll('#filter button').forEach(btn => {
         const cat = btn.dataset.cat;
         markerLayer.setStyle(feature => {
             if (cat === 'all' || feature.get('kategori') === cat) {
-                return circleStyle(feature);   // tampilkan
+                return circleStyle(feature);
             }
-            return null;  // sembunyikan
+            return null;
         });
     });
 });
@@ -374,43 +450,117 @@ document.querySelectorAll('#filter button').forEach(btn => {
 
 ---
 
-# 5️⃣ Deploy Live ke GitHub Pages
+# 5️⃣ Strategi Publikasi & Akses Peta Interaktif
 
 ---
 
-# Langkah Deploy (Sekarang, Bersama)
+# Platform Publikasi WebGIS
+
+| Platform | Untuk | Pro | Con |
+|---|---|---|---|
+| **GitHub Pages** 📂 | Static demo | Gratis, instant | No backend |
+| **Vercel/Netlify** ☁️ | Serverless | Auto-deploy, fast | Limited free |
+| **DigitalOcean/AWS** 🖥️ | Backend kompleks | Full control | Biaya, DevOps |
+| **GeoServer** 🗺️ | Geoportal | GIS-native | Learning curve |
+
+*Fokus kelas: GitHub Pages (A) & Vercel (B bonus)*
+
+---
+
+# 3 Skenario Publikasi
+
+**Skenario 1:** Leaflet + GitHub Pages
+→ Demo/portfolio, static, instant
+
+**Skenario 2:** OpenLayers + Vercel
+→ Dashboard real-time, auto-deploy
+
+**Skenario 3:** GeoServer + PostGIS
+→ Geoportal enterprise, powerful
+
+---
+
+# Akses Peta: 4 Model
+
+| Level | Auth | Monitoring | Contoh |
+|---|---|---|---|
+| **🌍 Public** | ❌ | - | OpenStreetMap |
+| **🔐 Login** | ✅ SSO | Tracking | Corp dashboard |
+| **🛡️ API Key** | ✅ Key | Rate limit | Google Maps |
+| **🔒 Enterprise** | ✅ Token | SLA | ArcGIS Online |
+
+---
+
+# Implementasi: Public WebGIS di GitHub Pages
 
 ```bash
-# 1. Init repo (kalau belum)
+# 1. Init repo lokal
 git init
-git add index.html app.js
+git add index.html app.js data/landmarks.geojson
 git commit -m "WebGIS Yogyakarta - initial"
 
 # 2. Buat repo di GitHub, lalu push
 git remote add origin https://github.com/USERNAME/webgis-yogya.git
 git push -u origin main
 
-# 3. Aktifkan Pages
-# GitHub → Settings → Pages → Source: main / root → Save
+# 3. Aktifkan GitHub Pages
+# Settings → Pages → Branch: main → Folder: root → Save
 
-# 4. Tunggu ~1 menit, akses di:
+# 4. Tunggu ~1 menit, akses:
 # https://USERNAME.github.io/webgis-yogya/
 ```
 
 ---
 
-# Tips Publikasi Profesional
+# Implementasi: Autentikasi + Backend (Vercel)
 
-1. **README.md** — sertakan screenshot + link demo
-2. **Responsive** — test di mobile (DevTools → toggle device)
-3. **CORS** — data eksternal harus mengizinkan cross-origin fetch
-4. **HTTPS** — GitHub Pages sudah otomatis; WMS juga harus HTTPS
-5. **Attributions** — cantumkan sumber data, library, dan lisensi
-6. **Loading speed** — pakai CDN, compress GeoJSON besar
+```javascript
+// API endpoint: /api/landmarks?token=XXX
+// Backend mengecek token sebelum return data
+
+const token = localStorage.getItem('auth_token');
+fetch(`/api/landmarks?token=${token}`)
+    .then(r => r.json())
+    .then(data => {
+        data.features.forEach(f => {
+            new L.Marker([f.geometry.coordinates[1], f.geometry.coordinates[0]])
+                .bindPopup(f.properties.nama)
+                .addTo(map);
+        });
+    });
+```
 
 ---
 
-# 6️⃣ Kenalan: MapLibre GL JS
+# Best Practices: UX & Teknis
+
+Checklist dasar publikasi:
+
+- Mobile-friendly
+- Ada loading dan pesan error
+- Gunakan HTTPS
+- Cantumkan sumber data (attribution)
+- README berisi link demo
+
+---
+
+# Contoh Publikasi Nyata
+
+### 📍 **Sheet Map** (Leaflet + Google Sheets + GitHub Pages)
+Data publik → clustering → 100% client-side
+🔗 [ismailsunni.id/map/sheet-map](https://ismailsunni.id/map/sheet-map/)
+
+### 🛣️ **Route Finder** (OpenLayers + Backend API)
+Node.js + PostgreSQL → DigitalOcean → rate limiting
+🔗 [ismailsunni.id/map/route-finder](https://ismailsunni.id/map/route-finder/)
+
+### 🗺️ **Geo Admin** (OGC Service + Geoportal)
+Java + WMS/WMTS → 800+ layers → 3D view
+🔗 [map.geo.admin.ch](https://map.geo.admin.ch)
+
+---
+
+# 7️⃣ Kenalan: MapLibre GL JS
 ## Selanjutnya Setelah OpenLayers
 
 ---
@@ -452,7 +602,7 @@ map.addControl(new maplibregl.NavigationControl());
 
 ---
 
-# 7️⃣ Studi Kasus
+# 8️⃣ Studi Kasus
 ## WebGIS di Dunia Nyata
 
 ---
@@ -505,7 +655,7 @@ Fitur:
 
 ---
 
-# 8️⃣ Refleksi & Tugas
+# 9️⃣ Refleksi & Tugas
 
 ---
 
@@ -528,18 +678,17 @@ Fitur:
 
 ---
 
-# 📋 Tugas
+# 📋 Latihan Mandiri
 
-Buat **WebGIS interaktif** dengan ketentuan:
+Silakan pilih salah satu atau kombinasikan:
 
-1. Gunakan **OpenLayers**
-2. Tampilkan **minimal 5 lokasi** dari **Google Sheets** (bukan hardcode)
-3. **Minimal 2 base map** dengan switcher
-4. Tambahkan **filter kategori** (minimal 2 kategori)
-5. *(Bonus)* Integrasikan **layer WMS** dari sumber publik
-6. *(Bonus)* Tambahkan **hover tooltip** & click popup
-7. **Deploy ke GitHub Pages**
-8. Kumpulkan: **link repo + link demo**
+1. Bangun WebGIS dengan Leaflet/OpenLayers + data Google Sheets
+2. Tambahkan 2 basemap + filter kategori
+3. Deploy ke GitHub Pages
+4. Coba integrasi 1 layer WMS publik
+5. (Opsional) Coba deploy versi dengan autentikasi sederhana di Vercel
+
+**Keluaran latihan:** link repo + link demo + screenshot.
 
 ---
 

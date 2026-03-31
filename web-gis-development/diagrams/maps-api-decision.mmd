@@ -1,0 +1,8 @@
+flowchart TD
+    A[Proyek Baru] --> B{Butuh WMS/WFS\natau multi-CRS?}
+    B -->|Ya| C[OpenLayers]
+    B -->|Tidak| D{Butuh routing,\ngeocoding, traffic?}
+    D -->|Ya| E[Google Maps API]
+    D -->|Tidak| F{Butuh 3D\natau vector tiles?}
+    F -->|Ya| G[MapLibre GL JS]
+    F -->|Tidak| H[Leaflet]
