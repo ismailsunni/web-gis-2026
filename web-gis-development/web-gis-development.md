@@ -7,8 +7,8 @@ author: Ismail Sunni
 date: April 2026
 ---
 
-# Pembangunan SIG Web
-## Dari Library ke Sistem: Membangun WebGIS Nyata
+# WebGIS Praktis
+## Perbandingan GIS, Ragam Maps API, dan Akses Publikasi Web
 
 Program Sarjana Terapan Teknologi Survei dan Pemetaan Dasar
 Departemen Teknologi Kebumian
@@ -57,12 +57,12 @@ Setelah sesi ini, mahasiswa mampu:
 
 # Outline
 
-1. **WebGIS vs Desktop GIS** — Perbandingan mendalam (2 slide)
+1. **WebGIS vs Desktop GIS** — Perbandingan mendalam
 2. **Arsitektur WebGIS** — Stack & komponen
-3. **Ragam Maps API** — Leaflet, Google Maps, OpenLayers (3 slide)
-4. **Perbandingan Detail** — Teknis & decision matrix (2 slide)
+3. **Ragam Maps API** — Leaflet, Google Maps, OpenLayers
+4. **Perbandingan Detail** — Teknis & decision matrix
 5. **Publikasi & Akses** — Platform, strategi, best practices
-6. **MapLibre GL JS** — Web mapping generasi berikutnya
+6. **Library Lain** — Opsi tambahan di luar tiga utama
 7. **Studi Kasus** — WebGIS di dunia nyata
 8. **Refleksi & Tugas** — Takeaways & assignment
 
@@ -124,7 +124,7 @@ Setelah sesi ini, mahasiswa mampu:
 | **Distribusi** | Email/FTP | Share URL instant |
 | **Maintenance** | Update per mesin | 1× di server |
 | **Learning curve** | Curam (~40 jam) | Ringan (~4 jam) |
-| **Biaya** | Lisensi mahal | Mostly gratis |
+| **Biaya** | Dari Gratis hingga Mahal | Dari Gratis hingga Mahal |
 | **User target** | GIS analyst | Publik/stakeholder |
 
 ---
@@ -143,7 +143,7 @@ Setelah sesi ini, mahasiswa mampu:
 |---|---|---|
 | 🖥️ **Desktop GIS** | Analisis kompleks, editing presisi | Buffer, network, peta cetak |
 | 🌐 **Web GIS** | Publikasi, dashboard, kolaborasi | Portal publik, monitoring |
-| 🔄 **Hybrid** | Analisis + distribusi online | QGIS -> GeoServer -> WebGIS |
+| 🔄 **Hybrid** | Analisis + distribusi online | QGIS + Lizmap, atau QGIS -> GeoServer -> WebGIS |
 
 ---
 
@@ -163,6 +163,8 @@ Setelah sesi ini, mahasiswa mampu:
 Tidak semua WebGIS butuh backend!
 
 ![Serverless WebGIS](diagrams/serverless.png)
+
+Contoh stack: GitHub Pages/Vercel + Supabase (Auth + PostgreSQL) + GeoJSON/tiles.
 
 **Gratis, cepat, tanpa server!**
 
@@ -253,7 +255,7 @@ Tidak semua WebGIS butuh backend!
 |---|---|---|---|
 | **Setup** | Import CDN | API key | Import CDN |
 | **Learning curve** | Mudah (2–4 jam) | Mudah (2–4 jam) | Menengah (6–10 jam) |
-| **Basemap** | Plugin | Built-in premium | Open (OSM/CARTO) |
+| **Basemap** | OSM/CARTO/Esri via tile URL | Built-in Google | OSM/CARTO/Esri via tile source |
 | **Customization** | Baik | Terbatas | Sangat baik |
 | **WMS/WFS** | Plugin/sulit | ❌ Tidak | ✅ Built-in |
 
@@ -266,7 +268,7 @@ Tidak semua WebGIS butuh backend!
 | **Multi-CRS** | Dengan plugin | Mercator saja | ✅ Semua EPSG |
 | **3D/Terrain** | ❌ | ✅ Ada | Limited |
 | **Biaya** | Gratis | ~$7-10 per 1K | Gratis |
-| **Offline** | SDK ada | ❌ Tidak | Dengan cache |
+| **Offline** | Bisa | ❌ Tidak | Bisa |
 
 ---
 
@@ -306,7 +308,7 @@ const marker = new google.maps.Marker({
 
 ---
 
-# Leaflet vs OpenLayers: Teknis
+# Leaflet vs OpenLayers: Teknis (Part 1)
 
 | Aksi | Leaflet | OpenLayers |
 |---|---|---|
@@ -314,6 +316,13 @@ const marker = new google.maps.Marker({
 | Set view | `.setView([-7.79, 110.36], 13)` | `view: new ol.View({center, zoom})` |
 | Tambah tile | `L.tileLayer(url).addTo(map)` | `new ol.layer.Tile({source:...})` |
 | Marker | `L.marker([lat,lng])` | `new ol.Feature({geometry: Point})` |
+
+---
+
+# Leaflet vs OpenLayers: Teknis (Part 2)
+
+| Aksi | Leaflet | OpenLayers |
+|---|---|---|
 | Popup | `.bindPopup(html)` | `new ol.Overlay({element:...})` |
 | WMS | Plugin (sulit) | ✅ `ol.source.TileWMS` (mudah) |
 | CRS lain | Dengan proj4 plugin | ✅ `ol.proj.fromLonLat()` native |
@@ -532,6 +541,29 @@ fetch(`/api/landmarks?token=${token}`)
 
 ---
 
+# Contoh Auth dengan Supabase
+
+```javascript
+// CDN: https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Login sederhana email + password
+const { data, error } = await supabase.auth.signInWithPassword({
+    email: 'mahasiswa@kampus.ac.id',
+    password: 'password123'
+});
+
+if (error) alert('Login gagal');
+if (data?.session) {
+    const token = data.session.access_token;
+    fetch('/api/landmarks', { headers: { Authorization: `Bearer ${token}` } });
+}
+```
+
+Backend memverifikasi JWT Supabase sebelum mengirim data.
+
+---
+
 # Best Practices: UX & Teknis
 
 Checklist dasar publikasi:
@@ -546,59 +578,45 @@ Checklist dasar publikasi:
 
 # Contoh Publikasi Nyata
 
-### 📍 **Sheet Map** (Leaflet + Google Sheets + GitHub Pages)
+### 📍 **Sheet Map** (Open Layers + Google Sheets + GitHub Pages)
 Data publik → clustering → 100% client-side
 🔗 [ismailsunni.id/map/sheet-map](https://ismailsunni.id/map/sheet-map/)
 
-### 🛣️ **Route Finder** (OpenLayers + Backend API)
+### 🛣️ **Route Finder** (OpenLayers + Supabase + PostGIS + pgRouting + GitHub Pages)
 Node.js + PostgreSQL → DigitalOcean → rate limiting
 🔗 [ismailsunni.id/map/route-finder](https://ismailsunni.id/map/route-finder/)
 
 ### 🗺️ **Geo Admin** (OGC Service + Geoportal)
-Java + WMS/WMTS → 800+ layers → 3D view
+JavaScript + WMS/WMTS → 800+ layers → 3D view
 🔗 [map.geo.admin.ch](https://map.geo.admin.ch)
 
 ---
 
-# 7️⃣ Kenalan: MapLibre GL JS
-## Selanjutnya Setelah OpenLayers
+# 7️⃣ Library Lain
+## Opsi Tambahan untuk Kebutuhan Khusus
 
 ---
 
-# Mengapa MapLibre GL JS?
+# Beberapa Library Lain
 
-OpenLayers dan Leaflet render peta sebagai **raster (Canvas)**.
-MapLibre GL JS render dengan **WebGL** — beda kategori.
+- **MapLibre GL JS** — open-source untuk vector tiles dan tampilan WebGL. 🔗 https://maplibre.org/
+- **Mapbox GL JS / Maps SDK** — ekosistem commercial yang matang untuk peta modern berbasis vector tiles. 🔗 https://www.mapbox.com/
+- **CesiumJS** — fokus pada globe 3D, terrain, dan visualisasi geospasial 3D. 🔗 https://cesium.com/platform/cesiumjs/
+- **kepler.gl** — cocok untuk eksplorasi data spasial besar dengan visualisasi cepat. 🔗 https://kepler.gl/
+- **deck.gl** — kuat untuk visualisasi WebGL layer besar seperti trip, heatmap, dan point cloud. 🔗 https://deck.gl/
 
-| | OpenLayers / Leaflet | MapLibre GL JS |
+---
+
+# Alternatif Google Maps
+
+| Platform | Kelebihan Singkat | Link |
 |---|---|---|
-| Render | Canvas 2D | WebGL |
-| Tiles | Raster (PNG) | Vector tiles (MVT) |
-| 3D | ❌ | ✅ Terrain, buildings |
-| Rotasi peta | Terbatas | ✅ Bebas |
-| Animasi | Terbatas | ✅ Smooth |
-| Style | JS | JSON style spec |
+| **Mapbox** | Styling fleksibel, SDK matang | https://www.mapbox.com/ |
+| **HERE Maps** | Kuat untuk routing/logistik | https://www.here.com/ |
+| **TomTom Maps** | Traffic dan navigasi real-time | https://developer.tomtom.com/ |
+| **MapTiler** | Mudah dipakai dengan MapLibre | https://www.maptiler.com/ |
 
----
-
-# MapLibre: Contoh Singkat
-
-```javascript
-const map = new maplibregl.Map({
-    container: 'map',
-    style: 'https://tiles.openfreemap.org/styles/liberty',
-    center: [110.3695, -7.7956],
-    zoom: 14,
-    pitch: 45,      // tampilan miring (3D effect)
-    bearing: -20    // rotasi peta
-});
-
-map.addControl(new maplibregl.NavigationControl());
-```
-
-**Kapan pakai MapLibre:** visualisasi 3D, animasi data, vektor tiles skala besar
-
-> 🔗 maplibre.org — open source, gratis, aktif dikembangkan
+Catatan: tetap pilih platform berdasarkan **biaya**, **fitur**, dan **cakupan data**.
 
 ---
 
@@ -664,7 +682,7 @@ Fitur:
 🤔 Kapan sebaiknya pakai Desktop vs Web GIS?
 🤔 Kapan WMS lebih baik daripada GeoJSON langsung?
 🤔 Apa keuntungan load data dari Google Sheets vs hardcode?
-🤔 Mengapa MapLibre berbeda kategori dari Leaflet/OpenLayers?
+🤔 Kapan perlu memakai library lain selain Leaflet/OpenLayers?
 
 ---
 
@@ -674,7 +692,7 @@ Fitur:
 2. OpenLayers unggul di **OGC standards** — WMS/WFS, multi-CRS, native
 3. **Google Sheets → CSV** = cara cepat punya backend data tanpa server
 4. **Serverless WebGIS** bisa sangat powerful (GeoJSON + GitHub Pages)
-5. MapLibre GL JS = WebGL rendering, vector tiles, 3D — generasi berikutnya
+5. Selain tiga library utama, ada opsi lain untuk kebutuhan **3D**, **vector tiles**, dan **visualisasi data besar**
 
 ---
 
