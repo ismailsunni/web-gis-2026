@@ -6,7 +6,7 @@ size: 16:9
 author: Ismail Sunni
 date: April 2026
 ---
-****
+
 # OGC Services
 ## Standar Interoperabilitas: WMS & WFS
 
@@ -53,15 +53,15 @@ Setelah sesi ini, mahasiswa mampu:
 
 ---
 
-# Outline (50 menit)
+# Outline
 
-1. **Mengapa Interoperabilitas?** — masalah & solusi (5')
-2. **WMS** — Web Map Service mendalam (12')
-3. **WFS** — Web Feature Service mendalam (12')
-4. **WMS vs WFS** — kapan pakai yang mana (3')
-5. **Selain WMS & WFS** — WMTS, WMS-T, Vector Tiles, OGC API (8')
-6. **Demo Langsung** — OpenLayers + GeoServer (7')
-7. **Wrap-up** & Q&A (3')
+1. **Mengapa Interoperabilitas?** — masalah & solusi
+2. **WMS** — Web Map Service mendalam
+3. **WFS** — Web Feature Service mendalam
+4. **WMS vs WFS** — kapan pakai yang mana
+5. **Selain WMS & WFS** — WMTS, WMS-T, Vector Tiles, OGC API
+6. **Demo Langsung** — OpenLayers + GeoServer
+7. **Wrap-up** & Q&A
 
 ---
 
@@ -275,7 +275,7 @@ OpenLayers otomatis menyusun URL `GetMap` saat user pan/zoom.
 ✅ **Pro:**
 - Cepat di klien — server sudah render
 - Cocok untuk layer besar (jutaan fitur)
-- Styling konsisten — ditentukan server (SLD)
+- Styling konsisten — ditentukan server (SLD di GeoServer, QML di QGIS Server, dll.)
 
 ❌ **Con:**
 - Hanya gambar — tidak ada data atribut langsung
@@ -482,37 +482,26 @@ Browser cukup, tapi response WMS/WFS sering panjang & berformat XML/JSON yang su
 
 | Tool | Untuk apa |
 |---|---|
-| **Hoppscotch** 🌐 | **Rekomendasi utama** — web-based, tanpa install |
+| **Hoppscotch** 🌐 | Web-based, tanpa install — rekomendasi utama |
 | **Browser + JSON Viewer** ext | Cepat untuk GeoJSON/JSON |
-| **Postman** 📮 | Alternatif jika kantor/proyek sudah pakai |
 | **`curl` + `xmllint`/`jq`** | Power user, scriptable |
 | **DevTools → Network** | Lihat request OL kirim |
 
-> Pakai Hoppscotch untuk kelas — buka browser, langsung jalan.
+> Buka Hoppscotch di browser, langsung jalan.
 
 ---
 
 # Hoppscotch untuk OGC: Workflow
 
-🔗 [hoppscotch.io](https://hoppscotch.io/) — buka di browser, tidak perlu install.
+🔗 [hoppscotch.io](https://hoppscotch.io/) — buka di browser, tanpa install.
 
 1. **Method:** `GET`
-2. Tempel URL `GetCapabilities`, misal:
-   `https://ows.terrestris.de/osm/service?SERVICE=WMS&REQUEST=GetCapabilities`
-3. **Send** → response otomatis di-pretty-print (XML/JSON)
+2. Tempel URL `GetCapabilities`
+3. **Send** → response di-pretty-print otomatis
 4. **Parameters tab** → ubah `BBOX`, `LAYERS`, `CQL_FILTER` tanpa edit URL
-5. **Save** ke koleksi → akses cepat lain hari
+5. **Save** ke koleksi untuk akses cepat lain hari
 
-**Kenapa Hoppscotch (vs Postman)?**
-- Open source, sejalan dengan semangat OGC
-- Tanpa sign-up untuk fitur dasar
-- Berjalan di browser apa pun, termasuk lab tanpa hak install
-
-```bash
-# Setara di terminal (untuk yang suka CLI):
-curl -s "URL_GETCAPABILITIES" | xmllint --format -    # XML
-curl -s "URL_GETFEATURE_JSON" | jq '.features[0]'     # JSON
-```
+> Setara terminal: `curl ... | xmllint --format -` (XML) atau `| jq` (JSON)
 
 ---
 
@@ -631,20 +620,13 @@ https://demo.pygeoapi.io/master/collections/lakes/items?f=json&limit=10
 
 ---
 
-# Keluarga Standar OGC (Ringkas)
+# Keluarga Standar OGC
 
-| Standar | Untuk apa |
-|---|---|
-| **WMS** | Peta sebagai gambar |
-| **WMTS** | Tile raster pre-rendered |
-| **WFS** | Fitur vektor |
-| **WCS** | Data raster mentah (citra) |
-| **CSW** | Catalog metadata |
-| **WPS** | Geoprocessing jarak jauh |
-| **SensorThings API** | Data IoT/sensor real-time |
-| **OGC API - \*** | Penerus modern (REST/JSON) |
-
-> Tidak perlu hafal semua — kenali ada, cari saat butuh.
+- **WMS / WMTS** — peta sebagai gambar / tile
+- **WFS** — fitur vektor
+- **WCS** — data raster mentah
+- **WPS** — geoprocessing jarak jauh
+- **OGC API - \*** — penerus modern (REST/JSON)
 
 ---
 
@@ -746,12 +728,19 @@ Pastikan GeoServer Docker:
 
 # Latihan Mandiri
 
-1. Akses `GetCapabilities` GeoServer publik atau Docker lokal — list 3 layer
-2. Susun manual URL `GetMap` untuk satu layer, buka di browser → muncul gambar
-3. Susun URL `GetFeature` dengan `OUTPUTFORMAT=application/json` → buka di browser
-4. Tambahkan filter `CQL_FILTER` untuk satu atribut
-5. Tampilkan keduanya (WMS + WFS dari layer sama) di OpenLayers, bandingkan perilaku klik
-6. (Opsional) Bandingkan WMS 1.1.1 vs 1.3.0 untuk layer EPSG:4326 — perhatikan axis order
+Bangun **aplikasi WebGIS** yang mengkonsumsi **WMS dan WFS**, lalu publish.
+
+**Minimal:**
+- Minimal 1 layer WMS + 1 layer WFS (boleh dari sumber publik mana pun)
+- Toggle visibility tiap layer
+- Popup atribut saat fitur WFS diklik
+
+**Bonus:**
+- `GetFeatureInfo` untuk WMS layer
+- `CQL_FILTER` interaktif (input/dropdown di UI)
+- Bandingkan satu layer disajikan sebagai WMS vs WFS
+
+**Keluaran:** link demo (publish bebas, GitHub Pages dsb.) + repo source.
 
 ---
 
