@@ -1,16 +1,40 @@
 /* =========================
-   CONFIG — edit these to point at your GeoServer
+   CONFIG
+   - "local"  : pakai GeoServer Docker di localhost
+   - "public" : pakai endpoint publik (Terrestris WMS + ahocevar WFS)
+   Ganti PROFILE untuk berpindah.
 ========================= */
 
-const GEOSERVER_BASE = "http://localhost:8080/geoserver";
-const WORKSPACE = "topp";        // contoh bawaan GeoServer
-const LAYER = "states";          // layer di workspace tersebut
-const INITIAL_CENTER = [-98.5, 39.5]; // [lon, lat] — disesuaikan layer
-const INITIAL_ZOOM = 4;
+const PROFILE = "public"; // "local" | "public"
 
-const QUALIFIED_LAYER = `${WORKSPACE}:${LAYER}`;
-const WMS_URL = `${GEOSERVER_BASE}/wms`;
-const WFS_URL = `${GEOSERVER_BASE}/wfs`;
+const PROFILES = {
+  local: {
+    wmsUrl: "http://localhost:8080/geoserver/wms",
+    wmsLayer: "topp:states",
+    wfsUrl: "http://localhost:8080/geoserver/wfs",
+    wfsTypename: "topp:states",
+    center: [-98.5, 39.5],
+    zoom: 4,
+  },
+  public: {
+    // Terrestris OSM-WMS — overlay layer (jalan + label, transparan)
+    wmsUrl: "https://ows.terrestris.de/osm/service",
+    wmsLayer: "OSM-Overlay-WMS",
+    // ahocevar GeoServer demo — dipakai contoh resmi OpenLayers
+    wfsUrl: "https://ahocevar.com/geoserver/wfs",
+    wfsTypename: "osm:water_areas",
+    center: [110.3695, -7.7956], // Yogyakarta
+    zoom: 12,
+  },
+};
+
+const CFG = PROFILES[PROFILE];
+const WMS_URL = CFG.wmsUrl;
+const WFS_URL = CFG.wfsUrl;
+const QUALIFIED_LAYER = CFG.wmsLayer;
+const WFS_TYPENAME = CFG.wfsTypename;
+const INITIAL_CENTER = CFG.center;
+const INITIAL_ZOOM = CFG.zoom;
 
 /* =========================
    BASEMAP
@@ -50,7 +74,7 @@ const wfsSource = new ol.source.Vector({
   url: (extent) => {
     const url =
       `${WFS_URL}?service=WFS&version=2.0.0&request=GetFeature` +
-      `&typename=${encodeURIComponent(QUALIFIED_LAYER)}` +
+      `&typename=${encodeURIComponent(WFS_TYPENAME)}` +
       `&outputFormat=application/json` +
       `&srsname=EPSG:3857` +
       `&bbox=${extent.join(",")},EPSG:3857`;

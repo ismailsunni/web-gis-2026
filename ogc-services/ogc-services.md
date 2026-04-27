@@ -56,11 +56,12 @@ Setelah sesi ini, mahasiswa mampu:
 # Outline (50 menit)
 
 1. **Mengapa Interoperabilitas?** — masalah & solusi (5')
-2. **WMS** — Web Map Service mendalam (15')
-3. **WFS** — Web Feature Service mendalam (15')
-4. **WMS vs WFS** — kapan pakai yang mana (5')
-5. **Demo Langsung** — OpenLayers + GeoServer (8')
-6. **Wrap-up** & Q&A (2')
+2. **WMS** — Web Map Service mendalam (12')
+3. **WFS** — Web Feature Service mendalam (12')
+4. **WMS vs WFS** — kapan pakai yang mana (3')
+5. **Selain WMS & WFS** — WMTS, WMS-T, Vector Tiles, OGC API (8')
+6. **Demo Langsung** — OpenLayers + GeoServer (7')
+7. **Wrap-up** & Q&A (3')
 
 ---
 
@@ -284,6 +285,27 @@ OpenLayers otomatis menyusun URL `GetMap` saat user pan/zoom.
 
 ---
 
+# WMS Publik untuk Dicoba
+
+**Terrestris OSM-WMS** (Jerman, sangat stabil)
+```
+https://ows.terrestris.de/osm/service?
+  SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities
+```
+Layer: `OSM-WMS`, `OSM-Overlay-WMS`, `TOPO-OSM-WMS`
+
+**USGS National Map** (citra satelit AS)
+```
+https://basemap.nationalmap.gov/arcgis/services/USGSImageryOnly/MapServer/WMSServer?
+  SERVICE=WMS&REQUEST=GetCapabilities
+```
+
+**Indonesia:** [tanahair.indonesia.go.id](https://tanahair.indonesia.go.id/portal-web) (BIG) dan [bmkg.go.id](https://www.bmkg.go.id/) menyediakan WMS publik — periksa endpoint terbaru.
+
+> Tempel URL `GetCapabilities` di tab browser → kalian dapat XML lengkap.
+
+---
+
 # 3️⃣ WFS — Web Feature Service
 
 ---
@@ -432,6 +454,68 @@ const wfsLayer = new ol.layer.Vector({ source: wfsSource });
 
 ---
 
+# WFS Publik untuk Dicoba
+
+**ahocevar GeoServer demo** (dipakai contoh resmi OpenLayers)
+```
+https://ahocevar.com/geoserver/wfs?
+  service=WFS&version=2.0.0&request=GetFeature&
+  typename=osm:water_areas&
+  outputFormat=application/json&
+  bbox=110.3,-7.85,110.45,-7.75,EPSG:4326
+```
+
+**GeoSolutions demo**
+```
+https://gs-stable.geosolutionsgroup.com/geoserver/wfs?
+  service=WFS&version=2.0.0&request=GetCapabilities
+```
+
+> Buka URL `GetFeature` di browser → kalian langsung dapat GeoJSON.
+> Coba ubah `bbox` atau tambah `&CQL_FILTER=...`.
+
+---
+
+# Inspeksi Response OGC dengan Tools
+
+Browser cukup, tapi response WMS/WFS sering panjang & berformat XML/JSON yang sulit dibaca mentah.
+
+| Tool | Untuk apa |
+|---|---|
+| **Hoppscotch** 🌐 | **Rekomendasi utama** — web-based, tanpa install |
+| **Browser + JSON Viewer** ext | Cepat untuk GeoJSON/JSON |
+| **Postman** 📮 | Alternatif jika kantor/proyek sudah pakai |
+| **`curl` + `xmllint`/`jq`** | Power user, scriptable |
+| **DevTools → Network** | Lihat request OL kirim |
+
+> Pakai Hoppscotch untuk kelas — buka browser, langsung jalan.
+
+---
+
+# Hoppscotch untuk OGC: Workflow
+
+🔗 [hoppscotch.io](https://hoppscotch.io/) — buka di browser, tidak perlu install.
+
+1. **Method:** `GET`
+2. Tempel URL `GetCapabilities`, misal:
+   `https://ows.terrestris.de/osm/service?SERVICE=WMS&REQUEST=GetCapabilities`
+3. **Send** → response otomatis di-pretty-print (XML/JSON)
+4. **Parameters tab** → ubah `BBOX`, `LAYERS`, `CQL_FILTER` tanpa edit URL
+5. **Save** ke koleksi → akses cepat lain hari
+
+**Kenapa Hoppscotch (vs Postman)?**
+- Open source, sejalan dengan semangat OGC
+- Tanpa sign-up untuk fitur dasar
+- Berjalan di browser apa pun, termasuk lab tanpa hak install
+
+```bash
+# Setara di terminal (untuk yang suka CLI):
+curl -s "URL_GETCAPABILITIES" | xmllint --format -    # XML
+curl -s "URL_GETFEATURE_JSON" | jq '.features[0]'     # JSON
+```
+
+---
+
 # 4️⃣ WMS vs WFS
 
 ---
@@ -466,20 +550,119 @@ const wfsLayer = new ol.layer.Vector({ source: wfsSource });
 
 ---
 
-# Ekosistem: Server yang Bicara OGC
+# 5️⃣ Selain WMS & WFS
+## Standar OGC Lainnya
+
+---
+
+# WMTS — Web Map Tile Service
+
+**Masalah WMS:** server me-render gambar setiap request → lambat, tidak bisa di-cache CDN.
+
+**Solusi WMTS:** server menyiapkan **tile** terpotong dengan skema z/x/y → bisa di-cache.
+
+```
+https://server.example.com/wmts/{layer}/{tilematrixset}/{z}/{x}/{y}.png
+```
+
+- Mirip XYZ tiles tapi dengan **metadata standar** (CRS, skala, batas)
+- Cara modern menyajikan basemap raster
+- Didukung penuh OpenLayers (`ol.source.WMTS`)
+
+> Saat kalian pakai OSM atau Esri tile → secara konsep itu adalah WMTS.
+
+---
+
+# WMS-T — WMS dengan Dimensi Waktu
+
+WMS bisa diperluas dengan dimensi **waktu** dan **elevasi**.
+
+```
+&TIME=2026-04-27T00:00:00Z
+&ELEVATION=500
+```
+
+**Sangat relevan untuk Indonesia:**
+- 🌧️ **BMKG** — radar cuaca, citra satelit Himawari per jam
+- 🛰️ **LAPAN/BRIN** — time series Sentinel/Landsat untuk tutupan lahan
+- 🔥 **Hotspot kebakaran** — animasi harian
+- 🌊 **Banjir & longsor** — monitoring temporal
+
+GeoServer mendukung WMS-T langsung jika data punya kolom waktu.
+
+---
+
+# Vector Tiles — Tile Vektor
+
+Bukan gambar, tapi **fitur vektor** dipotong per tile (Protobuf, sangat ringan).
+
+**Format dominan: Mapbox Vector Tile (MVT)**
+- Adopted as **OGC Community Standard** (2018)
+- Diserve oleh GeoServer, tegola, Martin, pg_tileserv
+- Klien: MapLibre GL JS, Mapbox GL JS, OpenLayers
+
+**Keunggulan:**
+- Ringan (data di-encode protobuf)
+- Bisa di-restyle di klien (warna, font, ikon)
+- Smooth zoom & rotation (rendering WebGL)
+
+**Format file populer:** **PMTiles** — semua tile dalam 1 file, bisa di-host di S3/GitHub Pages.
+
+---
+
+# OGC API — Generasi Baru
+
+Standar lama (WMS/WFS) berbasis XML & SOAP-style query.
+Standar baru: **REST + JSON + OpenAPI**.
+
+| Lama | Baru |
+|---|---|
+| WFS | **OGC API - Features** |
+| WMS / WMTS | **OGC API - Tiles, Maps** |
+| WPS | **OGC API - Processes** |
+| CSW | **OGC API - Records** |
+
+Contoh URL OGC API - Features:
+```
+https://demo.pygeoapi.io/master/collections/lakes/items?f=json&limit=10
+```
+
+> WFS belum ditinggalkan, tapi proyek baru sebaiknya pakai OGC API Features.
+
+---
+
+# Keluarga Standar OGC (Ringkas)
+
+| Standar | Untuk apa |
+|---|---|
+| **WMS** | Peta sebagai gambar |
+| **WMTS** | Tile raster pre-rendered |
+| **WFS** | Fitur vektor |
+| **WCS** | Data raster mentah (citra) |
+| **CSW** | Catalog metadata |
+| **WPS** | Geoprocessing jarak jauh |
+| **SensorThings API** | Data IoT/sensor real-time |
+| **OGC API - \*** | Penerus modern (REST/JSON) |
+
+> Tidak perlu hafal semua — kenali ada, cari saat butuh.
+
+---
+
+# Server yang Bicara OGC
 
 | Server | Sifat | Cocok untuk |
 |---|---|---|
 | **GeoServer** ☕ | Java, GUI, paling populer | General purpose, geoportal |
 | **MapServer** ⚡ | C, sangat cepat | High performance, batch |
 | **QGIS Server** 🦊 | Pakai project QGIS | Workflow desktop → web |
-| **PostGIS + ogc-api-features** | Modern | API-first, cloud native |
+| **pygeoapi** 🐍 | Python, OGC API native | Modern API-first |
+| **pg_tileserv / Martin** | Vector tiles dari PostGIS | Vector tile serving |
 
 > Hari ini kita pakai **GeoServer (Docker)** untuk demo.
 
 ---
 
-# 5️⃣ Demo Langsung
+# 6️⃣ Demo Langsung
 
 ---
 
@@ -535,7 +718,7 @@ Pastikan GeoServer Docker:
 
 ---
 
-# 6️⃣ Wrap-up
+# 7️⃣ Wrap-up
 
 ---
 
@@ -546,7 +729,9 @@ Pastikan GeoServer Docker:
 3. **WFS** = server mengirim **fitur vektor** → interaktif, fleksibel
 4. **`GetCapabilities`** selalu jadi titik mulai eksplorasi server
 5. Hati-hati **axis order** WMS 1.3.0 — sumber bug klasik
-6. Server populer: **GeoServer**, MapServer, QGIS Server
+6. **WMTS** untuk basemap, **WMS-T** untuk data temporal (cuaca, satelit)
+7. **Vector Tiles (MVT)** = generasi baru, ringan & restyle-able
+8. **OGC API** = penerus modern berbasis REST/JSON
 
 ---
 
@@ -574,10 +759,13 @@ Pastikan GeoServer Docker:
 
 - [OGC WMS Standard](https://www.ogc.org/standard/wms/)
 - [OGC WFS Standard](https://www.ogc.org/standard/wfs/)
-- [GeoServer Docs](https://docs.geoserver.org/)
-- [GeoServer Docker Image](https://hub.docker.com/r/geoserver/geoserver)
-- [OpenLayers TileWMS Example](https://openlayers.org/en/latest/examples/wms-tiled.html)
-- [OpenLayers WFS Example](https://openlayers.org/en/latest/examples/vector-wfs.html)
+- [OGC WMTS Standard](https://www.ogc.org/standard/wmts/)
+- [OGC API - Features](https://ogcapi.ogc.org/features/)
+- [Mapbox Vector Tile Spec (OGC Community Standard)](https://github.com/mapbox/vector-tile-spec)
+- [PMTiles](https://protomaps.com/docs/pmtiles)
+- [GeoServer Docs](https://docs.geoserver.org/) · [GeoServer Docker](https://hub.docker.com/r/geoserver/geoserver)
+- [pygeoapi](https://pygeoapi.io/) — server OGC API Python
+- [OpenLayers WMS Example](https://openlayers.org/en/latest/examples/wms-tiled.html) · [WFS Example](https://openlayers.org/en/latest/examples/vector-wfs.html)
 - [CQL Filter Reference (GeoServer)](https://docs.geoserver.org/latest/en/user/filter/ecql_reference.html)
 - [This presentation](https://github.com/ismailsunni/web-gis-2026)
 
