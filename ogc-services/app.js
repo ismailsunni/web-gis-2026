@@ -9,10 +9,11 @@ const PROFILE = "public"; // "local" | "public"
 
 const PROFILES = {
   local: {
-    wmsUrl: "http://localhost:8080/geoserver/wms",
+    wmsUrl: "http://localhost:8080/wms",
     wmsLayer: "topp:states",
-    wfsUrl: "http://localhost:8080/geoserver/wfs",
+    wfsUrl: "http://localhost:8080/wfs",
     wfsTypename: "topp:states",
+    wfsExtent: [-124.73, 24.96, -66.97, 49.37],
     center: [-98.5, 39.5],
     zoom: 4,
   },
@@ -20,11 +21,12 @@ const PROFILES = {
     // Terrestris OSM-WMS — overlay layer (jalan + label, transparan)
     wmsUrl: "https://ows.terrestris.de/osm/service",
     wmsLayer: "OSM-Overlay-WMS",
-    // ahocevar GeoServer demo — dipakai contoh resmi OpenLayers
-    wfsUrl: "https://ahocevar.com/geoserver/wfs",
-    wfsTypename: "osm:water_areas",
-    center: [110.3695, -7.7956], // Yogyakarta
-    zoom: 12,
+    // Local GeoServer (no /geoserver prefix) — Tasmania water bodies
+    wfsUrl: "http://localhost:8080/wfs",
+    wfsTypename: "topp:tasmania_water_bodies",
+    wfsExtent: [143.83, -43.65, 148.48, -39.57], // EPSG:4326 bbox of Tasmania
+    center: [146.155, -41.61], // Tasmania
+    zoom: 7,
   },
 };
 
@@ -33,6 +35,7 @@ const WMS_URL = CFG.wmsUrl;
 const WFS_URL = CFG.wfsUrl;
 const QUALIFIED_LAYER = CFG.wmsLayer;
 const WFS_TYPENAME = CFG.wfsTypename;
+const WFS_EXTENT = CFG.wfsExtent || null; // EPSG:4326, null if data covers initial view
 const INITIAL_CENTER = CFG.center;
 const INITIAL_ZOOM = CFG.zoom;
 
@@ -241,11 +244,25 @@ document.getElementById("toggle-wfs").addEventListener("change", (e) => {
 });
 
 /* =========================
+   BASEMAP SWITCHER
+========================= */
+
+document.querySelectorAll('input[name="basemap"]').forEach((radio) => {
+  radio.addEventListener("change", (e) => {
+    baseLayer.setVisible(e.target.value === "osm");
+  });
+});
+
+/* =========================
    REQUEST LOG (didactic)
 ========================= */
 
 const logEntriesEl = document.getElementById("request-log-entries");
 const MAX_LOG_ENTRIES = 8;
+
+document.getElementById("btn-clear-log").addEventListener("click", () => {
+  logEntriesEl.innerHTML = "";
+});
 
 function logRequest(kind, url) {
   const entry = document.createElement("div");
@@ -261,4 +278,21 @@ function logRequest(kind, url) {
 function shortenUrl(url) {
   if (url.length <= 240) return url;
   return url.slice(0, 220) + "…" + url.slice(-16);
+}
+
+/* =========================
+   ZOOM TO WFS EXTENT BUTTON
+   Shown only when WFS data is outside the initial map view
+========================= */
+
+const btnWfsExtent = document.getElementById("btn-wfs-extent");
+if (btnWfsExtent && WFS_EXTENT) {
+  btnWfsExtent.addEventListener("click", () => {
+    map.getView().fit(
+      ol.proj.transformExtent(WFS_EXTENT, "EPSG:4326", "EPSG:3857"),
+      { duration: 800, padding: [40, 40, 40, 40] },
+    );
+  });
+} else if (btnWfsExtent) {
+  btnWfsExtent.style.display = "none";
 }

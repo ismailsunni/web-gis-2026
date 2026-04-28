@@ -141,6 +141,21 @@
             border-radius: 3px;
         }
 
+        #btn-wfs-extent {
+            margin-top: 0.6rem;
+            width: 100%;
+            padding: 0.4rem 0.6rem;
+            font-size: 12px;
+            font-family: inherit;
+            background: var(--wfs-color);
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        #btn-wfs-extent:hover { opacity: 0.85; }
+
         /* Request log */
         #request-log {
             position: fixed;
@@ -167,6 +182,19 @@
             letter-spacing: 0.05em;
             color: var(--text-muted);
         }
+
+        #btn-clear-log {
+            font-size: 10px;
+            font-family: inherit;
+            padding: 2px 7px;
+            border: 1px solid var(--panel-border);
+            border-radius: 5px;
+            background: var(--accent-soft);
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        #btn-clear-log:hover { background: #e2e8f0; }
 
         #request-log .entry {
             padding: 0.35rem 0;
@@ -235,7 +263,18 @@
     <div id="map"></div>
 
     <div id="layer-panel">
-        <h3>Layers</h3>
+        <h3>Basemap</h3>
+        <label class="layer-toggle">
+            <input type="radio" name="basemap" value="osm" checked>
+            <span class="swatch" style="background:#94a3b8"></span>
+            <span>OSM</span>
+        </label>
+        <label class="layer-toggle">
+            <input type="radio" name="basemap" value="none">
+            <span class="swatch" style="background:#e2e8f0;border:1px solid #cbd5e1"></span>
+            <span>None</span>
+        </label>
+        <h3 style="margin-top:0.75rem">Layers</h3>
         <label class="layer-toggle">
             <input type="checkbox" id="toggle-wms" checked>
             <span class="swatch wms"></span>
@@ -246,14 +285,18 @@
             <span class="swatch wfs"></span>
             <span>WFS <code>(GeoJSON)</code></span>
         </label>
+        <button id="btn-wfs-extent">Zoom to WFS data</button>
         <div id="config-hint">
-            Edit <code>GEOSERVER_BASE</code>, <code>WORKSPACE</code>,
-            and <code>LAYER</code> at the top of <code>app.js</code>.
+            Edit <code>PROFILE</code> at the top of <code>app.js</code>
+            to switch between local &amp; public endpoints.
         </div>
     </div>
 
     <div id="request-log">
-        <h3>Request log</h3>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem">
+            <h3 style="margin:0">Request log</h3>
+            <button id="btn-clear-log" title="Clear log">✕ clear</button>
+        </div>
         <div id="request-log-entries"></div>
     </div>
 
