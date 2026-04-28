@@ -478,6 +478,30 @@ https://gs-stable.geosolutionsgroup.com/geoserver/wfs?
 
 ---
 
+# GeoServer Lokal (Opsional)
+
+Bagi yang ingin mencoba WFS dari GeoServer sendiri, jalankan via Docker:
+
+```bash
+docker run -d \
+  --name geoserver \
+  -p 8080:8080 \
+  camptocamp/geoserver:2.17
+```
+
+Akses di **http://localhost:8080** · login: `admin` / `geoserver`
+
+Layer demo sudah tersedia: `topp:states`, `topp:tasmania_water_bodies`, dll.
+
+> 💡 **Aktifkan CORS** agar bisa diakses dari browser:
+> Edit `/usr/local/tomcat/webapps/ROOT/WEB-INF/web.xml` di dalam container,
+> uncomment blok filter `cross-origin` (ganti class ke `org.apache.catalina.filters.CorsFilter`),
+> lalu restart container.
+
+Image: https://github.com/camptocamp/docker-geoserver
+
+---
+
 # Inspeksi Response OGC dengan Tools
 
 Browser cukup, tapi response WMS/WFS sering panjang & berformat XML/JSON yang sulit dibaca mentah.
