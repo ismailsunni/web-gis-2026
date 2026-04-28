@@ -464,12 +464,14 @@ https://ahocevar.com/geoserver/wfs?
   outputFormat=application/json&
   bbox=110.3,-7.85,110.45,-7.75,EPSG:4326
 ```
+⚠️ *Server ini tidak resmi — mungkin tidak available saat dicoba.*
 
 **GeoSolutions demo**
 ```
 https://gs-stable.geosolutionsgroup.com/geoserver/wfs?
   service=WFS&version=2.0.0&request=GetCapabilities
 ```
+⚠️ *Layer publik tidak selalu tersedia — perlu autentikasi atau sedang down.*
 
 > Buka URL `GetFeature` di browser → kalian langsung dapat GeoJSON.
 > Coba ubah `bbox` atau tambah `&CQL_FILTER=...`.
