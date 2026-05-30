@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LBS Demo — Apa yang Ada di Sekitar Saya?</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.8.0/dist/ol.css" />
+    <style>
+        :root {
+            --panel-bg: rgba(255, 255, 255, 0.94);
+            --panel-border: rgba(15, 23, 42, 0.08);
+            --panel-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent: #0f172a;
+            --accent-soft: #f1f5f9;
+            --me-color: #2563eb;
+            --poi-color: #db2777;
+            --ok: #059669;
+            --warn: #f59e0b;
+            --err: #dc2626;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+        }
+
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Control panel */
+        #control-panel {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 100;
+            min-width: 240px;
+            max-width: 300px;
+            padding: 0.9rem 1rem;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            box-shadow: var(--panel-shadow);
+            backdrop-filter: blur(10px);
+            font-size: 13px;
+        }
+
+        #control-panel h2 {
+            margin: 0 0 0.15rem 0;
+            font-size: 15px;
+        }
+
+        #control-panel .subtitle {
+            margin: 0 0 0.75rem 0;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        button {
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+            border-radius: 9px;
+            padding: 0.55rem 0.8rem;
+            width: 100%;
+            margin-bottom: 0.5rem;
+            transition: transform 0.05s ease, filter 0.15s ease;
+        }
+
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        #btn-locate {
+            background: var(--me-color);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        #btn-watch {
+            background: var(--accent-soft);
+            color: var(--text-main);
+        }
+
+        #btn-watch.active {
+            background: var(--ok);
+            color: #fff;
+        }
+
+        .accuracy-row {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin: 0.35rem 0 0.65rem 0;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        #status {
+            margin-top: 0.55rem;
+            padding-top: 0.55rem;
+            border-top: 1px solid var(--panel-border);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        #status .tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        #status .tag.ok { background: var(--ok); }
+        #status .tag.warn { background: var(--warn); }
+        #status .tag.err { background: var(--err); }
+        #status .tag.info { background: var(--me-color); }
+
+        #status code {
+            background: var(--accent-soft);
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+
+        /* Nearest POI list */
+        #poi-panel {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+            width: 250px;
+            padding: 0.85rem 1rem;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            box-shadow: var(--panel-shadow);
+            backdrop-filter: blur(10px);
+            font-size: 13px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        #poi-panel h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .poi-item {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.45rem 0;
+            border-bottom: 1px dashed var(--panel-border);
+        }
+
+        .poi-item:last-child { border-bottom: none; }
+
+        .poi-item .name { font-weight: 600; }
+        .poi-item .cat { font-size: 11px; color: var(--text-muted); }
+        .poi-item .dist {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--poi-color);
+            white-space: nowrap;
+        }
+
+        #poi-empty {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        /* Popup */
+        .ol-popup {
+            position: absolute;
+            background: #fff;
+            border-radius: 10px;
+            padding: 9px 13px;
+            font-size: 13px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+            max-width: 240px;
+            transform: translate(-50%, -110%);
+            line-height: 1.45;
+        }
+
+        .ol-popup b { font-size: 14px; }
+        .ol-popup .cat { font-size: 11px; color: var(--text-muted); }
+
+        #attribution-display {
+            position: fixed;
+            right: 1rem;
+            bottom: 1rem;
+            z-index: 100;
+            padding: 0.45rem 0.75rem;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            box-shadow: var(--panel-shadow);
+            backdrop-filter: blur(10px);
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            #control-panel {
+                top: 0.75rem;
+                left: 0.75rem;
+                right: 0.75rem;
+                max-width: none;
+            }
+
+            #poi-panel {
+                top: auto;
+                left: 0.75rem;
+                right: 0.75rem;
+                bottom: 1rem;
+                width: auto;
+                max-height: 32vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <div id="control-panel">
+        <h2>📍 LBS Demo</h2>
+        <p class="subtitle">Apa yang ada di sekitar saya?</p>
+
+        <button id="btn-locate">Temukan lokasi saya</button>
+        <button id="btn-watch">▶ Ikuti pergerakan (watch)</button>
+
+        <label class="accuracy-row">
+            <input type="checkbox" id="toggle-accuracy" checked>
+            Akurasi tinggi (GPS)
+        </label>
+
+        <div id="status">
+            <span class="tag info">Siap</span><br>
+            Klik <b>Temukan lokasi saya</b>. Browser akan meminta izin akses lokasi.
+        </div>
+    </div>
+
+    <div id="poi-panel">
+        <h3>Terdekat dari saya</h3>
+        <div id="poi-list"></div>
+        <div id="poi-empty">Belum ada lokasi. Temukan posisimu dulu untuk melihat
+            POI terdekat (diurutkan berdasarkan jarak Haversine).</div>
+    </div>
+
+    <div id="attribution-display">© OpenStreetMap · Geolocation API · OpenLayers</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/ol@10.8.0/dist/ol.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
