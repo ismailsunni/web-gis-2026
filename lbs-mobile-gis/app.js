@@ -102,6 +102,7 @@ const meLayer = new ol.layer.Vector({
 const map = new ol.Map({
   target: "map",
   layers: [baseLayer, poiLayer, meLayer],
+  controls: [], // no default OL controls; pan/zoom via mouse, scroll, pinch
   view: new ol.View({
     center: ol.proj.fromLonLat(INITIAL_CENTER),
     zoom: INITIAL_ZOOM,
