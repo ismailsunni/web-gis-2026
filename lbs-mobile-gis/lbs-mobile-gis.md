@@ -293,7 +293,14 @@ navigator.permissions.query({ name: "geolocation" })
 
 # Alur Kerja LBS: Langkah demi Langkah
 
-![Alur Kerja LBS di Mobile](diagrams/lbs-workflow.png)
+1. Pengguna **buka aplikasi** / fitur lokasi
+2. Aplikasi **minta izin** akses lokasi → *(granted)*
+3. OS **aktifkan sensor** → tentukan posisi (GPS / WiFi / Cell)
+4. Aplikasi **terima koordinat** (lat, lon, accuracy)
+5. **Kirim koordinat** ke server (query spasial)
+6. Server **cari data relevan** (POI terdekat, dsb.)
+7. **Tampilkan hasil** di peta / daftar ke pengguna
+8. *(opsional)* **`watchPosition`** → ulangi dari langkah 4 saat bergerak
 
 ---
 

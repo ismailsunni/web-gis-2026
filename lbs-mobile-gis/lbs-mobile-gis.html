@@ -359,7 +359,16 @@ navigator.<span class="hljs-property">geolocation</span>.<span class="hljs-title
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="23" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="alur-kerja-lbs-langkah-demi-langkah">Alur Kerja LBS: Langkah demi Langkah</h1>
-<p><img src="diagrams/lbs-workflow.png" alt="Alur Kerja LBS di Mobile" /></p>
+<ol>
+<li>Pengguna <strong>buka aplikasi</strong> / fitur lokasi</li>
+<li>Aplikasi <strong>minta izin</strong> akses lokasi → <em>(granted)</em></li>
+<li>OS <strong>aktifkan sensor</strong> → tentukan posisi (GPS / WiFi / Cell)</li>
+<li>Aplikasi <strong>terima koordinat</strong> (lat, lon, accuracy)</li>
+<li><strong>Kirim koordinat</strong> ke server (query spasial)</li>
+<li>Server <strong>cari data relevan</strong> (POI terdekat, dsb.)</li>
+<li><strong>Tampilkan hasil</strong> di peta / daftar ke pengguna</li>
+<li><em>(opsional)</em> <strong><code>watchPosition</code></strong> → ulangi dari langkah 4 saat bergerak</li>
+</ol>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="24" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="contoh-konkret-warung-makan-terdekat">Contoh Konkret: &quot;Warung Makan Terdekat&quot;</h1>
