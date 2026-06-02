@@ -1,0 +1,6 @@
+flowchart LR
+    U["Pengguna\n+ Perangkat"] -->|"1. minta posisi"| S["Sensor Lokasi\n(GPS / WiFi / Cell)"]
+    S -->|"2. koordinat"| U
+    U -->|"3. kirim lokasi"| A["Aplikasi / Client"]
+    A -->|"4. query spasial"| D["Server + Basis Data Spasial\n(PostGIS, API)"]
+    D -->|"5. hasil relevan"| A

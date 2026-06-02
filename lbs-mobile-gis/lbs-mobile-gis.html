@@ -148,18 +148,7 @@ Sekolah Vokasi, UGM</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="11" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="11" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="anatomi-sebuah-layanan-lbs">Anatomi Sebuah Layanan LBS</h1>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code>┌──────────────┐   1. minta posisi    ┌─────────────────┐
-│   Pengguna   │ ───────────────────<img class="emoji" draggable="false" alt="▶" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/25b6.svg" data-marp-twemoji=""/> │  Perangkat +    │
-│  + Perangkat │ <img class="emoji" draggable="false" alt="◀" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/25c0.svg" data-marp-twemoji=""/>─────────────────── │  Sensor Lokasi  │
-└──────┬───────┘   2. koordinat       │  (GPS/WiFi/Cell)│
-       │ 3. kirim lokasi              └─────────────────┘
-       ▼
-┌──────────────┐   4. query spasial   ┌─────────────────┐
-│  Aplikasi /  │ ───────────────────<img class="emoji" draggable="false" alt="▶" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/25b6.svg" data-marp-twemoji=""/> │  Server + Basis │
-│   Client     │ <img class="emoji" draggable="false" alt="◀" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/25c0.svg" data-marp-twemoji=""/>─────────────────── │  Data Spasial   │
-└──────────────┘   5. hasil relevan   │  (PostGIS, API) │
-                                      └─────────────────┘
-</code></pre>
+<p><img src="diagrams/lbs-anatomy.png" alt="Anatomi Layanan LBS" /></p>
 <p><strong>Lima komponen klasik LBS:</strong></p>
 <ol>
 <li><strong>Perangkat</strong> (HP, browser)  2. <strong>Jaringan</strong> (internet/seluler)</li>
@@ -370,22 +359,7 @@ navigator.<span class="hljs-property">geolocation</span>.<span class="hljs-title
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="23" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="alur-kerja-lbs-langkah-demi-langkah">Alur Kerja LBS: Langkah demi Langkah</h1>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code>1. Pengguna buka aplikasi / fitur lokasi
-         │
-2. Aplikasi MINTA IZIN akses lokasi
-         │ (granted)
-3. OS aktifkan sensor → tentukan posisi (GPS/WiFi/Cell)
-         │
-4. Aplikasi terima koordinat (lat, lon, accuracy)
-         │
-5. Kirim koordinat ke SERVER (query spasial)
-         │
-6. Server cari data relevan (POI terdekat, dsb.)
-         │
-7. Tampilkan hasil di peta / daftar ke pengguna
-         │
-8. (opsional) watchPosition → update saat bergerak
-</code></pre>
+<p><img src="diagrams/lbs-workflow.png" alt="Alur Kerja LBS di Mobile" /></p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="24" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="contoh-konkret-warung-makan-terdekat">Contoh Konkret: &quot;Warung Makan Terdekat&quot;</h1>
@@ -408,28 +382,7 @@ navigator.<span class="hljs-property">geolocation</span>.<span class="hljs-title
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="26" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="arsitektur-lbs-sederhana">Arsitektur LBS Sederhana</h1>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code>┌─────────────────────────────┐
-│         CLIENT              │
-│  Browser / Mobile App       │
-│  • Geolocation API          │
-│  • Peta (OpenLayers/Leaflet)│
-│  • UI: tombol, daftar, popup │
-└──────────────┬──────────────┘
-               │ HTTP/HTTPS (REST/JSON)
-               ▼
-┌─────────────────────────────┐
-│         SERVER             │
-│  • API endpoint (REST)      │
-│  • Logika query spasial     │
-└──────────────┬──────────────┘
-               │ SQL spasial
-               ▼
-┌─────────────────────────────┐
-│      DATABASE SPASIAL       │
-│  PostGIS / SpatiaLite       │
-│  • POI, jalan, area, dsb.   │
-└─────────────────────────────┘
-</code></pre>
+<p><img src="diagrams/lbs-architecture.png" alt="Arsitektur LBS Sederhana" /></p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="27" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="27" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="pembagian-tanggung-jawab">Pembagian Tanggung Jawab</h1>
@@ -466,16 +419,10 @@ navigator.<span class="hljs-property">geolocation</span>.<span class="hljs-title
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="28" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="versi-paling-sederhana-client-only">Versi Paling Sederhana (Client-Only)</h1>
 <p>Tanpa server — cukup untuk belajar konsep:</p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-comment">// 1. Ambil posisi pengguna</span>
-navigator.<span class="hljs-property">geolocation</span>.<span class="hljs-title function_">getCurrentPosition</span>(<span class="hljs-function">(<span class="hljs-params">pos</span>) =&gt;</span> {
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript">navigator.<span class="hljs-property">geolocation</span>.<span class="hljs-title function_">getCurrentPosition</span>(<span class="hljs-function">(<span class="hljs-params">pos</span>) =&gt;</span> {
   <span class="hljs-keyword">const</span> me = [pos.<span class="hljs-property">coords</span>.<span class="hljs-property">longitude</span>, pos.<span class="hljs-property">coords</span>.<span class="hljs-property">latitude</span>];
-
-  <span class="hljs-comment">// 2. Hitung jarak ke tiap POI (data inline)</span>
-  poiList.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
-    p.<span class="hljs-property">jarak</span> = <span class="hljs-title function_">haversine</span>(me, [p.<span class="hljs-property">lon</span>, p.<span class="hljs-property">lat</span>]); <span class="hljs-comment">// km</span>
-  });
-
-  <span class="hljs-comment">// 3. Urutkan &amp; tampilkan yang terdekat</span>
+  <span class="hljs-comment">// Hitung jarak ke tiap POI (data inline), urutkan, tampilkan</span>
+  poiList.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-property">jarak</span> = <span class="hljs-title function_">haversine</span>(me, [p.<span class="hljs-property">lon</span>, p.<span class="hljs-property">lat</span>]));
   poiList.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a.<span class="hljs-property">jarak</span> - b.<span class="hljs-property">jarak</span>);
   <span class="hljs-title function_">renderDaftar</span>(poiList.<span class="hljs-title function_">slice</span>(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>));
   <span class="hljs-title function_">tampilkanDiPeta</span>(me, poiList);
@@ -584,7 +531,7 @@ navigator.<span class="hljs-property">geolocation</span>.<span class="hljs-title
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="35" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="35" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="tantangan-cara-menguji-lbs">Tantangan: Cara Menguji LBS</h1>
-<p>Lokasi berubah-ubah — bagaimana menguji tanpa harus berjalan keliling kota?</p>
+<p>Lokasi berubah-ubah — bagaimana menguji tanpa berjalan keliling kota?</p>
 <table>
 <thead>
 <tr>
@@ -611,10 +558,7 @@ navigator.<span class="hljs-property">geolocation</span>.<span class="hljs-title
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>Mulai dari <strong>DevTools</strong> (cepat) → naik ke <strong>HP asli</strong> untuk validasi.</p>
-</blockquote>
-<p><strong>Ingat dua syarat wajib:</strong></p>
+<p><strong>Dua syarat wajib:</strong></p>
 <ul>
 <li><img class="emoji" draggable="false" alt="🔒" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/1f512.svg" data-marp-twemoji=""/> <strong>HTTPS atau <code>localhost</code></strong> — Geolocation tidak jalan di <code>http://</code> biasa</li>
 <li><img class="emoji" draggable="false" alt="✅" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/2705.svg" data-marp-twemoji=""/> <strong>Izin diberikan</strong> — siapkan juga skenario izin <strong>ditolak</strong></li>
@@ -626,24 +570,15 @@ navigator.<span class="hljs-property">geolocation</span>.<span class="hljs-title
 <p><strong>Langkah:</strong></p>
 <ol>
 <li>Buka halaman LBS kalian (<code>localhost</code> / HTTPS)</li>
-<li><code>F12</code> → buka <strong>DevTools</strong></li>
-<li><code>Ctrl/Cmd + Shift + P</code> → ketik <strong>&quot;Sensors&quot;</strong> → <em>Show Sensors</em>
-<ul>
-<li>(atau: ⋮ → More tools → <strong>Sensors</strong>)</li>
-</ul>
-</li>
+<li><code>F12</code> → <strong>DevTools</strong> → <code>Ctrl/Cmd + Shift + P</code> → ketik <strong>&quot;Sensors&quot;</strong></li>
 <li>Panel <strong>Location</strong>:
 <ul>
-<li>Pilih preset kota (Tokyo, Berlin, …), <strong>atau</strong></li>
-<li><strong>Other…</strong> → isi <code>Latitude</code> &amp; <code>Longitude</code> sendiri</li>
-<li>Pilih <strong>&quot;Location unavailable&quot;</strong> untuk menguji <strong>error</strong>!</li>
+<li>Pilih preset kota (Tokyo, Berlin, …), <strong>atau</strong> <strong>Other…</strong> → isi <code>Latitude</code> &amp; <code>Longitude</code></li>
+<li>Pilih <strong>&quot;Location unavailable&quot;</strong> → menguji <code>POSITION_UNAVAILABLE</code> &amp; fallback</li>
 </ul>
 </li>
 <li>Reload / klik tombol lokasi → app memakai koordinat palsu</li>
 </ol>
-<blockquote>
-<p><img class="emoji" draggable="false" alt="💡" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/1f4a1.svg" data-marp-twemoji=""/> Set ke <em>Location unavailable</em> untuk menguji <code>POSITION_UNAVAILABLE</code> &amp; fallback.</p>
-</blockquote>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="37" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="37" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="debug-1-sensors--simulasi-gerak">Debug 1: Sensors — Simulasi Gerak</h1>
@@ -668,19 +603,11 @@ navigator.<span class="hljs-property">geolocation</span>.<span class="hljs-title
 <p><strong>Android (paling umum):</strong></p>
 <ol>
 <li><strong>Settings → About phone</strong> → tap <strong>Build number</strong> 7× → aktif <em>Developer options</em></li>
-<li><strong>Developer options → Select mock location app</strong> → pilih aplikasi fake GPS</li>
-<li>Install <strong>Fake GPS</strong> (mis. <em>Fake GPS Location</em>, <em>Lockito</em> untuk simulasi rute)</li>
-<li>Set titik / gambar rute di app fake GPS → jalankan</li>
-<li>Buka halaman LBS di Chrome Android → posisi mengikuti fake GPS</li>
+<li><strong>Developer options → Select mock location app</strong> → pilih app fake GPS</li>
+<li>Install <strong>Fake GPS</strong> (mis. <em>Lockito</em> bisa <strong>menjalankan rute</strong> → uji <code>watchPosition</code>)</li>
+<li>Set titik / rute di app → buka halaman LBS di Chrome Android → posisi mengikuti</li>
 </ol>
-<p><strong>iOS:</strong></p>
-<ul>
-<li>Lebih ketat — butuh <strong>Xcode → Simulator</strong> (Features → Location) atau<br />
-tool seperti <strong>iMazing</strong> (set lokasi via Mac). Tidak ada mock app native sederhana.</li>
-</ul>
-<blockquote>
-<p><em>Lockito</em> bisa <strong>menjalankan rute</strong> → bagus untuk uji <code>watchPosition</code> saat &quot;bergerak&quot;.</p>
-</blockquote>
+<p><strong>iOS:</strong> lebih ketat — butuh <strong>Xcode → Simulator</strong> (Features → Location) atau <strong>iMazing</strong> (set lokasi via Mac).</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="39" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="39" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="debug-2-hp-asli--akses-halaman-lokal">Debug 2: HP Asli — Akses Halaman Lokal</h1>
@@ -695,11 +622,11 @@ tool seperti <strong>iMazing</strong> (set lokasi via Mac). Tidak ada mock app n
 <tbody>
 <tr>
 <td><img class="emoji" draggable="false" alt="🌐" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/1f310.svg" data-marp-twemoji=""/> <strong>Publish (GitHub Pages/Vercel)</strong></td>
-<td>HTTPS otomatis — paling mudah</td>
+<td>HTTPS otomatis — <strong>paling mudah</strong></td>
 </tr>
 <tr>
 <td><img class="emoji" draggable="false" alt="🔌" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/1f50c.svg" data-marp-twemoji=""/> <strong><code>chrome://inspect</code> (Port forwarding)</strong></td>
-<td>HP via USB → akses <code>localhost</code> laptop, HTTPS aman</td>
+<td>HP via USB → akses <code>localhost</code> laptop</td>
 </tr>
 <tr>
 <td><img class="emoji" draggable="false" alt="🚇" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/1f687.svg" data-marp-twemoji=""/> <strong>Tunnel (ngrok / cloudflared)</strong></td>
@@ -707,17 +634,12 @@ tool seperti <strong>iMazing</strong> (set lokasi via Mac). Tidak ada mock app n
 </tr>
 <tr>
 <td><img class="emoji" draggable="false" alt="📶" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/1f4f6.svg" data-marp-twemoji=""/> <strong>IP LAN (<code>http://192.168.x.x</code>)</strong></td>
-<td><img class="emoji" draggable="false" alt="⚠️" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/26a0.svg" data-marp-twemoji=""/> HTTP biasa → Geolocation <strong>diblokir</strong> kecuali HTTPS</td>
+<td><img class="emoji" draggable="false" alt="⚠️" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/26a0.svg" data-marp-twemoji=""/> HTTP biasa → Geolocation <strong>diblokir</strong></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Bonus — remote debugging HP Android:</strong></p>
-<ul>
-<li>HP via USB → <code>chrome://inspect</code> di Chrome desktop → <strong>inspect</strong> tab HP</li>
-<li>Lihat console, Network, dan error langsung dari layar HP</li>
-</ul>
 <blockquote>
-<p>Cara paling bebas masalah: <strong>publish ke HTTPS</strong>, lalu buka di HP.</p>
+<p><strong>Bonus:</strong> HP via USB → <code>chrome://inspect</code> juga untuk <strong>remote debugging</strong> (console, Network, error dari layar HP).</p>
 </blockquote>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="40" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="40" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
@@ -777,17 +699,12 @@ tool seperti <strong>iMazing</strong> (set lokasi via Mac). Tidak ada mock app n
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="45" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="45" style="--paginate:true;--theme:default;" data-marpit-pagination-total="45" data-size="16:9">
 <h1 id="%F0%9F%93%9A-referensi"><img class="emoji" draggable="false" alt="📚" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/svg/1f4da.svg" data-marp-twemoji=""/> Referensi</h1>
 <ul>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API">MDN: Geolocation API</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API">MDN: Using the Geolocation API</a></li>
-<li><a href="https://www.w3.org/TR/geolocation/">W3C Geolocation API Spec</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API">MDN: Permissions API</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API">MDN: Using the Geolocation API</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API">Permissions API</a></li>
 <li><a href="https://postgis.net/docs/ST_DWithin.html">PostGIS: ST_DWithin</a> · <a href="https://postgis.net/docs/ST_Distance.html">ST_Distance</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/sensors/">Chrome DevTools: Override geolocation (Sensors)</a></li>
-<li><a href="https://developer.chrome.com/docs/devtools/remote-debugging/">Chrome: Remote debug Android (<code>chrome://inspect</code>)</a></li>
+<li><a href="https://developer.chrome.com/docs/devtools/sensors/">Chrome DevTools: Override geolocation (Sensors)</a> · <a href="https://developer.chrome.com/docs/devtools/remote-debugging/">Remote debug Android</a></li>
 <li><a href="https://developer.android.com/studio/debug/dev-options">Android: Mock location / Developer options</a></li>
 <li><a href="https://ngrok.com/">ngrok</a> · <a href="https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/">cloudflared tunnel</a> — expose <code>localhost</code> via HTTPS</li>
-<li><a href="https://openlayers.org/en/latest/examples/geolocation.html">OpenLayers Geolocation Example</a></li>
-<li><a href="https://leafletjs.com/reference.html#map-locate">Leaflet: locate()</a></li>
+<li><a href="https://openlayers.org/en/latest/examples/geolocation.html">OpenLayers Geolocation</a> · <a href="https://leafletjs.com/reference.html#map-locate">Leaflet: locate()</a></li>
 <li><a href="https://github.com/ismailsunni/web-gis-2026">This presentation</a></li>
 </ul>
 <blockquote>

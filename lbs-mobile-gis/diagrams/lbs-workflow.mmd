@@ -1,0 +1,8 @@
+flowchart LR
+    S1["1. Pengguna buka aplikasi / fitur lokasi"] --> S2["2. Aplikasi MINTA IZIN akses lokasi"]
+    S2 -->|granted| S3["3. OS aktifkan sensor -> tentukan posisi\n(GPS / WiFi / Cell)"]
+    S3 --> S4["4. Aplikasi terima koordinat\n(lat, lon, accuracy)"]
+    S4 --> S5["5. Kirim koordinat ke SERVER\n(query spasial)"]
+    S5 --> S6["6. Server cari data relevan\n(POI terdekat, dsb.)"]
+    S6 --> S7["7. Tampilkan hasil di peta / daftar ke pengguna"]
+    S7 -.->|"8. opsional: watchPosition\nupdate saat bergerak"| S4

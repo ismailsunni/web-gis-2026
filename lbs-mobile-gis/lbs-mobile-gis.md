@@ -117,19 +117,7 @@ Setelah sesi ini, mahasiswa mampu:
 
 # Anatomi Sebuah Layanan LBS
 
-```
-┌──────────────┐   1. minta posisi    ┌─────────────────┐
-│   Pengguna   │ ───────────────────▶ │  Perangkat +    │
-│  + Perangkat │ ◀─────────────────── │  Sensor Lokasi  │
-└──────┬───────┘   2. koordinat       │  (GPS/WiFi/Cell)│
-       │ 3. kirim lokasi              └─────────────────┘
-       ▼
-┌──────────────┐   4. query spasial   ┌─────────────────┐
-│  Aplikasi /  │ ───────────────────▶ │  Server + Basis │
-│   Client     │ ◀─────────────────── │  Data Spasial   │
-└──────────────┘   5. hasil relevan   │  (PostGIS, API) │
-                                      └─────────────────┘
-```
+![Anatomi Layanan LBS](diagrams/lbs-anatomy.png)
 
 **Lima komponen klasik LBS:**
 1. **Perangkat** (HP, browser)  2. **Jaringan** (internet/seluler)
@@ -305,23 +293,7 @@ navigator.permissions.query({ name: "geolocation" })
 
 # Alur Kerja LBS: Langkah demi Langkah
 
-```
-1. Pengguna buka aplikasi / fitur lokasi
-         │
-2. Aplikasi MINTA IZIN akses lokasi
-         │ (granted)
-3. OS aktifkan sensor → tentukan posisi (GPS/WiFi/Cell)
-         │
-4. Aplikasi terima koordinat (lat, lon, accuracy)
-         │
-5. Kirim koordinat ke SERVER (query spasial)
-         │
-6. Server cari data relevan (POI terdekat, dsb.)
-         │
-7. Tampilkan hasil di peta / daftar ke pengguna
-         │
-8. (opsional) watchPosition → update saat bergerak
-```
+![Alur Kerja LBS di Mobile](diagrams/lbs-workflow.png)
 
 ---
 
@@ -348,29 +320,7 @@ navigator.permissions.query({ name: "geolocation" })
 
 # Arsitektur LBS Sederhana
 
-```
-┌─────────────────────────────┐
-│         CLIENT              │
-│  Browser / Mobile App       │
-│  • Geolocation API          │
-│  • Peta (OpenLayers/Leaflet)│
-│  • UI: tombol, daftar, popup │
-└──────────────┬──────────────┘
-               │ HTTP/HTTPS (REST/JSON)
-               ▼
-┌─────────────────────────────┐
-│         SERVER             │
-│  • API endpoint (REST)      │
-│  • Logika query spasial     │
-└──────────────┬──────────────┘
-               │ SQL spasial
-               ▼
-┌─────────────────────────────┐
-│      DATABASE SPASIAL       │
-│  PostGIS / SpatiaLite       │
-│  • POI, jalan, area, dsb.   │
-└─────────────────────────────┘
-```
+![Arsitektur LBS Sederhana](diagrams/lbs-architecture.png)
 
 ---
 
@@ -392,16 +342,10 @@ navigator.permissions.query({ name: "geolocation" })
 Tanpa server — cukup untuk belajar konsep:
 
 ```javascript
-// 1. Ambil posisi pengguna
 navigator.geolocation.getCurrentPosition((pos) => {
   const me = [pos.coords.longitude, pos.coords.latitude];
-
-  // 2. Hitung jarak ke tiap POI (data inline)
-  poiList.forEach(p => {
-    p.jarak = haversine(me, [p.lon, p.lat]); // km
-  });
-
-  // 3. Urutkan & tampilkan yang terdekat
+  // Hitung jarak ke tiap POI (data inline), urutkan, tampilkan
+  poiList.forEach(p => p.jarak = haversine(me, [p.lon, p.lat]));
   poiList.sort((a, b) => a.jarak - b.jarak);
   renderDaftar(poiList.slice(0, 5));
   tampilkanDiPeta(me, poiList);
@@ -492,7 +436,7 @@ Lokasi pengguna bisa mengungkap **rumah, tempat kerja, kebiasaan**.
 
 # Tantangan: Cara Menguji LBS
 
-Lokasi berubah-ubah — bagaimana menguji tanpa harus berjalan keliling kota?
+Lokasi berubah-ubah — bagaimana menguji tanpa berjalan keliling kota?
 
 | Cara | Untuk apa | Realisme |
 |---|---|---|
@@ -500,9 +444,7 @@ Lokasi berubah-ubah — bagaimana menguji tanpa harus berjalan keliling kota?
 | 📱 **HP asli + Fake GPS app** | Simulasi gerak di perangkat nyata | Mendekati produksi |
 | 🚶 **HP asli + jalan beneran** | Validasi akhir akurasi GPS | Paling nyata |
 
-> Mulai dari **DevTools** (cepat) → naik ke **HP asli** untuk validasi.
-
-**Ingat dua syarat wajib:**
+**Dua syarat wajib:**
 - 🔒 **HTTPS atau `localhost`** — Geolocation tidak jalan di `http://` biasa
 - ✅ **Izin diberikan** — siapkan juga skenario izin **ditolak**
 
@@ -514,16 +456,11 @@ Override lokasi langsung di browser desktop, **tanpa GPS**.
 
 **Langkah:**
 1. Buka halaman LBS kalian (`localhost` / HTTPS)
-2. `F12` → buka **DevTools**
-3. `Ctrl/Cmd + Shift + P` → ketik **"Sensors"** → *Show Sensors*
-   - (atau: ⋮ → More tools → **Sensors**)
-4. Panel **Location**:
-   - Pilih preset kota (Tokyo, Berlin, …), **atau**
-   - **Other…** → isi `Latitude` & `Longitude` sendiri
-   - Pilih **"Location unavailable"** untuk menguji **error**!
-5. Reload / klik tombol lokasi → app memakai koordinat palsu
-
-> 💡 Set ke *Location unavailable* untuk menguji `POSITION_UNAVAILABLE` & fallback.
+2. `F12` → **DevTools** → `Ctrl/Cmd + Shift + P` → ketik **"Sensors"**
+3. Panel **Location**:
+   - Pilih preset kota (Tokyo, Berlin, …), **atau** **Other…** → isi `Latitude` & `Longitude`
+   - Pilih **"Location unavailable"** → menguji `POSITION_UNAVAILABLE` & fallback
+4. Reload / klik tombol lokasi → app memakai koordinat palsu
 
 ---
 
@@ -549,16 +486,11 @@ Uji di perangkat nyata, tapi dengan lokasi yang **kita kontrol**.
 
 **Android (paling umum):**
 1. **Settings → About phone** → tap **Build number** 7× → aktif *Developer options*
-2. **Developer options → Select mock location app** → pilih aplikasi fake GPS
-3. Install **Fake GPS** (mis. *Fake GPS Location*, *Lockito* untuk simulasi rute)
-4. Set titik / gambar rute di app fake GPS → jalankan
-5. Buka halaman LBS di Chrome Android → posisi mengikuti fake GPS
+2. **Developer options → Select mock location app** → pilih app fake GPS
+3. Install **Fake GPS** (mis. *Lockito* bisa **menjalankan rute** → uji `watchPosition`)
+4. Set titik / rute di app → buka halaman LBS di Chrome Android → posisi mengikuti
 
-**iOS:**
-- Lebih ketat — butuh **Xcode → Simulator** (Features → Location) atau
-  tool seperti **iMazing** (set lokasi via Mac). Tidak ada mock app native sederhana.
-
-> *Lockito* bisa **menjalankan rute** → bagus untuk uji `watchPosition` saat "bergerak".
+**iOS:** lebih ketat — butuh **Xcode → Simulator** (Features → Location) atau **iMazing** (set lokasi via Mac).
 
 ---
 
@@ -568,16 +500,12 @@ Halaman di laptop kalian (`localhost`) — bagaimana membukanya dari HP?
 
 | Cara | Catatan |
 |---|---|
-| 🌐 **Publish (GitHub Pages/Vercel)** | HTTPS otomatis — paling mudah |
-| 🔌 **`chrome://inspect` (Port forwarding)** | HP via USB → akses `localhost` laptop, HTTPS aman |
+| 🌐 **Publish (GitHub Pages/Vercel)** | HTTPS otomatis — **paling mudah** |
+| 🔌 **`chrome://inspect` (Port forwarding)** | HP via USB → akses `localhost` laptop |
 | 🚇 **Tunnel (ngrok / cloudflared)** | URL HTTPS publik sementara ke server lokal |
-| 📶 **IP LAN (`http://192.168.x.x`)** | ⚠️ HTTP biasa → Geolocation **diblokir** kecuali HTTPS |
+| 📶 **IP LAN (`http://192.168.x.x`)** | ⚠️ HTTP biasa → Geolocation **diblokir** |
 
-**Bonus — remote debugging HP Android:**
-- HP via USB → `chrome://inspect` di Chrome desktop → **inspect** tab HP
-- Lihat console, Network, dan error langsung dari layar HP
-
-> Cara paling bebas masalah: **publish ke HTTPS**, lalu buka di HP.
+> **Bonus:** HP via USB → `chrome://inspect` juga untuk **remote debugging** (console, Network, error dari layar HP).
 
 ---
 
@@ -642,17 +570,12 @@ Bangun **aplikasi LBS sederhana**, lalu publish.
 
 # 📚 Referensi
 
-- [MDN: Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
-- [MDN: Using the Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API)
-- [W3C Geolocation API Spec](https://www.w3.org/TR/geolocation/)
-- [MDN: Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API)
+- [MDN: Using the Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API) · [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API)
 - [PostGIS: ST_DWithin](https://postgis.net/docs/ST_DWithin.html) · [ST_Distance](https://postgis.net/docs/ST_Distance.html)
-- [Chrome DevTools: Override geolocation (Sensors)](https://developer.chrome.com/docs/devtools/sensors/)
-- [Chrome: Remote debug Android (`chrome://inspect`)](https://developer.chrome.com/docs/devtools/remote-debugging/)
+- [Chrome DevTools: Override geolocation (Sensors)](https://developer.chrome.com/docs/devtools/sensors/) · [Remote debug Android](https://developer.chrome.com/docs/devtools/remote-debugging/)
 - [Android: Mock location / Developer options](https://developer.android.com/studio/debug/dev-options)
 - [ngrok](https://ngrok.com/) · [cloudflared tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) — expose `localhost` via HTTPS
-- [OpenLayers Geolocation Example](https://openlayers.org/en/latest/examples/geolocation.html)
-- [Leaflet: locate()](https://leafletjs.com/reference.html#map-locate)
+- [OpenLayers Geolocation](https://openlayers.org/en/latest/examples/geolocation.html) · [Leaflet: locate()](https://leafletjs.com/reference.html#map-locate)
 - [This presentation](https://github.com/ismailsunni/web-gis-2026)
 
 > Selamat membangun aplikasi yang tahu di mana penggunanya — dengan bertanggung jawab!

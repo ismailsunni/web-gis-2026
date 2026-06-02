@@ -1,0 +1,6 @@
+flowchart TD
+    C["<b>CLIENT</b> — Browser / Mobile App\nGeolocation API\nPeta (OpenLayers / Leaflet)\nUI: tombol, daftar, popup"]
+    S["<b>SERVER</b>\nAPI endpoint (REST)\nLogika query spasial"]
+    D["<b>DATABASE SPASIAL</b>\nPostGIS / SpatiaLite\nPOI, jalan, area, dsb."]
+    C -->|"HTTP/HTTPS (REST/JSON)"| S
+    S -->|"SQL spasial"| D
