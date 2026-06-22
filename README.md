@@ -6,62 +6,72 @@ Repositori GitHub:
 - https://github.com/ismailsunni/web-gis-2026
 
 Repositori ini berisi:
-- slide presentasi mingguan dalam format Markdown
-- demo WebGIS sederhana berbasis HTML, CSS, dan JavaScript
-- contoh implementasi peta dengan pendekatan client-side tanpa backend penuh
+- halaman utama (`index.html`) yang menautkan seluruh materi dan demo
+- slide presentasi mingguan dalam format Markdown beserta hasil build HTML/PDF
+- demo WebGIS sederhana berbasis HTML, CSS, dan JavaScript (client-side, tanpa backend penuh)
+- rekap submission tugas mahasiswa
 
 ## Highlight Materi
 
 Topik utama yang dibahas dalam repositori ini:
-- perbandingan WebGIS vs Desktop GIS
-- pemilihan Maps API: Leaflet, Google Maps, OpenLayers
+- dasar pemrograman internet: HTML, CSS, JavaScript, DOM, dan event
+- perbandingan WebGIS vs Desktop GIS serta pemilihan Maps API (Leaflet, Google Maps, OpenLayers)
+- konsumsi dan visualisasi layanan OGC (WMS & WFS) dari GeoServer di OpenLayers
+- Location-Based Services (LBS) & Mobile GIS: Geolocation API, sumber lokasi, privasi & baterai
 - strategi publikasi dan akses peta interaktif di web
-- contoh WebGIS sederhana berbasis OpenLayers
-
-## File Penting
-
-- `web-gis-development/web-gis-development.md` — sumber slide utama
-- `web-gis-development/web-gis-development.html` — hasil build slide HTML
-- `web-gis-development/web-gis-development.pdf` — hasil build slide PDF
-- `web-gis-development/index.html` — demo WebGIS OpenLayers
-- `web-gis-development/app.js` — logika demo peta
 
 ## Struktur Repo
 
+- `index.html` — halaman utama yang menautkan demo, slide, dan rekap tugas tiap topik
+
 ### `internet-programming/`
-Materi pengantar JavaScript dan mini WebGIS tanpa library pemetaan.
+Pengantar JavaScript (DOM, event) dan mini WebGIS tanpa library pemetaan.
 
 ### `web-gis-development/`
-Materi utama tentang:
-- perbandingan WebGIS vs Desktop GIS
-- ragam Maps API: Leaflet, Google Maps, OpenLayers
-- strategi publikasi dan akses peta interaktif di web
-- demo WebGIS berbasis OpenLayers
+Arsitektur WebGIS, ragam Maps API, dan demo peta interaktif berbasis OpenLayers.
+
+### `ogc-services/`
+Standar interoperabilitas OGC — konsumsi WMS & WFS dari GeoServer di OpenLayers.
+
+### `lbs-mobile-gis/`
+Location-Based Services & Mobile GIS — Geolocation API, sumber lokasi, alur kerja LBS.
 
 ### `examples/`
-Contoh minimal dan eksperimen kecil terkait tampilan peta.
+Contoh minimal penempatan marker pada peta.
+
+### `homework/`
+Rekap submission tugas mahasiswa dalam bentuk halaman web (dapat disortir & difilter):
+- `homework/week-7.html` — tugas Mini WebGIS (ditautkan dari kartu *Web GIS Development*)
+- `homework/week-11.html` — tugas Visualisasi WMS & WFS (ditautkan dari kartu *OGC Services*)
+
+### `tugas/`
+Perkakas pembuat rekap:
+- `recap_week7.py`, `recap_week11.py` — ekstraksi link GitHub repo & live deployment dari PDF submission, lalu menghasilkan CSV/Markdown dan halaman `homework/week-*.html`
+- `week7_recap.csv` / `.md`, `week11_recap.csv` / `.md` — hasil ekspor rekap
+
+PDF submission mentah (`tugas/week-7/`, `tugas/week-11/`) tidak di-commit (lihat `tugas/.gitignore`).
 
 ## Menjalankan Demo
 
-Semua demo dapat dibuka langsung di browser.
-
-- `examples/index.html`
-- `internet-programming/index.html`
-- `web-gis-development/index.html`
-
-Jika browser membatasi akses file lokal untuk beberapa aset, jalankan lewat web server sederhana, misalnya:
+Semua demo dapat dibuka langsung di browser, namun sebagian aset lebih stabil dijalankan lewat web server sederhana:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Lalu buka `http://localhost:8000/`.
+Lalu buka `http://localhost:8000/` untuk halaman utama, atau langsung ke salah satu demo:
+
+- `internet-programming/index.html`
+- `examples/index.html`
+- `web-gis-development/index.html`
+- `ogc-services/index.html`
+- `lbs-mobile-gis/index.html`
 
 ## Membangun Slide
 
-Folder `web-gis-development/` memiliki `Makefile` untuk membangun slide HTML dan PDF.
+Folder `web-gis-development/`, `ogc-services/`, dan `lbs-mobile-gis/` masing-masing memiliki `Makefile` untuk membangun slide HTML dan PDF.
 
-Masuk ke folder tersebut lalu jalankan:
+Masuk ke folder yang dimaksud lalu jalankan:
 
 ```bash
 make all
@@ -76,12 +86,24 @@ Target yang tersedia:
 
 Catatan: `make all` hanya membangun slide presentasi, bukan demo `index.html` dan `app.js`.
 
+## Rekap Tugas
+
+Untuk membuat ulang rekap submission (CSV, Markdown, dan halaman web):
+
+```bash
+cd tugas
+python3 recap_week7.py    # atau recap_week11.py
+```
+
+Skrip membaca PDF submission, mengekstrak link GitHub repo & live deployment (dari teks maupun anotasi/hyperlink PDF), lalu menulis `week*_recap.csv`, `week*_recap.md`, dan `homework/week-*.html`.
+
 ## Teknologi yang Dipakai
 
 - OpenLayers
 - HTML/CSS/JavaScript vanilla
 - Marp CLI untuk slide
 - Mermaid untuk diagram
+- Python (`pdftotext`, `qpdf`) untuk perkakas rekap tugas
 
 ## Konteks Penggunaan
 
@@ -95,6 +117,7 @@ Repositori ini ditujukan untuk:
 Materi dalam repositori ini membantu mahasiswa memahami:
 - perbedaan peran Desktop GIS dan WebGIS
 - pemilihan library pemetaan yang tepat sesuai kebutuhan
+- konsumsi layanan OGC (WMS & WFS) dan konsep LBS/Mobile GIS
 - publikasi peta interaktif ke web
 - integrasi data spasial sederhana untuk demo dan tugas mandiri
 
