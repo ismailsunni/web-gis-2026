@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
-"""Recap week-7 submissions: extract student id, name, GitHub repo link, and live (gh-pages/other) link from each PDF."""
-import os, re, subprocess, csv, glob, sys, html, json
+"""Recap week-11 submissions (WMS & WFS visualization): extract student id, name,
+GitHub repo link, and live (gh-pages/other) link from each PDF, then publish a web page."""
+import os, re, subprocess, csv, glob, html
 
-BASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "week-7")
+WEEK_DIR = "week-11"
+WEEK_LABEL = "Week 11"
+PAGE_TITLE = "Homework — Week 11"
+PAGE_SUBTITLE = "WMS &amp; WFS visualization assignment — GitHub repository &amp; live deployment links"
+HTML_NAME = "week-11.html"
+CSV_NAME = "week11_recap.csv"
+MD_NAME = "week11_recap.md"
+
+BASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), WEEK_DIR)
 
 # URLs that are noise: bundled-library refs, certificate CRLs, doc links, CDNs, etc.
 NOISE = re.compile(
@@ -10,7 +19,7 @@ NOISE = re.compile(
     r"openlayers|leafletjs|leaflet|openstreetmap|tile\.|/cdn|cdn\.|unpkg|jsdelivr|"
     r"googleapis|gstatic|fonts\.|schema\.|purl\.|/ns\.|/ns/|xmlns|mozilla|adobe|"
     r"crl\.|/pki/|certs/|Typography|app\.netlify\.com|github\.com/?$|github\.com,|"
-    r"google\.com/maps|maps\.google", re.I)
+    r"google\.com/maps|maps\.google|geoserver|:8080|localhost|127\.0\.0\.1", re.I)
 
 LIVE_HOST = re.compile(r"github\.io|netlify\.app|vercel\.app|pages\.dev|web\.app|surge\.sh|firebaseapp|render\.com|onrender", re.I)
 
@@ -22,14 +31,12 @@ HARD_NOISE = re.compile(r"andre-fuchs|kerning-pairs", re.I)
 
 def extract_urls(pdf):
     out = []
-    # 1) visible text (layout keeps URLs more intact on one line)
     for mode in ("-layout", "-raw"):
         try:
             t = subprocess.run(["pdftotext", mode, pdf, "-"], capture_output=True, timeout=60).stdout.decode("utf-8", "ignore")
             out.append(t)
         except Exception:
             pass
-    # 2) decompressed annotations (clickable hyperlinks) via qpdf
     try:
         q = subprocess.run(["qpdf", "--qdf", "--object-streams=disable", pdf, "-"], capture_output=True, timeout=60).stdout.decode("utf-8", "ignore")
         out.append(q)
@@ -53,13 +60,10 @@ def norm_repo(u):
         return None
     user, repo = m.group(1), m.group(2)
     repo = re.sub(r"\.git$", "", repo)
-    if user.lower() in ("andre-fuchs",):
-        return None
     return f"https://github.com/{user}/{repo}"
 
 
 def pick_longest(cands):
-    # prefer full (non-trailing-hyphen) and longest
     if not cands:
         return ""
     cands = sorted(cands, key=lambda x: (x.rstrip("/").endswith("-"), -len(x)))
@@ -69,17 +73,10 @@ def pick_longest(cands):
 # Manual findings for image-only PDFs (links inside browser screenshots, read visually).
 # keyed by student_id -> (github_repo, live_url, note)
 OVERRIDES = {
-    "7751739": ("https://github.com/angelifitranouvalatifah-cmd/angel", "", "repo from screenshot; gh-pages deployment active but live URL not shown (likely https://angelifitranouvalatifah-cmd.github.io/angel/ - verify)"),
-    "7751725": ("https://github.com/vishnutama491-creator/ErlanggaKharismaSigWeb", "https://vishnutama491-creator.github.io/ErlanggaKharismaSigWeb/", "both read from gh-pages settings screenshot"),
-    "7751711": ("https://github.com/farizalnalendra/final-projects-gweb", "https://farizalnalendra.github.io/final-projects-gweb/", "links from screenshots; live page showed 404 at capture time"),
-    "7751746": ("", "", "no link - results page blank, not deployed"),
-    "7751716": ("", "", "ran locally (file://), no repo/deployment"),
-    "7751713": ("", "", "ran locally (file://), not deployed"),
-    "7751721": ("", "", "ran locally (file://), not deployed"),
-    "7751749": ("", "", "ran locally (file://), not deployed"),
-    "7751742": ("", "", "ran locally (file://), not deployed"),
-    "7751728": ("", "", "no URLs; deployment only mentioned generically"),
-    "7751705": ("", "", "code only, no repo/deployment link"),
+    "7751771": ("", "https://strong-palmier-49bce1.netlify.app", "live URL decoded from QR code; no GitHub repo (data shared via Google Drive)"),
+    "7751800": ("", "", "wrong/blank file uploaded (M12 theory PDF), no WMS/WFS submission or links"),
+    "7751791": ("https://github.com/gitaarifah-design/webgis-yogyakarta-final", "https://gitaarifah-design.github.io/webgis-yogyakarta-final/", "repo URL in PDF was a 'USERNAME' placeholder; corrected from Pages URL"),
+    "7751782": ("https://github.com/pipitamanda/M11_SIGWEB", "https://pipitamanda.github.io/M11_SIGWEB/", "PDF also lists M7 repo (ignored) and a second demo: pipitamanda.github.io/Peta_Interaktif_Kabupaten_Ngawi/"),
 }
 
 rows = []
@@ -90,7 +87,7 @@ for d in sorted(os.listdir(BASE)):
     parts = d.split("_")
     name = parts[0].strip()
     sid = parts[1].strip() if len(parts) > 1 else ""
-    pdfs = glob.glob(os.path.join(full, "*.pdf"))
+    pdfs = glob.glob(os.path.join(full, "*.pdf")) + glob.glob(os.path.join(full, "*.PDF"))
     repo = live = ""
     other = []
     if pdfs:
@@ -109,7 +106,6 @@ for d in sorted(os.listdir(BASE)):
             note = "Google Drive only: " + pick_longest(other)
     elif not live and other:
         note = "live link maybe in Drive: " + pick_longest(other)
-    # apply manual overrides (visual reads of image-only PDFs)
     if sid in OVERRIDES:
         repo, live, note = OVERRIDES[sid]
     # derive repo from a github.io Pages URL when no explicit repo was found
@@ -123,16 +119,15 @@ for d in sorted(os.listdir(BASE)):
     rows.append([sid, name, repo, live, note])
 
 rows.sort(key=lambda r: r[1].lower())
-out_csv = os.path.join(os.path.dirname(BASE), "week7_recap.csv")
+out_csv = os.path.join(os.path.dirname(BASE), CSV_NAME)
 with open(out_csv, "w", newline="", encoding="utf-8") as f:
     w = csv.writer(f)
     w.writerow(["student_id", "name", "github_repo", "live_url", "notes"])
     w.writerows(rows)
 
-# readable markdown table
-out_md = os.path.join(os.path.dirname(BASE), "week7_recap.md")
+out_md = os.path.join(os.path.dirname(BASE), MD_NAME)
 with open(out_md, "w", encoding="utf-8") as f:
-    f.write("# Week 7 Submission Recap\n\n")
+    f.write(f"# {WEEK_LABEL} Submission Recap\n\n")
     f.write(f"Total submissions: {len(rows)}\n\n")
     f.write("| # | Student ID | Name | GitHub Repo | Live URL | Notes |\n")
     f.write("|---|---|---|---|---|---|\n")
@@ -141,7 +136,7 @@ with open(out_md, "w", encoding="utf-8") as f:
         live = f"[live]({r[3]})" if r[3] else "—"
         f.write(f"| {i} | {r[0]} | {r[1]} | {repo} | {live} | {r[4]} |\n")
 
-# ---- published web page (homework/index.html at repo root) ----
+# ---- published web page ----
 REPO_ROOT = os.path.dirname(os.path.dirname(BASE))
 hw_dir = os.path.join(REPO_ROOT, "homework")
 os.makedirs(hw_dir, exist_ok=True)
@@ -176,7 +171,7 @@ page = f"""<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homework — Web GIS 2026</title>
+    <title>{PAGE_TITLE} — Web GIS 2026</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
@@ -240,8 +235,8 @@ page = f"""<!DOCTYPE html>
 <body>
     <div class="container">
         <a class="back" href="../">← Course materials</a> &nbsp;·&nbsp; <a class="back" href="./">All homework</a>
-        <h1>📋 Homework — Week 7</h1>
-        <p class="subtitle">Mini WebGIS assignment submissions — GitHub repository &amp; live deployment links</p>
+        <h1>📋 {PAGE_TITLE}</h1>
+        <p class="subtitle">{PAGE_SUBTITLE}</p>
 
         <div class="stats">
             <div class="stat"><b>{len(rows)}</b> submissions</div>
@@ -321,12 +316,11 @@ page = f"""<!DOCTYPE html>
 </body>
 </html>
 """
-out_html = os.path.join(hw_dir, "week-7.html")
+out_html = os.path.join(hw_dir, HTML_NAME)
 with open(out_html, "w", encoding="utf-8") as f:
     f.write(page)
 print("HTML ->", out_html)
 
-# print summary
 missing = [r for r in rows if not r[2] and not r[3]]
 print(f"Total: {len(rows)} | with repo: {sum(1 for r in rows if r[2])} | with live: {sum(1 for r in rows if r[3])} | missing both: {len(missing)}")
 print("CSV ->", out_csv)
