@@ -239,7 +239,7 @@ page = f"""<!DOCTYPE html>
 </head>
 <body>
     <div class="container">
-        <a class="back" href="../">← Course materials</a> &nbsp;·&nbsp; <a class="back" href="./">All homework</a>
+        <a class="back" href="../">← Back to course materials</a>
         <h1>📋 Homework — Week 7</h1>
         <p class="subtitle">Mini WebGIS assignment submissions — GitHub repository &amp; live deployment links</p>
 
