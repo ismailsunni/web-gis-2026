@@ -1,0 +1,4 @@
+# Raw exam/attendance scans — contain student signatures; kept local only.
+uas/*.jpg
+uas/*.jpeg
+uas/*.png
