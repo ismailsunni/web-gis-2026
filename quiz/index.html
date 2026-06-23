@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz UAS — OGC Services & LBS · Web GIS 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5; color: #333; padding: 0 1rem 4rem;
+        }
+        .container { max-width: 760px; margin: 0 auto; padding-top: 1.5rem; }
+        a.back { color: #2563eb; text-decoration: none; font-size: 0.85rem; }
+        a.back:hover { text-decoration: underline; }
+        h1 { font-size: 1.6rem; margin: 0.6rem 0 0.3rem; }
+        .subtitle { color: #666; font-size: 0.92rem; margin-bottom: 1rem; }
+        .intro { background: #fff; border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 1.2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-size: 0.88rem; color: #555; }
+        .intro ul { margin: 0.5rem 0 0 1.1rem; }
+        .controls { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+        .controls label { font-size: 0.85rem; color: #555; display: flex; align-items: center; gap: 0.35rem; }
+        .q { background: #fff; border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 0.9rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-left: 4px solid transparent; }
+        .q.correct { border-left-color: #16a34a; }
+        .q.wrong { border-left-color: #dc2626; }
+        .q-head { display: flex; gap: 0.55rem; margin-bottom: 0.7rem; font-size: 0.95rem; line-height: 1.45; }
+        .q-num { flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: #eef2f7;
+            color: #475569; font-weight: 700; font-size: 0.8rem; display: inline-flex;
+            align-items: center; justify-content: center; }
+        .q-text { font-weight: 500; }
+        .tag { display: inline-block; font-size: 0.66rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.03em; color: #64748b; background: #f1f5f9; border-radius: 4px;
+            padding: 0.05rem 0.4rem; margin-top: 0.25rem; }
+        .opts { display: flex; flex-direction: column; gap: 0.4rem; }
+        .opt { display: flex; align-items: flex-start; gap: 0.55rem; padding: 0.5rem 0.65rem;
+            border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; font-size: 0.88rem;
+            transition: background 0.12s, border-color 0.12s; }
+        .opt:hover { background: #f8fafc; }
+        .opt input { margin-top: 0.15rem; flex: none; }
+        .opt .key { font-weight: 700; color: #475569; flex: none; }
+        .opt.pick-correct { background: #dcfce7; border-color: #16a34a; }
+        .opt.pick-wrong { background: #fee2e2; border-color: #dc2626; }
+        .opt.reveal-correct { border-color: #16a34a; }
+        .opt.reveal-correct .key { color: #16a34a; }
+        code { background: #f1f5f9; padding: 0.05rem 0.3rem; border-radius: 4px;
+            font-size: 0.85em; color: #be123c; }
+        .actions { margin: 1.4rem 0; display: flex; gap: 0.7rem; flex-wrap: wrap; }
+        button { font-size: 0.92rem; font-weight: 600; padding: 0.6rem 1.3rem; border-radius: 8px;
+            border: none; cursor: pointer; }
+        .btn-primary { background: #2563eb; color: #fff; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-ghost { background: #fff; color: #2563eb; border: 1px solid #cbd5e1; }
+        .btn-ghost:hover { background: #f8fafc; }
+        /* sticky progress */
+        .progress-bar { position: sticky; top: 0; z-index: 20; background: rgba(245,245,245,0.95);
+            backdrop-filter: blur(4px); padding: 0.6rem 0; margin-bottom: 0.5rem; }
+        .progress-track { height: 8px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0; background: #2563eb; transition: width 0.2s; }
+        .progress-label { font-size: 0.78rem; color: #64748b; margin-top: 0.3rem; }
+        /* result panel */
+        .result { background: #fff; border-radius: 12px; padding: 1.4rem 1.5rem; margin-bottom: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        .result[hidden] { display: none; }
+        .score-big { font-size: 2.6rem; font-weight: 800; line-height: 1; }
+        .score-pct { font-size: 1.1rem; color: #64748b; margin-top: 0.3rem; }
+        .grade { display: inline-block; margin-top: 0.6rem; padding: 0.25rem 0.9rem; border-radius: 99px;
+            font-size: 0.85rem; font-weight: 700; }
+        .grade.pass { background: #dcfce7; color: #15803d; }
+        .grade.fail { background: #fee2e2; color: #b91c1c; }
+        .breakdown { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+        .bd { background: #f8fafc; border-radius: 8px; padding: 0.5rem 0.9rem; font-size: 0.82rem; color: #475569; }
+        .bd b { display: block; font-size: 1.1rem; color: #1e293b; }
+        footer { text-align: center; margin-top: 2rem; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back" href="../">← Kembali ke materi kuliah</a>
+        <h1>📝 Quiz UAS — OGC Services &amp; LBS / Mobile GIS</h1>
+        <p class="subtitle">CPMK-3 · 50 soal pilihan ganda · Web GIS 2026</p>
+
+        <div class="intro">
+            Kerjakan seluruh soal, lalu tekan <b>Selesai &amp; Lihat Nilai</b> untuk melihat skor dan pembahasan.
+            <ul>
+                <li>Pilih satu jawaban yang paling tepat untuk tiap soal.</li>
+                <li>Nilai dan jawaban benar baru ditampilkan setelah kamu menekan tombol selesai.</li>
+                <li>Gunakan <b>Acak urutan soal</b> bila ingin latihan dengan urutan berbeda.</li>
+            </ul>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
+            <div class="progress-label" id="plabel">0 / 50 terjawab</div>
+        </div>
+
+        <div class="controls">
+            <label><input type="checkbox" id="shuffle" onchange="render()"> Acak urutan soal</label>
+        </div>
+
+        <div class="result" id="result" hidden></div>
+
+        <div id="quiz"></div>
+
+        <div class="actions">
+            <button class="btn-primary" id="submitBtn" onclick="submitQuiz()">Selesai &amp; Lihat Nilai</button>
+            <button class="btn-ghost" onclick="resetQuiz()">Ulangi</button>
+        </div>
+
+        <footer>Web GIS 2026 · Ismail Sunni</footer>
+    </div>
+
+    <script>
+        const QUESTIONS = [{"n": 1, "section": "OGC Services (WMS & WFS)", "q": "Apa kepanjangan dari OGC?", "opts": [{"k": "A", "t": "Open Geographic Community"}, {"k": "B", "t": "Official Geospatial Committee"}, {"k": "C", "t": "Open Geospatial Consortium"}, {"k": "D", "t": "Online GIS Consortium"}], "ans": "C"}, {"n": 2, "section": "OGC Services (WMS & WFS)", "q": "Apa masalah utama yang ingin diselesaikan oleh standar OGC?", "opts": [{"k": "A", "t": "Vendor lock-in, data silos, dan integrasi yang mahal &amp; rapuh"}, {"k": "B", "t": "Mempercepat rendering peta di klien"}, {"k": "C", "t": "Mengurangi ukuran file shapefile"}, {"k": "D", "t": "Menghapus kebutuhan akan basemap"}], "ans": "A"}, {"n": 3, "section": "OGC Services (WMS & WFS)", "q": "Pada arsitektur Service-Oriented GIS, siapa yang bertugas membaca format data asli (PostGIS, SHP, GeoTIFF)?", "opts": [{"k": "A", "t": "Klien (browser)"}, {"k": "B", "t": "CDN"}, {"k": "C", "t": "Pengguna akhir"}, {"k": "D", "t": "Map server"}], "ans": "D"}, {"n": 4, "section": "OGC Services (WMS & WFS)", "q": "Apa output utama dari WMS?", "opts": [{"k": "A", "t": "Fitur vektor GeoJSON"}, {"k": "B", "t": "Gambar raster (PNG/JPEG/GIF)"}, {"k": "C", "t": "File XML Schema"}, {"k": "D", "t": "Tile protobuf"}], "ans": "B"}, {"n": 5, "section": "OGC Services (WMS & WFS)", "q": "Apa output utama dari WFS?", "opts": [{"k": "A", "t": "Fitur vektor (GML/GeoJSON)"}, {"k": "B", "t": "Gambar raster"}, {"k": "C", "t": "Tile berskema z/x/y"}, {"k": "D", "t": "Citra satelit terkompresi"}], "ans": "A"}, {"n": 6, "section": "OGC Services (WMS & WFS)", "q": "Manakah TIGA operasi utama WMS?", "opts": [{"k": "A", "t": "GetCapabilities, DescribeFeatureType, GetFeature"}, {"k": "B", "t": "GetMap, Transaction, GetTile"}, {"k": "C", "t": "GetMap, GetFeature, GetLegend"}, {"k": "D", "t": "GetCapabilities, GetMap, GetFeatureInfo"}], "ans": "D"}, {"n": 7, "section": "OGC Services (WMS & WFS)", "q": "Operasi WMS manakah yang dipakai untuk melihat &quot;menu&quot; layanan (daftar layer, CRS, format)?", "opts": [{"k": "A", "t": "GetMap"}, {"k": "B", "t": "GetFeatureInfo"}, {"k": "C", "t": "GetCapabilities"}, {"k": "D", "t": "DescribeFeatureType"}], "ans": "C"}, {"n": 8, "section": "OGC Services (WMS & WFS)", "q": "Pada operasi <code>GetMap</code>, parameter <code>BBOX</code> berisi urutan nilai...", "opts": [{"k": "A", "t": "width, height, format, style"}, {"k": "B", "t": "minX, minY, maxX, maxY"}, {"k": "C", "t": "lat pusat, lon pusat, zoom"}, {"k": "D", "t": "CRS, layer, style, format"}], "ans": "B"}, {"n": 9, "section": "OGC Services (WMS & WFS)", "q": "Pada WMS, parameter sistem koordinat di versi 1.1.1 dan 1.3.0 berturut-turut bernama...", "opts": [{"k": "A", "t": "CRS dan SRS"}, {"k": "B", "t": "EPSG dan PROJ"}, {"k": "C", "t": "SRID dan CRS"}, {"k": "D", "t": "SRS dan CRS"}], "ans": "D"}, {"n": 10, "section": "OGC Services (WMS & WFS)", "q": "Apa perbedaan penting WMS 1.3.0 dibanding 1.1.1 untuk EPSG:4326?", "opts": [{"k": "A", "t": "Urutan sumbu menjadi <code>lat, lon</code> (bukan <code>lon, lat</code>)"}, {"k": "B", "t": "1.3.0 hanya mendukung PNG"}, {"k": "C", "t": "1.3.0 menghapus parameter BBOX"}, {"k": "D", "t": "1.3.0 tidak mendukung transparansi"}], "ans": "A"}, {"n": 11, "section": "OGC Services (WMS & WFS)", "q": "Operasi WMS <code>GetFeatureInfo</code> digunakan untuk...", "opts": [{"k": "A", "t": "Meminta gambar peta yang sudah dirender"}, {"k": "B", "t": "Menanyakan atribut fitur pada koordinat/pixel tertentu"}, {"k": "C", "t": "Mengetahui skema atribut sebuah layer"}, {"k": "D", "t": "Mengedit fitur pada server"}], "ans": "B"}, {"n": 12, "section": "OGC Services (WMS & WFS)", "q": "Pada <code>GetFeatureInfo</code>, parameter <code>I</code> dan <code>J</code> mewakili...", "opts": [{"k": "A", "t": "Koordinat geografis lon/lat"}, {"k": "B", "t": "Lebar dan tinggi gambar"}, {"k": "C", "t": "Index layer dan style"}, {"k": "D", "t": "Pixel yang diklik pada gambar"}], "ans": "D"}, {"n": 13, "section": "OGC Services (WMS & WFS)", "q": "Manakah yang merupakan kelebihan (Pro) WMS?", "opts": [{"k": "A", "t": "Klien menerima data atribut langsung"}, {"k": "B", "t": "Mudah di-restyle di klien"}, {"k": "C", "t": "Cocok untuk layer besar (jutaan fitur) karena server sudah render"}, {"k": "D", "t": "Bisa diedit langsung dari web"}], "ans": "C"}, {"n": 14, "section": "OGC Services (WMS & WFS)", "q": "Manakah yang merupakan kekurangan (Con) WMS?", "opts": [{"k": "A", "t": "Hanya gambar — tidak ada data atribut langsung di klien"}, {"k": "B", "t": "Tidak mendukung CRS"}, {"k": "C", "t": "Tidak bisa menampilkan basemap besar"}, {"k": "D", "t": "Selalu mengembalikan GeoJSON yang berat"}], "ans": "A"}, {"n": 15, "section": "OGC Services (WMS & WFS)", "q": "Operasi WFS <code>DescribeFeatureType</code> mengembalikan...", "opts": [{"k": "A", "t": "Gambar peta"}, {"k": "B", "t": "Daftar seluruh server OGC"}, {"k": "C", "t": "File konfigurasi GeoServer"}, {"k": "D", "t": "Skema atribut: nama field &amp; tipe data"}], "ans": "D"}, {"n": 16, "section": "OGC Services (WMS & WFS)", "q": "Untuk mengambil hanya fitur dalam area tertentu pada WFS digunakan filter...", "opts": [{"k": "A", "t": "CQL_FILTER"}, {"k": "B", "t": "BBOX"}, {"k": "C", "t": "STYLES"}, {"k": "D", "t": "INFO_FORMAT"}], "ans": "B"}, {"n": 17, "section": "OGC Services (WMS & WFS)", "q": "Apa kepanjangan CQL pada <code>CQL_FILTER</code>?", "opts": [{"k": "A", "t": "Cartographic Query Language"}, {"k": "B", "t": "Coordinate Query Layer"}, {"k": "C", "t": "Common Query Language"}, {"k": "D", "t": "Complex Query Logic"}], "ans": "C"}, {"n": 18, "section": "OGC Services (WMS & WFS)", "q": "Filter <code>CQL_FILTER=kelas=&#x27;arteri&#x27; AND panjang&gt;500</code> artinya...", "opts": [{"k": "A", "t": "Ambil fitur dengan kelas arteri DAN panjang lebih dari 500"}, {"k": "B", "t": "Ambil semua fitur tanpa filter"}, {"k": "C", "t": "Ambil fitur kelas arteri ATAU panjang 500"}, {"k": "D", "t": "Hapus fitur kelas arteri"}], "ans": "A"}, {"n": 19, "section": "OGC Services (WMS & WFS)", "q": "Operasi tambahan WFS untuk insert/update/delete fitur (advanced) disebut...", "opts": [{"k": "A", "t": "GetFeatureInfo"}, {"k": "B", "t": "DescribeFeatureType"}, {"k": "C", "t": "GetMap"}, {"k": "D", "t": "Transaction (WFS-T)"}], "ans": "D"}, {"n": 20, "section": "OGC Services (WMS & WFS)", "q": "Pada OpenLayers, strategi <code>ol.loadingstrategy.bbox</code> untuk WFS berarti...", "opts": [{"k": "A", "t": "Memuat seluruh fitur sekaligus saat awal"}, {"k": "B", "t": "Server hanya mengirim fitur sesuai viewport, berubah saat pan/zoom"}, {"k": "C", "t": "Menonaktifkan loading fitur"}, {"k": "D", "t": "Mengubah WFS menjadi WMS"}], "ans": "B"}, {"n": 21, "section": "OGC Services (WMS & WFS)", "q": "Manakah kelebihan (Pro) WFS dibanding WMS?", "opts": [{"k": "A", "t": "Klien mendapat data asli — bisa restyle, query, dan analisis"}, {"k": "B", "t": "Selalu lebih ringan untuk jutaan fitur"}, {"k": "C", "t": "Styling ditentukan sepenuhnya di server"}, {"k": "D", "t": "Tidak memerlukan koneksi internet"}], "ans": "A"}, {"n": 22, "section": "OGC Services (WMS & WFS)", "q": "Apa masalah WMS biasa yang diselesaikan oleh WMTS?", "opts": [{"k": "A", "t": "WMS tidak mendukung vektor"}, {"k": "B", "t": "WMS tidak punya GetCapabilities"}, {"k": "C", "t": "WMS me-render gambar tiap request → lambat &amp; sulit di-cache CDN"}, {"k": "D", "t": "WMS tidak mendukung HTTPS"}], "ans": "C"}, {"n": 23, "section": "OGC Services (WMS & WFS)", "q": "Ekstensi WMS dengan dimensi waktu (mis. <code>&amp;TIME=...</code>) disebut WMS-T dan sangat relevan untuk...", "opts": [{"k": "A", "t": "Data administratif statis"}, {"k": "B", "t": "Layer jalan raya"}, {"k": "C", "t": "Editing fitur dari web"}, {"k": "D", "t": "Data temporal seperti radar cuaca BMKG &amp; citra satelit per jam"}], "ans": "D"}, {"n": 24, "section": "OGC Services (WMS & WFS)", "q": "Format dominan untuk Vector Tiles yang menjadi OGC Community Standard (2018) adalah...", "opts": [{"k": "A", "t": "GeoTIFF"}, {"k": "B", "t": "Mapbox Vector Tile (MVT)"}, {"k": "C", "t": "Shapefile"}, {"k": "D", "t": "KML"}], "ans": "B"}, {"n": 25, "section": "OGC Services (WMS & WFS)", "q": "Format file populer yang menyimpan semua tile dalam satu file dan bisa di-host di S3/GitHub Pages adalah...", "opts": [{"k": "A", "t": "GeoPackage"}, {"k": "B", "t": "GML"}, {"k": "C", "t": "PMTiles"}, {"k": "D", "t": "WKT"}], "ans": "C"}, {"n": 26, "section": "OGC Services (WMS & WFS)", "q": "Generasi baru standar OGC berbasis REST + JSON + OpenAPI. Penerus WFS adalah...", "opts": [{"k": "A", "t": "OGC API - Features"}, {"k": "B", "t": "OGC API - Tiles"}, {"k": "C", "t": "OGC API - Processes"}, {"k": "D", "t": "OGC API - Records"}], "ans": "A"}, {"n": 27, "section": "OGC Services (WMS & WFS)", "q": "Manakah pasangan standar OGC dan fungsinya yang BENAR?", "opts": [{"k": "A", "t": "WCS — geoprocessing jarak jauh"}, {"k": "B", "t": "WPS — data raster mentah"}, {"k": "C", "t": "WFS — peta sebagai gambar"}, {"k": "D", "t": "WCS — data raster mentah"}], "ans": "D"}, {"n": 28, "section": "OGC Services (WMS & WFS)", "q": "Server OGC manakah yang berbasis Java, ber-GUI, dan paling populer untuk general purpose/geoportal?", "opts": [{"k": "A", "t": "MapServer"}, {"k": "B", "t": "GeoServer"}, {"k": "C", "t": "pg_tileserv"}, {"k": "D", "t": "pygeoapi"}], "ans": "B"}, {"n": 29, "section": "OGC Services (WMS & WFS)", "q": "Mengapa <code>GetCapabilities</code> disebut sebagai titik mulai eksplorasi server baru?", "opts": [{"k": "A", "t": "Karena memuat daftar layer, CRS, format, dan style yang ditawarkan"}, {"k": "B", "t": "Karena langsung menampilkan peta"}, {"k": "C", "t": "Karena satu-satunya operasi yang gratis"}, {"k": "D", "t": "Karena mengembalikan GeoJSON"}], "ans": "A"}, {"n": 30, "section": "OGC Services (WMS & WFS)", "q": "Penyebab paling umum &quot;peta saya kosong / di tempat aneh&quot; pada WMS adalah...", "opts": [{"k": "A", "t": "Format PNG tidak didukung"}, {"k": "B", "t": "Tidak memakai HTTPS"}, {"k": "C", "t": "Tertukarnya axis order/BBOX antara versi 1.1.1 dan 1.3.0"}, {"k": "D", "t": "Lupa memanggil clearWatch()"}], "ans": "C"}, {"n": 31, "section": "LBS & Mobile GIS", "q": "Definisi LBS (Location-Based Services) yang paling tepat adalah...", "opts": [{"k": "A", "t": "Layanan yang hanya berjalan di perangkat mobile"}, {"k": "B", "t": "Layanan peta tanpa internet"}, {"k": "C", "t": "Standar pertukaran data OGC"}, {"k": "D", "t": "Layanan yang memanfaatkan posisi geografis pengguna untuk memberi informasi/fungsi relevan"}], "ans": "D"}, {"n": 32, "section": "LBS & Mobile GIS", "q": "&quot;Cari ATM terdekat&quot; termasuk mode LBS...", "opts": [{"k": "A", "t": "Proactive (push)"}, {"k": "B", "t": "Reactive (pull)"}, {"k": "C", "t": "Geofencing"}, {"k": "D", "t": "Hybrid"}], "ans": "B"}, {"n": 33, "section": "LBS & Mobile GIS", "q": "Notifikasi promo otomatis saat pengguna lewat mall termasuk mode...", "opts": [{"k": "A", "t": "Proactive (push) / geofencing"}, {"k": "B", "t": "Reactive (pull)"}, {"k": "C", "t": "A-GPS"}, {"k": "D", "t": "Manual input"}], "ans": "A"}, {"n": 34, "section": "LBS & Mobile GIS", "q": "Geofencing adalah...", "opts": [{"k": "A", "t": "Mengukur jarak antar dua titik"}, {"k": "B", "t": "Menggabungkan beberapa sumber lokasi"}, {"k": "C", "t": "Memicu aksi saat pengguna masuk/keluar batas area virtual"}, {"k": "D", "t": "Mengubah CRS koordinat"}], "ans": "C"}, {"n": 35, "section": "LBS & Mobile GIS", "q": "Manakah BUKAN salah satu dari lima komponen klasik LBS?", "opts": [{"k": "A", "t": "Perangkat (HP, browser)"}, {"k": "B", "t": "Penyedia posisi (GPS, WiFi)"}, {"k": "C", "t": "Penyedia konten/data (peta, POI)"}, {"k": "D", "t": "Kompiler bahasa pemrograman"}], "ans": "D"}, {"n": 36, "section": "LBS & Mobile GIS", "q": "Sumber lokasi manakah yang paling akurat (5–10 m) tetapi boros baterai dan butuh langit terbuka?", "opts": [{"k": "A", "t": "WiFi"}, {"k": "B", "t": "GPS / GNSS"}, {"k": "C", "t": "Cell tower"}, {"k": "D", "t": "IP Address"}], "ans": "B"}, {"n": 37, "section": "LBS & Mobile GIS", "q": "Sumber lokasi yang paling kasar (akurasi kota/wilayah), biasa dipakai web tanpa GPS, adalah...", "opts": [{"k": "A", "t": "IP Address"}, {"k": "B", "t": "GPS"}, {"k": "C", "t": "Bluetooth / Beacon"}, {"k": "D", "t": "WiFi"}], "ans": "A"}, {"n": 38, "section": "LBS & Mobile GIS", "q": "Apa fungsi A-GPS (Assisted GPS)?", "opts": [{"k": "A", "t": "Mengganti GPS dengan WiFi sepenuhnya"}, {"k": "B", "t": "Menghemat baterai dengan mematikan GPS"}, {"k": "C", "t": "Mengubah koordinat ke EPSG:3857"}, {"k": "D", "t": "Memakai data jaringan seluler untuk mempercepat fix GPS"}], "ans": "D"}, {"n": 39, "section": "LBS & Mobile GIS", "q": "Sebagai developer pada hybrid positioning, kita...", "opts": [{"k": "A", "t": "Memilih sumber lokasi secara manual (GPS/WiFi/Cell)"}, {"k": "B", "t": "Wajib menulis driver GPS sendiri"}, {"k": "C", "t": "Tidak memilih sumbernya — OS/browser yang menentukan; kita hanya minta tingkat akurasi"}, {"k": "D", "t": "Harus mematikan WiFi agar akurat"}], "ans": "C"}, {"n": 40, "section": "LBS & Mobile GIS", "q": "HTML Geolocation API hanya berjalan di context aman, yaitu...", "opts": [{"k": "A", "t": "<code>http://</code> apa saja"}, {"k": "B", "t": "<code>https://</code> atau <code>http://localhost</code>"}, {"k": "C", "t": "Hanya di aplikasi native"}, {"k": "D", "t": "Hanya di jaringan LAN"}], "ans": "B"}, {"n": 41, "section": "LBS & Mobile GIS", "q": "Method manakah yang mengambil posisi pengguna SEKALI saja?", "opts": [{"k": "A", "t": "<code>watchPosition</code>"}, {"k": "B", "t": "<code>clearWatch</code>"}, {"k": "C", "t": "<code>query</code>"}, {"k": "D", "t": "<code>getCurrentPosition</code>"}], "ans": "D"}, {"n": 42, "section": "LBS & Mobile GIS", "q": "Method <code>watchPosition</code> cocok digunakan untuk...", "opts": [{"k": "A", "t": "Navigasi/tracking — dipanggil setiap posisi berubah"}, {"k": "B", "t": "Mengambil lokasi satu kali saat load"}, {"k": "C", "t": "Mengecek status izin"}, {"k": "D", "t": "Menghapus marker"}], "ans": "A"}, {"n": 43, "section": "LBS & Mobile GIS", "q": "Mengapa penting memanggil <code>clearWatch()</code>?", "opts": [{"k": "A", "t": "Agar peta berputar"}, {"k": "B", "t": "Agar GPS tidak terus menyala (hemat baterai)"}, {"k": "C", "t": "Agar izin otomatis diberikan"}, {"k": "D", "t": "Agar koordinat menjadi EPSG:4326"}], "ans": "B"}, {"n": 44, "section": "LBS & Mobile GIS", "q": "Properti <code>coords.accuracy</code> menyatakan...", "opts": [{"k": "A", "t": "Kecepatan dalam m/s"}, {"k": "B", "t": "Ketinggian dalam meter"}, {"k": "C", "t": "Akurasi horizontal dalam meter"}, {"k": "D", "t": "Arah hadap dalam derajat"}], "ans": "C"}, {"n": 45, "section": "LBS & Mobile GIS", "q": "Koordinat yang dikembalikan Geolocation API selalu dalam sistem...", "opts": [{"k": "A", "t": "EPSG:3857 (Web Mercator)"}, {"k": "B", "t": "UTM zona 49S"}, {"k": "C", "t": "EPSG:23837"}, {"k": "D", "t": "EPSG:4326 / WGS 84 — lon/lat derajat desimal"}], "ans": "D"}, {"n": 46, "section": "LBS & Mobile GIS", "q": "Pada penanganan error, <code>error.code</code> bernilai <code>PERMISSION_DENIED</code> artinya...", "opts": [{"k": "A", "t": "Pengguna menolak akses lokasi"}, {"k": "B", "t": "Informasi lokasi tidak tersedia"}, {"k": "C", "t": "Permintaan timeout"}, {"k": "D", "t": "Browser tidak mendukung Geolocation"}], "ans": "A"}, {"n": 47, "section": "LBS & Mobile GIS", "q": "Pada arsitektur LBS, query &quot;cari data dalam jarak/area&quot; (mis. <code>ST_DWithin</code>, <code>ST_Distance</code>) dikerjakan oleh lapisan...", "opts": [{"k": "A", "t": "Client"}, {"k": "B", "t": "Database spasial"}, {"k": "C", "t": "Map server"}, {"k": "D", "t": "CDN"}], "ans": "B"}, {"n": 48, "section": "LBS & Mobile GIS", "q": "Untuk menghitung jarak antar dua titik lat/lon di permukaan bumi pada demo client-only digunakan fungsi...", "opts": [{"k": "A", "t": "ST_DWithin"}, {"k": "B", "t": "fromLonLat"}, {"k": "C", "t": "Haversine"}, {"k": "D", "t": "GetFeatureInfo"}], "ans": "C"}, {"n": 49, "section": "LBS & Mobile GIS", "q": "Manakah yang BUKAN prinsip privasi LBS yang dianjurkan?", "opts": [{"k": "A", "t": "Minta izin secukupnya, saat dibutuhkan saja"}, {"k": "B", "t": "Kirim lewat HTTPS"}, {"k": "C", "t": "Simpan lokasi mentah selama mungkin untuk analisis"}, {"k": "D", "t": "Patuhi regulasi seperti UU PDP"}], "ans": "C"}, {"n": 50, "section": "LBS & Mobile GIS", "q": "Saat membuka halaman LBS dari HP melalui IP LAN (<code>http://192.168.x.x</code>), apa yang terjadi pada Geolocation?", "opts": [{"k": "A", "t": "Diblokir karena bukan context aman (HTTP biasa)"}, {"k": "B", "t": "Berjalan normal"}, {"k": "C", "t": "Lebih akurat"}, {"k": "D", "t": "Otomatis memakai mock location"}], "ans": "A"}];
+        const TOTAL = QUESTIONS.length;
+        let order = QUESTIONS.map((_, i) => i);
+        let submitted = false;
+
+        function shuffleArr(a) {
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function render() {
+            submitted = false;
+            document.getElementById('result').hidden = true;
+            document.getElementById('submitBtn').disabled = false;
+            order = QUESTIONS.map((_, i) => i);
+            if (document.getElementById('shuffle').checked) shuffleArr(order);
+            const quiz = document.getElementById('quiz');
+            quiz.innerHTML = '';
+            for (const idx of order) {
+                const q = QUESTIONS[idx];
+                const opts = q.opts.map(o => `
+                    <label class="opt" id="opt-${q.n}-${o.k}">
+                        <input type="radio" name="q${q.n}" value="${o.k}" onchange="updateProgress()">
+                        <span class="key">${o.k}.</span>
+                        <span class="opt-text">${o.t}</span>
+                    </label>`).join('');
+                quiz.insertAdjacentHTML('beforeend', `
+                    <div class="q" id="q${q.n}" data-ans="${q.ans}">
+                        <div class="q-head">
+                            <span class="q-num">${q.n}</span>
+                            <span class="q-text">${q.q}<br><span class="tag">${q.section}</span></span>
+                        </div>
+                        <div class="opts">${opts}</div>
+                    </div>`);
+            }
+            updateProgress();
+            window.scrollTo({ top: 0 });
+        }
+
+        function answeredCount() {
+            let n = 0;
+            for (const q of QUESTIONS) if (document.querySelector(`input[name="q${q.n}"]:checked`)) n++;
+            return n;
+        }
+
+        function updateProgress() {
+            if (submitted) return;
+            const n = answeredCount();
+            document.getElementById('fill').style.width = (n / TOTAL * 100) + '%';
+            document.getElementById('plabel').textContent = `${n} / ${TOTAL} terjawab`;
+        }
+
+        function submitQuiz() {
+            if (submitted) return;
+            const n = answeredCount();
+            if (n < TOTAL && !confirm(`Masih ada ${TOTAL - n} soal belum dijawab. Tetap selesaikan?`)) return;
+            submitted = true;
+            document.getElementById('submitBtn').disabled = true;
+
+            let score = 0;
+            const bySection = {};
+            for (const q of QUESTIONS) {
+                bySection[q.section] = bySection[q.section] || { correct: 0, total: 0 };
+                bySection[q.section].total++;
+                const picked = document.querySelector(`input[name="q${q.n}"]:checked`);
+                const pick = picked ? picked.value : null;
+                const qEl = document.getElementById('q' + q.n);
+                // lock inputs
+                qEl.querySelectorAll('input').forEach(i => i.disabled = true);
+                // reveal correct option
+                document.getElementById(`opt-${q.n}-${q.ans}`).classList.add('reveal-correct');
+                if (pick === q.ans) {
+                    score++;
+                    bySection[q.section].correct++;
+                    qEl.classList.add('correct');
+                    document.getElementById(`opt-${q.n}-${pick}`).classList.add('pick-correct');
+                } else {
+                    qEl.classList.add('wrong');
+                    if (pick) document.getElementById(`opt-${q.n}-${pick}`).classList.add('pick-wrong');
+                }
+            }
+
+            const pct = Math.round(score / TOTAL * 100);
+            const pass = pct >= 60;
+            const bd = Object.entries(bySection).map(([s, v]) =>
+                `<div class="bd"><b>${v.correct}/${v.total}</b>${s}</div>`).join('');
+            const res = document.getElementById('result');
+            res.innerHTML = `
+                <div class="score-big">${score} <span style="font-size:1.3rem;color:#94a3b8">/ ${TOTAL}</span></div>
+                <div class="score-pct">${pct}% benar</div>
+                <div class="grade ${pass ? 'pass' : 'fail'}">${pass ? 'LULUS' : 'BELUM LULUS'} (batas 60%)</div>
+                <div class="breakdown">${bd}</div>
+                <p style="margin-top:1rem;font-size:0.82rem;color:#64748b">Gulir ke bawah untuk melihat pembahasan tiap soal.</p>`;
+            res.hidden = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            render();
+        }
+
+        render();
+    </script>
+</body>
+</html>
