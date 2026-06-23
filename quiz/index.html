@@ -52,6 +52,12 @@
         .btn-primary:hover { background: #1d4ed8; }
         .btn-ghost { background: #fff; color: #2563eb; border: 1px solid #cbd5e1; }
         .btn-ghost:hover { background: #f8fafc; }
+        .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.82rem; }
+        .btn-ghost.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+        .btn-ghost:disabled { opacity: 0.5; cursor: not-allowed; }
+        .empty-state { background: #fff; border-radius: 10px; padding: 1.4rem; text-align: center;
+            color: #64748b; font-size: 0.9rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .empty-state[hidden] { display: none; }
         /* sticky progress */
         .progress-bar { position: sticky; top: 0; z-index: 20; background: rgba(245,245,245,0.95);
             backdrop-filter: blur(4px); padding: 0.6rem 0; margin-bottom: 0.5rem; }
@@ -96,11 +102,13 @@
 
         <div class="controls">
             <label><input type="checkbox" id="shuffle" onchange="render()"> Acak urutan soal</label>
+            <button class="btn-ghost btn-sm" id="filterBtn" onclick="toggleFilter()">Tampilkan: Semua soal</button>
         </div>
 
         <div class="result" id="result" hidden></div>
 
         <div id="quiz"></div>
+        <div class="empty-state" id="emptyState" hidden>🎉 Semua soal sudah dijawab. Tekan <b>Selesai &amp; Lihat Nilai</b> untuk melihat skor.</div>
 
         <div class="actions">
             <button class="btn-primary" id="submitBtn" onclick="submitQuiz()">Selesai &amp; Lihat Nilai</button>
@@ -115,6 +123,7 @@
         const TOTAL = QUESTIONS.length;
         let order = QUESTIONS.map((_, i) => i);
         let submitted = false;
+        let filterUnanswered = false;
 
         function shuffleArr(a) {
             for (let i = a.length - 1; i > 0; i--) {
@@ -126,6 +135,11 @@
 
         function render() {
             submitted = false;
+            filterUnanswered = false;
+            const fb = document.getElementById('filterBtn');
+            fb.disabled = false;
+            fb.classList.remove('active');
+            fb.textContent = 'Tampilkan: Semua soal';
             document.getElementById('result').hidden = true;
             document.getElementById('submitBtn').disabled = false;
             order = QUESTIONS.map((_, i) => i);
@@ -164,6 +178,29 @@
             const n = answeredCount();
             document.getElementById('fill').style.width = (n / TOTAL * 100) + '%';
             document.getElementById('plabel').textContent = `${n} / ${TOTAL} terjawab`;
+            applyFilter();
+        }
+
+        function applyFilter() {
+            let visible = 0;
+            for (const q of QUESTIONS) {
+                const el = document.getElementById('q' + q.n);
+                if (!el) continue;
+                const answered = !!document.querySelector(`input[name="q${q.n}"]:checked`);
+                const hide = filterUnanswered && !submitted && answered;
+                el.style.display = hide ? 'none' : '';
+                if (!hide) visible++;
+            }
+            document.getElementById('emptyState').hidden = !(filterUnanswered && !submitted && visible === 0);
+        }
+
+        function toggleFilter() {
+            if (submitted) return;
+            filterUnanswered = !filterUnanswered;
+            const fb = document.getElementById('filterBtn');
+            fb.classList.toggle('active', filterUnanswered);
+            fb.textContent = filterUnanswered ? 'Tampilkan: Belum dijawab' : 'Tampilkan: Semua soal';
+            applyFilter();
         }
 
         function submitQuiz() {
@@ -172,6 +209,14 @@
             if (n < TOTAL && !confirm(`Masih ada ${TOTAL - n} soal belum dijawab. Tetap selesaikan?`)) return;
             submitted = true;
             document.getElementById('submitBtn').disabled = true;
+            // show all questions for review and lock the filter
+            filterUnanswered = false;
+            const fb = document.getElementById('filterBtn');
+            fb.disabled = true;
+            fb.classList.remove('active');
+            fb.textContent = 'Tampilkan: Semua soal';
+            document.getElementById('emptyState').hidden = true;
+            QUESTIONS.forEach(q => { const el = document.getElementById('q' + q.n); if (el) el.style.display = ''; });
 
             let score = 0;
             const bySection = {};
