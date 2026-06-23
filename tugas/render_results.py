@@ -103,24 +103,28 @@ def uas_stat(rows):
 
 def build():
     rows = load_recap()
+    for r in rows:
+        r["order"] = 10 ** 6  # students without a UAS row sort to the end
     by_id = {r["nim"]: r for r in rows}
 
-    for u in load_uas():
+    for idx, u in enumerate(load_uas()):
         score = int(u["uas_score"])
         rid = u["recap_id"].strip()
         if rid and rid in by_id:
             by_id[rid]["uas"] = score
             by_id[rid]["uas_room"] = u["room"]
             by_id[rid]["name"] = titlecase(u["name"])  # prefer the official UAS sheet name
+            by_id[rid]["order"] = idx
         else:
             # UAS-only student (sat the exam but no task submission on record)
             rows.append({
                 "nim": u["nim"], "name": titlecase(u["name"]),
                 "s7": None, "n7": "", "s11": None, "n11": "",
-                "uas": score, "uas_room": u["room"],
+                "uas": score, "uas_room": u["room"], "order": idx,
             })
 
-    rows.sort(key=lambda r: r["name"].lower())
+    # Default order follows the UAS sheet (R.304 seats 1..31, then R.300 1..30).
+    rows.sort(key=lambda r: (r["order"], r["name"].lower()))
 
     trs = []
     for i, r in enumerate(rows, 1):
