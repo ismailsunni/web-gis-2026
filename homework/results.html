@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekap Nilai Tugas — Web GIS 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5; color: #333; padding: 2rem 1rem; }
+        .container { max-width: 920px; margin: 0 auto; }
+        a.back { color: #2563eb; text-decoration: none; font-size: 0.85rem; }
+        a.back:hover { text-decoration: underline; }
+        h1 { font-size: 1.7rem; margin: 0.6rem 0 0.3rem; }
+        .subtitle { color: #666; font-size: 0.92rem; margin-bottom: 1rem; }
+        .statgrp { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+        .statgrp-label { font-weight: 600; font-size: 0.85rem; width: 4.5rem; color: #475569; }
+        .chip { font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 99px; font-weight: 600; }
+        .chip.c100 { background: #dcfce7; color: #15803d; }
+        .chip.c90 { background: #fef9c3; color: #a16207; }
+        .chip.c0 { background: #fee2e2; color: #b91c1c; }
+        .controls { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin: 1rem 0 0.6rem; }
+        .search { flex: 1; min-width: 200px; max-width: 320px; padding: 0.5rem 0.8rem; font-size: 0.9rem;
+            border: 1px solid #ddd; border-radius: 8px; }
+        .controls label { font-size: 0.85rem; color: #555; display: flex; align-items: center; gap: 0.35rem; }
+        .legend { color: #888; font-size: 0.78rem; margin-bottom: 1rem; }
+        .table-wrap { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow-x: auto; }
+        table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+        thead th { position: sticky; top: 0; background: #f8fafc; text-align: left; padding: 0.7rem 0.8rem;
+            border-bottom: 2px solid #e5e7eb; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; }
+        thead th:hover { background: #eef2f7; }
+        thead th .arrow { color: #9ca3af; font-size: 0.7rem; margin-left: 0.2rem; }
+        thead th.sorted .arrow { color: #2563eb; }
+        td { padding: 0.6rem 0.8rem; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+        tbody tr:hover { background: #f9fafb; }
+        .num { color: #999; }
+        .nim { color: #555; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .name { font-weight: 500; }
+        .cell { display: inline-flex; align-items: center; gap: 0.45rem; }
+        .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 2.2rem;
+            height: 1.5rem; padding: 0 0.5rem; border-radius: 99px; font-size: 0.8rem; font-weight: 700; }
+        .badge.s100 { background: #dcfce7; color: #15803d; }
+        .badge.s90 { background: #fef9c3; color: #a16207; }
+        .badge.s0 { background: #fee2e2; color: #b91c1c; }
+        .note-btn { width: 1.25rem; height: 1.25rem; flex: none; border-radius: 50%; border: 1px solid #d1d5db;
+            background: #fff; color: #6b7280; font-size: 0.72rem; font-family: Georgia, serif; font-style: italic;
+            font-weight: 700; line-height: 1; cursor: pointer; display: inline-flex; align-items: center;
+            justify-content: center; transition: all 0.12s; }
+        .note-btn:hover { border-color: #2563eb; color: #2563eb; }
+        .note-btn[aria-expanded="true"] { background: #2563eb; border-color: #2563eb; color: #fff; }
+        .note { display: block; color: #92400e; font-size: 0.75rem; margin-top: 0.35rem; max-width: 260px;
+            background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 0.35rem 0.5rem; word-break: break-word; }
+        .note[hidden] { display: none; }
+        footer { text-align: center; margin-top: 1.5rem; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back" href="../">← Kembali ke materi kuliah</a>
+        <h1>📊 Rekap Nilai Tugas</h1>
+        <p class="subtitle">Hasil penilaian submission Week 7 (Mini WebGIS) &amp; Week 11 (WMS &amp; WFS) · Web GIS 2026</p>
+
+        <div class="statgrp"><div class="statgrp-label">Week 7</div><span class="chip c100">36 × 100</span><span class="chip c90">8 × 90</span><span class="chip c0">16 × 0</span></div><div class="statgrp"><div class="statgrp-label">Week 11</div><span class="chip c100">52 × 100</span><span class="chip c90">6 × 90</span><span class="chip c0">2 × 0</span></div>
+
+        <div class="controls">
+            <input class="search" id="q" type="search" placeholder="Cari nama atau NIM…" oninput="filterRows()">
+            <label><input type="checkbox" id="reviewOnly" onchange="filterRows()"> Hanya yang ada skor &lt; 100</label>
+        </div>
+        <p class="legend">Klik header kolom untuk mengurutkan &nbsp;·&nbsp; <b>100</b> = live site bisa diakses &nbsp;·&nbsp; <b>90</b> = repo ada tapi live site tidak ada/tidak bisa diakses &nbsp;·&nbsp; <b>0</b> = tidak ada submission / repo &amp; live tidak tersedia &nbsp;·&nbsp; klik tombol <i>i</i> untuk melihat catatan.</p>
+
+        <div class="table-wrap">
+        <table>
+            <thead><tr>
+                <th onclick="sortBy(0,'num')">#<span class="arrow"></span></th>
+                <th onclick="sortBy(1,'text')">NIM<span class="arrow"></span></th>
+                <th onclick="sortBy(2,'text')">Nama<span class="arrow"></span></th>
+                <th onclick="sortBy(3,'num')">Week 7<span class="arrow"></span></th>
+                <th onclick="sortBy(4,'num')">Week 11<span class="arrow"></span></th>
+            </tr></thead>
+            <tbody id="tbody">
+    <tr><td class="num" data-sort="1">1</td><td class="nim" data-sort="24/533855/SV/23946">24/533855/SV/23946</td><td class="name">Abisha Deryl Narendra</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Google Drive only: https://drive.google.com/file/d/1w34qFHYUoT7QyQjl2kwjUL0I7i9wIWsZ/view?usp=sharing</div></td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada submission</div></td></tr>
+    <tr><td class="num" data-sort="2">2</td><td class="nim" data-sort="24/543684/SV/25249">24/543684/SV/25249</td><td class="name">Adan Belva Bayanaka Abrar</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Repo tidak bisa diakses (HTTP 404); Live site tidak bisa diakses (HTTP 404); repo derived from Pages URL</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="3">3</td><td class="nim" data-sort="24/535954/SV/24347">24/535954/SV/24347</td><td class="name">Aisya Nurul Dzihni</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="4">4</td><td class="nim" data-sort="24/542016/SV/24987">24/542016/SV/24987</td><td class="name">Almira Tika Maharani Raharjo</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="5">5</td><td class="nim" data-sort="24/542376/SV/25037">24/542376/SV/25037</td><td class="name">AMANDA MAGHFIROH</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="6">6</td><td class="nim" data-sort="24/542491/SV/25047">24/542491/SV/25047</td><td class="name">Angeli Atifah</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td></tr>
+    <tr><td class="num" data-sort="7">7</td><td class="nim" data-sort="24/538278/SV/24484">24/538278/SV/24484</td><td class="name">Annysa Zada Almyra</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="8">8</td><td class="nim" data-sort="24/541891/SV/24972">24/541891/SV/24972</td><td class="name">Arief Djibran Renditya</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="9">9</td><td class="nim" data-sort="24/539596/SV/24629">24/539596/SV/24629</td><td class="name">Aura Hanadia Putri Muslim</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="10">10</td><td class="nim" data-sort="24/542861/SV/25105">24/542861/SV/25105</td><td class="name">CYELY AULIA RAHMAWATI</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="11">11</td><td class="nim" data-sort="24/543252/SV/25178">24/543252/SV/25178</td><td class="name">Deaputri Shalshabella Ardenti</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="12">12</td><td class="nim" data-sort="24/542746/SV/25088">24/542746/SV/25088</td><td class="name">Devy Iin Anggraini</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="13">13</td><td class="nim" data-sort="24/540146/SV/24788">24/540146/SV/24788</td><td class="name">Elan Fajar Hanifan</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>no link - results page blank, not deployed</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="14">14</td><td class="nim" data-sort="24/544247/SV/25360">24/544247/SV/25360</td><td class="name">Erlangga Kharisma Wishnutama</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Repo tidak bisa diakses (HTTP 404); Live site tidak bisa diakses (HTTP 404); both read from gh-pages settings screenshot</div></td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>wrong/blank file uploaded (M12 theory PDF), no WMS/WFS submission or links</div></td></tr>
+    <tr><td class="num" data-sort="15">15</td><td class="nim" data-sort="24/535932/SV/24341">24/535932/SV/24341</td><td class="name">Faradilla Kusumawardani</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Live site tidak bisa diakses (HTTP 404)</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="16">16</td><td class="nim" data-sort="24/541443/SV/24907">24/541443/SV/24907</td><td class="name">Farizal Nalendra</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Repo tidak bisa diakses (HTTP 404); Live site tidak bisa diakses (HTTP 404); links from screenshots; live page showed 404 at capture time</div></td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Live site tidak bisa diakses (HTTP 404)</div></td></tr>
+    <tr><td class="num" data-sort="17">17</td><td class="nim" data-sort="24/544819/SV/25537">24/544819/SV/25537</td><td class="name">Farras Haidar Abbad</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="18">18</td><td class="nim" data-sort="24/544890/SV/25558">24/544890/SV/25558</td><td class="name">FERA PRIMA RATNAWATY</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="19">19</td><td class="nim" data-sort="24/543031/SV/25142">24/543031/SV/25142</td><td class="name">Gita Arifah</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="20">20</td><td class="nim" data-sort="24/535950/SV/24345">24/535950/SV/24345</td><td class="name">Hafzah Safira</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td></tr>
+    <tr><td class="num" data-sort="21">21</td><td class="nim" data-sort="24/538898/SV/24547">24/538898/SV/24547</td><td class="name">Hanifan Arbi Pria Ardanu</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="22">22</td><td class="nim" data-sort="24/538552/SV/24508">24/538552/SV/24508</td><td class="name">Hencrys Hosea Rafael</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="23">23</td><td class="nim" data-sort="24/544543/SV/25447">24/544543/SV/25447</td><td class="name">Herly Riswandha Erlan Kusuma</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>ran locally (file://), no repo/deployment</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="24">24</td><td class="nim" data-sort="24/535993/SV/24361">24/535993/SV/24361</td><td class="name">Ikhlima Nuranida Zannuba</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="25">25</td><td class="nim" data-sort="24/542980/SV/25130">24/542980/SV/25130</td><td class="name">Ilham Alfian</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="26">26</td><td class="nim" data-sort="24/540502/SV/24856">24/540502/SV/24856</td><td class="name">Khiara Istiyanto</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="27">27</td><td class="nim" data-sort="24/535317/SV/24197">24/535317/SV/24197</td><td class="name">Lintang Dini Prahasti</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="28">28</td><td class="nim" data-sort="24/528213/SV/24475">24/528213/SV/24475</td><td class="name">Maharani Riyana Dewi</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="29">29</td><td class="nim" data-sort="24/543788/SV/25268">24/543788/SV/25268</td><td class="name">Mahda Luthfiyyah</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="30">30</td><td class="nim" data-sort="24/534384/SV/24032">24/534384/SV/24032</td><td class="name">maia herlina</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>code only, no repo/deployment link</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="31">31</td><td class="nim" data-sort="24/533889/SV/23952">24/533889/SV/23952</td><td class="name">MOH LATHIFUL AFKARI</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="32">32</td><td class="nim" data-sort="24/543007/SV/25136">24/543007/SV/25136</td><td class="name">Muhammad Ardava</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td></tr>
+    <tr><td class="num" data-sort="33">33</td><td class="nim" data-sort="24/544852/SV/25549">24/544852/SV/25549</td><td class="name">Muhammad Rafli Ferdian</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="34">34</td><td class="nim" data-sort="24/539466/SV/24606">24/539466/SV/24606</td><td class="name">Muhammad Raihan Fadhilah</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="35">35</td><td class="nim" data-sort="24/541361/SV/24897">24/541361/SV/24897</td><td class="name">Muhammad Rifai</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="36">36</td><td class="nim" data-sort="24/544915/SV/25567">24/544915/SV/25567</td><td class="name">Muhammad Wildan Attalah</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="37">37</td><td class="nim" data-sort="24/544634/SV/25483">24/544634/SV/25483</td><td class="name">Nadhia Liyana Khoerunnisa</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>ran locally (file://), not deployed</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="38">38</td><td class="nim" data-sort="24/535483/SV/24239">24/535483/SV/24239</td><td class="name">Nadia Renanda Salsabila</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="39">39</td><td class="nim" data-sort="24/540574/SV/24878">24/540574/SV/24878</td><td class="name">Nadia Shinta Dewi</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="40">40</td><td class="nim" data-sort="24/534628/SV/24067">24/534628/SV/24067</td><td class="name">NAJWA AZZAHRA</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>ran locally (file://), not deployed</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="41">41</td><td class="nim" data-sort="24/534516/SV/24054">24/534516/SV/24054</td><td class="name">Najwa Fithri Prastiyani</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="42">42</td><td class="nim" data-sort="24/542391/SV/25039">24/542391/SV/25039</td><td class="name">Nasywa Tsany Del Chano</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td></tr>
+    <tr><td class="num" data-sort="43">43</td><td class="nim" data-sort="24/545224/SV/25633">24/545224/SV/25633</td><td class="name">Nawang Nazli</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>ran locally (file://), not deployed</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="44">44</td><td class="nim" data-sort="24/543019/SV/25138">24/543019/SV/25138</td><td class="name">Pipit Amanda</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="45">45</td><td class="nim" data-sort="24/544769/SV/25525">24/544769/SV/25525</td><td class="name">Radin Jalu</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>ran locally (file://), not deployed</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="46">46</td><td class="nim" data-sort="24/544469/SV/25426">24/544469/SV/25426</td><td class="name">Rahma Syatasabela</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Live site tidak bisa diakses (HTTP 404)</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="47">47</td><td class="nim" data-sort="24/540239/SV/24089">24/540239/SV/24089</td><td class="name">Rajendra Mahia Adyatma</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="48">48</td><td class="nim" data-sort="24/539923/SV/24716">24/539923/SV/24716</td><td class="name">Rasefa Pradana</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="49">49</td><td class="nim" data-sort="24/543048/SV/25146">24/543048/SV/25146</td><td class="name">Rayya Ahista</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Google Drive only: https://drive.google.com/drive/folders/18jWGbWcBZ67ZDKU7qLa0hStQMuwJHBEf</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="50">50</td><td class="nim" data-sort="24/539388/SV/24595">24/539388/SV/24595</td><td class="name">Rifanna Fatkhuliya</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="51">51</td><td class="nim" data-sort="24/540168/SV/24791">24/540168/SV/24791</td><td class="name">Rika Astuti</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="52">52</td><td class="nim" data-sort="24/539963/SV/24728">24/539963/SV/24728</td><td class="name">Rohmatul Azizah</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="53">53</td><td class="nim" data-sort="24/544844/SV/25544">24/544844/SV/25544</td><td class="name">Salissabila Utami Putri</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada live site</div></td></tr>
+    <tr><td class="num" data-sort="54">54</td><td class="nim" data-sort="24/540453/SV/24847">24/540453/SV/24847</td><td class="name">Salomo Hutasoit</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Google Drive only: https://drive.google.com/drive/folders/1Kii0CjWiJcEV48y5toiH8F0a7SqnA2ik</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="55">55</td><td class="nim" data-sort="24/543054/SV/25148">24/543054/SV/25148</td><td class="name">Serli Mariani Welmince Selan</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>no URLs; deployment only mentioned generically</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="56">56</td><td class="nim" data-sort="24/535811/SV/24311">24/535811/SV/24311</td><td class="name">Tanaya Nur Anisa Ubadah</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="57">57</td><td class="nim" data-sort="24/543464/SV/25216">24/543464/SV/25216</td><td class="name">tobby arga</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Repo tidak bisa diakses (HTTP 404); Live site tidak bisa diakses (HTTP 404); repo derived from Pages URL</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="58">58</td><td class="nim" data-sort="24/534672/SV/24076">24/534672/SV/24076</td><td class="name">Xavier Algasa</td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Google Drive only: https://drive.google.com/drive/folders/16bZ5pIg6I2zXuCQZ93OLQ0tyJ5wlW0VU?usp=s</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="59">59</td><td class="nim" data-sort="24/540080/SV/24769">24/540080/SV/24769</td><td class="name">Yoga Dwi Putra</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+    <tr><td class="num" data-sort="60">60</td><td class="nim" data-sort="24/538569/SV/24511">24/538569/SV/24511</td><td class="name">Zahra Fitria Nabila Tsabita</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td></tr>
+            </tbody>
+        </table>
+        </div>
+
+        <footer>Dihasilkan dari submission · Web GIS 2026 · Ismail Sunni</footer>
+    </div>
+    <script>
+        function toggleNote(btn) {
+            const note = btn.closest('td').querySelector('.note');
+            const show = note.hasAttribute('hidden');
+            if (show) note.removeAttribute('hidden'); else note.setAttribute('hidden', '');
+            btn.setAttribute('aria-expanded', show ? 'true' : 'false');
+        }
+        function filterRows() {
+            const q = document.getElementById('q').value.toLowerCase();
+            const reviewOnly = document.getElementById('reviewOnly').checked;
+            for (const tr of document.querySelectorAll('#tbody tr')) {
+                const matchText = tr.textContent.toLowerCase().includes(q);
+                let needsReview = false;
+                tr.querySelectorAll('.wk').forEach(td => { if (+td.dataset.sort < 100) needsReview = true; });
+                tr.style.display = (matchText && (!reviewOnly || needsReview)) ? '' : 'none';
+            }
+        }
+        let sortState = { col: null, dir: 1 };
+        function sortBy(col, type) {
+            const tbody = document.getElementById('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            sortState.dir = (sortState.col === col) ? -sortState.dir : 1;
+            sortState.col = col;
+            const val = (tr) => {
+                const cell = tr.children[col];
+                const v = cell.dataset.sort !== undefined ? cell.dataset.sort : cell.textContent.trim();
+                return type === 'num' ? parseFloat(v) : v.toLowerCase();
+            };
+            rows.sort((a, b) => {
+                const x = val(a), y = val(b);
+                if (x < y) return -1 * sortState.dir;
+                if (x > y) return 1 * sortState.dir;
+                return 0;
+            });
+            rows.forEach(r => tbody.appendChild(r));
+            document.querySelectorAll('thead th').forEach((th, i) => {
+                th.classList.toggle('sorted', i === col);
+                th.querySelector('.arrow').textContent = i === col ? (sortState.dir === 1 ? '▲' : '▼') : '';
+            });
+        }
+    </script>
+</body>
+</html>
