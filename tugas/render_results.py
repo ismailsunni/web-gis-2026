@@ -16,12 +16,10 @@ import csv, os, html
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(HERE)
 
-# Display-name overrides keyed by recap student_id. The recap names come from
-# submission-folder names; where the official UAS sheet has a fuller/correct
-# name, override it here so it survives regeneration of results_recap.csv.
-NAME_OVERRIDES = {
-    "24/543007/SV/25136": "Muhammad Erino Putra A",  # sheet name (folder had "Muhammad Ardava")
-}
+
+def titlecase(name):
+    """Title-case the ALL-CAPS UAS sheet names for display (e.g. RIF'ANNA -> Rif'anna)."""
+    return " ".join(w[:1].upper() + w[1:].lower() for w in name.split())
 
 
 def load_recap():
@@ -105,9 +103,6 @@ def uas_stat(rows):
 
 def build():
     rows = load_recap()
-    for r in rows:
-        if r["nim"] in NAME_OVERRIDES:
-            r["name"] = NAME_OVERRIDES[r["nim"]]
     by_id = {r["nim"]: r for r in rows}
 
     for u in load_uas():
@@ -116,10 +111,11 @@ def build():
         if rid and rid in by_id:
             by_id[rid]["uas"] = score
             by_id[rid]["uas_room"] = u["room"]
+            by_id[rid]["name"] = titlecase(u["name"])  # prefer the official UAS sheet name
         else:
             # UAS-only student (sat the exam but no task submission on record)
             rows.append({
-                "nim": u["nim"], "name": u["name"],
+                "nim": u["nim"], "name": titlecase(u["name"]),
                 "s7": None, "n7": "", "s11": None, "n11": "",
                 "uas": score, "uas_room": u["room"],
             })
@@ -174,6 +170,9 @@ TEMPLATE = r"""<!DOCTYPE html>
         .search { flex: 1; min-width: 200px; max-width: 320px; padding: 0.5rem 0.8rem; font-size: 0.9rem;
             border: 1px solid #ddd; border-radius: 8px; }
         .controls label { font-size: 0.85rem; color: #555; display: flex; align-items: center; gap: 0.35rem; }
+        .dl-btn { font-size: 0.85rem; padding: 0.5rem 0.9rem; border: 1px solid #2563eb; background: #2563eb;
+            color: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.12s; }
+        .dl-btn:hover { background: #1d4ed8; }
         .legend { color: #888; font-size: 0.78rem; margin-bottom: 1rem; }
         .table-wrap { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow-x: auto; }
         table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
@@ -220,6 +219,7 @@ TEMPLATE = r"""<!DOCTYPE html>
         <div class="controls">
             <input class="search" id="q" type="search" placeholder="Cari nama atau NIM…" oninput="filterRows()">
             <label><input type="checkbox" id="reviewOnly" onchange="filterRows()"> Hanya yang ada skor tugas &lt; 100</label>
+            <button type="button" class="dl-btn" onclick="downloadCSV()">⬇ Unduh CSV</button>
         </div>
         <p class="legend"><b>Tugas</b>: <b>100</b> = live site bisa diakses · <b>90</b> = repo ada tapi live tidak · <b>0</b> = tidak ada submission &nbsp;·&nbsp; <b>UAS</b>: skor 0–100 (<b>≥80</b> hijau, <b>60–79</b> kuning, <b>&lt;60</b> merah) &nbsp;·&nbsp; klik header untuk mengurutkan, tombol <i>i</i> untuk catatan, “—” = tidak ada data.</p>
 
@@ -242,6 +242,27 @@ __ROWS__
         <footer>Dihasilkan dari submission &amp; lembar nilai UAS · Web GIS 2026 · Ismail Sunni</footer>
     </div>
     <script>
+        function downloadCSV() {
+            const header = ['No', 'NIM', 'Nama', 'Week 7', 'Week 11', 'UAS'];
+            const esc = (v) => /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+            const score = (td) => { const v = td.dataset.sort; return (v === undefined || +v < 0) ? '' : v; };
+            const lines = [header.join(',')];
+            for (const tr of document.querySelectorAll('#tbody tr')) {
+                const c = tr.children;
+                lines.push([
+                    c[0].textContent.trim(),
+                    c[1].textContent.trim(),
+                    c[2].textContent.trim(),
+                    score(c[3]), score(c[4]), score(c[5]),
+                ].map(esc).join(','));
+            }
+            const blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'rekap-nilai-web-gis-2026.csv';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
         function toggleNote(btn) {
             const note = btn.closest('td').querySelector('.note');
             const show = note.hasAttribute('hidden');
