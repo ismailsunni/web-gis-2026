@@ -22,7 +22,7 @@ Total submissions: 59
 | 16 | 7751799 | Farras Haidar Abbad | [repo](https://github.com/farrashaidarabbad/M11_WEBGIS_Farras-Haidar-Abbad_25537) | [live](https://farrashaidarabbad.github.io/M11_WEBGIS_Farras-Haidar-Abbad_25537/) |  |
 | 17 | 7751819 | FERA PRIMA RATNAWATY | — | [live](https://fanciful-custard-d99650.netlify.app/) |  |
 | 18 | 7751791 | Gita Arifah | [repo](https://github.com/gitaarifah-design/webgis-yogyakarta-final) | [live](https://gitaarifah-design.github.io/webgis-yogyakarta-final/) | repo URL in PDF was a 'USERNAME' placeholder; corrected from Pages URL |
-| 19 | 7751802 | Hafzah Safira | [repo](https://github.com/raaAa-rgb/Populasi-Unggas-Sleman2022) | — |  |
+| 19 | 7751802 | Hafzah Safira | [repo](https://github.com/raaAa-rgb/Populasi-Unggas-Sleman2022) | [live](https://raaaa-rgb.github.io/Populasi-Unggas-Sleman2022/webgis-sleman-hafzah%20(1).html) |  |
 | 20 | 7751801 | Hanifan Arbi Pria Ardanu | [repo](https://github.com/hanifanarbipriaardanu-ship-it/M11_HANIFAN_ARBI_538898) | [live](https://hanifanarbipriaardanu-ship-it.github.io/M11_HANIFAN_ARBI_538898/Website_Tugas_2.html) |  |
 | 21 | 7751795 | Hencrys Hosea Rafael | [repo](https://github.com/Crysiuss/Tugas-Minggu-11) | [live](https://crysiuss.github.io/Tugas-Minggu-11/) |  |
 | 22 | 7751806 | Herly Riswandha Erlan Kusuma | [repo](https://github.com/herlyriswandha41-beep/index) | [live](https://herlyriswandha41-beep.github.io/index/) | repo derived from Pages URL |
@@ -44,7 +44,7 @@ Total submissions: 59
 | 38 | 7751804 | Nadia Shinta Dewi | [repo](https://github.com/nadiashintadewi/latihan-sigweb-nadiashinta) | [live](https://nadiashintadewi.github.io/latihan-sigweb-nadiashinta/) |  |
 | 39 | 7751767 | NAJWA AZZAHRA | [repo](https://github.com/najwaazzahra2005-ugmtsp/Tugas-M11-WMS-dan-WFS) | [live](https://najwaazzahra2005-ugmtsp.github.io/Tugas-M11-WMS-dan-WFS/) | repo derived from Pages URL |
 | 40 | 7751792 | Najwa Fithri Prastiyani | [repo](https://github.com/najwafithi/WebGIS_Teori_NajwaF) | [live](https://najwafithi.github.io/WebGIS_Teori_NajwaF/) |  |
-| 41 | 7751820 | Nasywa Tsany Del Chano | [repo](https://github.com/nasywatsanydelchano-art/Tuags_Teori_SIG_WEB) | — |  |
+| 41 | 7751820 | Nasywa Tsany Del Chano | [repo](https://github.com/nasywatsanydelchano-art/Tuags_Teori_SIG_WEB) | [live](https://nasywatsanydelchano-art.github.io/Tuags_Teori_SIG_WEB/Tugas_SIGWEB.html) |  |
 | 42 | 7751771 | Nawang Nazli | — | [live](https://strong-palmier-49bce1.netlify.app) | live URL decoded from QR code; no GitHub repo (data shared via Google Drive) |
 | 43 | 7751782 | Pipit Amanda | [repo](https://github.com/pipitamanda/M11_SIGWEB) | [live](https://pipitamanda.github.io/M11_SIGWEB/) | PDF also lists M7 repo (ignored) and a second demo: pipitamanda.github.io/Peta_Interaktif_Kabupaten_Ngawi/ |
 | 44 | 7751794 | Radin Jalu | [repo](https://github.com/jalucyu/WEBSIG_Radin-Jalu) | [live](https://jalucyu.github.io/WEBSIG_Radin-Jalu/) | repo derived from Pages URL |
