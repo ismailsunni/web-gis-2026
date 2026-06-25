@@ -3,70 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <title>Rekap Nilai — Web GIS 2026</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f5f5; color: #333; padding: 2rem 1rem; }
-        .container { max-width: 980px; margin: 0 auto; }
-        a.back { color: #2563eb; text-decoration: none; font-size: 0.85rem; }
-        a.back:hover { text-decoration: underline; }
-        h1 { font-size: 1.7rem; margin: 0.6rem 0 0.3rem; }
-        .subtitle { color: #666; font-size: 0.92rem; margin-bottom: 1rem; }
-        .statgrp { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
-        .statgrp-label { font-weight: 600; font-size: 0.85rem; width: 4.5rem; color: #475569; }
-        .chip { font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 99px; font-weight: 600; }
-        .chip.c100 { background: #dcfce7; color: #15803d; }
-        .chip.c90 { background: #fef9c3; color: #a16207; }
-        .chip.c0 { background: #fee2e2; color: #b91c1c; }
-        .chip.cavg { background: #e0e7ff; color: #4338ca; }
-        .controls { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin: 1rem 0 0.6rem; }
-        .search { flex: 1; min-width: 200px; max-width: 320px; padding: 0.5rem 0.8rem; font-size: 0.9rem;
-            border: 1px solid #ddd; border-radius: 8px; }
-        .controls label { font-size: 0.85rem; color: #555; display: flex; align-items: center; gap: 0.35rem; }
-        .dl-btn { font-size: 0.85rem; padding: 0.5rem 0.9rem; border: 1px solid #2563eb; background: #2563eb;
-            color: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.12s; }
-        .dl-btn:hover { background: #1d4ed8; }
-        .legend { color: #888; font-size: 0.78rem; margin-bottom: 1rem; }
-        .table-wrap { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow-x: auto; }
-        table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
-        thead th { position: sticky; top: 0; background: #f8fafc; text-align: left; padding: 0.7rem 0.8rem;
-            border-bottom: 2px solid #e5e7eb; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; }
-        thead th:hover { background: #eef2f7; }
-        thead th .arrow { color: #9ca3af; font-size: 0.7rem; margin-left: 0.2rem; }
-        thead th.sorted .arrow { color: #2563eb; }
-        td { padding: 0.6rem 0.8rem; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
-        tbody tr:hover { background: #f9fafb; }
-        .num { color: #999; }
-        .nim { color: #555; font-variant-numeric: tabular-nums; white-space: nowrap; }
-        .name { font-weight: 500; }
-        .cell { display: inline-flex; align-items: center; gap: 0.45rem; }
-        .cell.muted { color: #cbd5e1; }
-        .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 2.2rem;
-            height: 1.5rem; padding: 0 0.5rem; border-radius: 99px; font-size: 0.8rem; font-weight: 700; }
-        .badge.s100 { background: #dcfce7; color: #15803d; }
-        .badge.s90 { background: #fef9c3; color: #a16207; }
-        .badge.s80 { background: #fef9c3; color: #a16207; }
-        .badge.s5 { background: #fee2e2; color: #b91c1c; }
-        .badge.s0 { background: #fee2e2; color: #b91c1c; }
-        .badge.u80 { background: #dcfce7; color: #15803d; }
-        .badge.u60 { background: #fef9c3; color: #a16207; }
-        .badge.u0 { background: #fee2e2; color: #b91c1c; }
-        .note-btn { width: 1.25rem; height: 1.25rem; flex: none; border-radius: 50%; border: 1px solid #d1d5db;
-            background: #fff; color: #6b7280; font-size: 0.72rem; font-family: Georgia, serif; font-style: italic;
-            font-weight: 700; line-height: 1; cursor: pointer; display: inline-flex; align-items: center;
-            justify-content: center; transition: all 0.12s; }
-        .note-btn:hover { border-color: #2563eb; color: #2563eb; }
-        .note-btn[aria-expanded="true"] { background: #2563eb; border-color: #2563eb; color: #fff; }
-        .note { display: block; color: #92400e; font-size: 0.75rem; margin-top: 0.35rem; max-width: 260px;
-            background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 0.35rem 0.5rem; word-break: break-word; }
-        .note[hidden] { display: none; }
-        footer { text-align: center; margin-top: 1.5rem; color: #999; font-size: 0.8rem; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <a class="back" href="../">← Kembali ke materi kuliah</a>
+        <nav class="subnav"><a href="week-7.html">Week 7</a><a href="week-11.html">Week 11</a><a href="results.html" class="active">Rekap Nilai</a></nav>
         <h1>📊 Rekap Nilai</h1>
         <p class="subtitle">Tugas Week 7 (Mini WebGIS) &amp; Week 11 (WMS &amp; WFS) · UAS (Sistem Informasi Geospasial berbasis Web) · Web GIS 2026</p>
 
@@ -90,12 +34,12 @@
                 <th onclick="sortBy(5,'num')">UAS<span class="arrow"></span></th>
             </tr></thead>
             <tbody id="tbody">
-    <tr><td class="num" data-sort="1">1</td><td class="nim" data-sort="24/533855/SV/23946">24/533855/SV/23946</td><td class="name">Abisha Deryl N</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Google Drive submission works when run (no live deployment): https://drive.google.com/file/d/1w34qFHYUoT7QyQjl2kwjUL0I7i9wIWsZ/view?usp=sharing</div></td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada submission</div></td><td class="uas" data-sort="78"><span class="cell"><span class="badge u60">78</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
+    <tr><td class="num" data-sort="1">1</td><td class="nim" data-sort="24/533855/SV/23946">24/533855/SV/23946</td><td class="name">Abisha Deryl N</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Google Drive submission works when run (no live deployment): <a href="https://drive.google.com/file/d/1w34qFHYUoT7QyQjl2kwjUL0I7i9wIWsZ/view?usp=sharing" target="_blank" rel="noopener">https://drive.google.com/file/d/1w34qFHYUoT7QyQjl2kwjUL0I7i9wIWsZ/view?usp=sharing</a></div></td><td class="wk" data-sort="0"><span class="cell"><span class="badge s0">0</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Tidak ada submission</div></td><td class="uas" data-sort="78"><span class="cell"><span class="badge u60">78</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
     <tr><td class="num" data-sort="2">2</td><td class="nim" data-sort="24/533889/SV/23952">24/533889/SV/23952</td><td class="name">Muhammad Lathiful A</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="uas" data-sort="74"><span class="cell"><span class="badge u60">74</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
     <tr><td class="num" data-sort="3">3</td><td class="nim" data-sort="24/534384/SV/24032">24/534384/SV/24032</td><td class="name">Maia Herlina</td><td class="wk" data-sort="80"><span class="cell"><span class="badge s80">80</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Submitted PDF with screenshots; no repo/live deployment</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="uas" data-sort="60"><span class="cell"><span class="badge u60">60</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
     <tr><td class="num" data-sort="4">4</td><td class="nim" data-sort="24/534516/SV/24054">24/534516/SV/24054</td><td class="name">Najwa Fithri P</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="uas" data-sort="56"><span class="cell"><span class="badge u0">56</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
     <tr><td class="num" data-sort="5">5</td><td class="nim" data-sort="24/534628/SV/24067">24/534628/SV/24067</td><td class="name">Najwa Azzahra</td><td class="wk" data-sort="80"><span class="cell"><span class="badge s80">80</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Submitted PDF with screenshots; no repo/live deployment</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="uas" data-sort="62"><span class="cell"><span class="badge u60">62</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
-    <tr><td class="num" data-sort="6">6</td><td class="nim" data-sort="24/534672/SV/24076">24/534672/SV/24076</td><td class="name">Xavier Hilmy Algasa</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Google Drive submission works when run (no live deployment): https://drive.google.com/drive/folders/16bZ5pIg6I2zXuCQZ93OLQ0tyJ5wlW0VU?usp=s</div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="uas" data-sort="86"><span class="cell"><span class="badge u80">86</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
+    <tr><td class="num" data-sort="6">6</td><td class="nim" data-sort="24/534672/SV/24076">24/534672/SV/24076</td><td class="name">Xavier Hilmy Algasa</td><td class="wk" data-sort="90"><span class="cell"><span class="badge s90">90</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Google Drive submission works when run (no live deployment): <a href="https://drive.google.com/drive/folders/16bZ5pIg6I2zXuCQZ93OLQ0tyJ5wlW0VU?usp=s" target="_blank" rel="noopener">https://drive.google.com/drive/folders/16bZ5pIg6I2zXuCQZ93OLQ0tyJ5wlW0VU?usp=s</a></div></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="uas" data-sort="86"><span class="cell"><span class="badge u80">86</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
     <tr><td class="num" data-sort="7">7</td><td class="nim" data-sort="24/535317/SV/24197">24/535317/SV/24197</td><td class="name">Lintang Dini P</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="uas" data-sort="76"><span class="cell"><span class="badge u60">76</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
     <tr><td class="num" data-sort="8">8</td><td class="nim" data-sort="24/535483/SV/24239">24/535483/SV/24239</td><td class="name">Nadia Renanda S</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="uas" data-sort="76"><span class="cell"><span class="badge u60">76</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
     <tr><td class="num" data-sort="9">9</td><td class="nim" data-sort="24/535811/SV/24311">24/535811/SV/24311</td><td class="name">Tanaya Nur Anisa U</td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="wk" data-sort="100"><span class="cell"><span class="badge s100">100</span></span></td><td class="uas" data-sort="60"><span class="cell"><span class="badge u60">60</span><button type="button" class="note-btn" onclick="toggleNote(this)" aria-expanded="false" aria-label="Show note" title="Show note">i</button></span><div class="note" hidden>Ruang R.304</div></td></tr>
