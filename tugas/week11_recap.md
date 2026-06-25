@@ -16,7 +16,7 @@ Total submissions: 59
 | 10 | 7751773 | Deaputri Shalshabella Ardenti | [repo](https://github.com/deaputri1785/webgis-wisata) | [live](https://deaputri1785.github.io/webgis-wisata/) |  |
 | 11 | 7751781 | Devy Iin Anggraini | [repo](https://github.com/devyiin565-maker/sigweb_iin) | [live](https://devyiin565-maker.github.io/sigweb_iin/) | repo derived from Pages URL |
 | 12 | 7751822 | Elan Fajar Hanifan | [repo](https://github.com/elanfajarhanifan/web-gis-2026-ogc-services) | [live](https://elanfajarhanifan.github.io/web-gis-2026-ogc-services/) | repo derived from Pages URL |
-| 13 | 7751800 | Erlangga Kharisma Wishnutama | — | — | wrong/blank file uploaded (M12 theory PDF), no WMS/WFS submission or links |
+| 13 | 7751800 | Erlangga Kharisma Wishnutama | — | — | Submitted but PDF is empty |
 | 14 | 7751810 | Faradilla Kusumawardani | [repo](https://github.com/faradillakusuma/M11_sigweb) | [live](https://faradillakusuma.github.io/M11_sigweb/) | repo derived from Pages URL |
 | 15 | 7751788 | Farizal Nalendra | [repo](https://github.com/farizalnalendra/sigwebpraktisifarizal) | [live](https://farizalnalendra.github.io/sigwebpraktisifarizal/) | repo derived from Pages URL |
 | 16 | 7751799 | Farras Haidar Abbad | [repo](https://github.com/farrashaidarabbad/M11_WEBGIS_Farras-Haidar-Abbad_25537) | [live](https://farrashaidarabbad.github.io/M11_WEBGIS_Farras-Haidar-Abbad_25537/) |  |
