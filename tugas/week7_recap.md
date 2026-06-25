@@ -47,7 +47,7 @@ Total submissions: 60
 | 41 | 7751724 | Najwa Fithri Prastiyani | [repo](https://github.com/najwafithi/mini_webgis_Najwa) | [live](https://najwafithi.github.io/Mini_WebGIS_Najwa/) |  |
 | 42 | 7751727 | Nasywa Tsany Del Chano | [repo](https://github.com/ntdelchano-ux/Mini_WEB_SIG) | — |  |
 | 43 | 7751749 | Nawang Nazli | — | — | Submitted PDF with screenshots; no repo/live deployment |
-| 44 | 7751748 | Pipit Amanda | [repo](https://github.com/pipitamanda/M7_SIGWEB_Pipit_Amanda_543019) | — |  |
+| 44 | 7751748 | Pipit Amanda | [repo](https://github.com/pipitamanda/M7_SIGWEB_Pipit_Amanda_543019) | [live](https://pipitamanda.github.io/M7_SIGWEB_Pipit_Amanda_543019/) |  |
 | 45 | 7751742 | Radin Jalu | — | — | Submitted PDF with screenshots; no repo/live deployment |
 | 46 | 7751730 | Rahma Syatasabela | [repo](https://github.com/rahmasyatasabela-bot/MiniWeb) | [live](https://rahmasyatasabela-bot.github.io/MiniWeb/) | repo derived from Pages URL |
 | 47 | 7751722 | Rajendra Mahia Adyatma | [repo](https://github.com/mahiaadyatma-lab/Tugas-Sistem-Informasi-Geospasial-berbasis-Web) | [live](https://mahiaadyatma-lab.github.io/Tugas-Sistem-Informasi-Geospasial-berbasis-Web/) |  |
