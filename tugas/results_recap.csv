@@ -1,6 +1,6 @@
 student_id,name,week7_score,week7_note,week11_score,week11_note
 24/533855/SV/23946,Abisha Deryl Narendra,90,Google Drive submission works when run (no live deployment): https://drive.google.com/file/d/1w34qFHYUoT7QyQjl2kwjUL0I7i9wIWsZ/view?usp=sharing,0,Tidak ada submission
-24/543684/SV/25249,Adan Belva Bayanaka Abrar,0,Repo tidak bisa diakses (HTTP 404); Live site tidak bisa diakses (HTTP 404); repo derived from Pages URL,100,
+24/543684/SV/25249,Adan Belva Bayanaka Abrar,100,,100,
 24/535954/SV/24347,Aisya Nurul Dzihni,90,Tidak ada live site,100,
 24/542016/SV/24987,Almira Tika Maharani Raharjo,100,,100,
 24/542376/SV/25037,AMANDA MAGHFIROH,100,,100,
@@ -12,9 +12,9 @@ student_id,name,week7_score,week7_note,week11_score,week11_note
 24/543252/SV/25178,Deaputri Shalshabella Ardenti,100,,100,
 24/542746/SV/25088,Devy Iin Anggraini,100,,100,
 24/540146/SV/24788,Elan Fajar Hanifan,5,Submitted but PDF is empty,100,
-24/544247/SV/25360,Erlangga Kharisma Wishnutama,0,Repo tidak bisa diakses (HTTP 404); Live site tidak bisa diakses (HTTP 404); both read from gh-pages settings screenshot,0,"wrong/blank file uploaded (M12 theory PDF), no WMS/WFS submission or links"
+24/544247/SV/25360,Erlangga Kharisma Wishnutama,100,,0,"wrong/blank file uploaded (M12 theory PDF), no WMS/WFS submission or links"
 24/535932/SV/24341,Faradilla Kusumawardani,90,Live site tidak bisa diakses (HTTP 404),100,
-24/541443/SV/24907,Farizal Nalendra,0,Repo tidak bisa diakses (HTTP 404); Live site tidak bisa diakses (HTTP 404); links from screenshots; live page showed 404 at capture time,90,Live site tidak bisa diakses (HTTP 404)
+24/541443/SV/24907,Farizal Nalendra,100,,90,Live site tidak bisa diakses (HTTP 404)
 24/544819/SV/25537,Farras Haidar Abbad,100,,100,
 24/544890/SV/25558,FERA PRIMA RATNAWATY,100,,100,
 24/543031/SV/25142,Gita Arifah,100,,100,
@@ -55,7 +55,7 @@ student_id,name,week7_score,week7_note,week11_score,week11_note
 24/540453/SV/24847,Salomo Hutasoit,100,,100,
 24/543054/SV/25148,Serli Mariani Welmince Selan,80,Submitted PDF with screenshots; no repo/live deployment,100,
 24/535811/SV/24311,Tanaya Nur Anisa Ubadah,100,,100,
-24/543464/SV/25216,tobby arga,0,Repo tidak bisa diakses (HTTP 404); Live site tidak bisa diakses (HTTP 404); repo derived from Pages URL,100,
+24/543464/SV/25216,tobby arga,100,,100,
 24/534672/SV/24076,Xavier Algasa,90,Google Drive submission works when run (no live deployment): https://drive.google.com/drive/folders/16bZ5pIg6I2zXuCQZ93OLQ0tyJ5wlW0VU?usp=s,100,
 24/540080/SV/24769,Yoga Dwi Putra,100,,100,
 24/538569/SV/24511,Zahra Fitria Nabila Tsabita,100,,100,

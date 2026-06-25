@@ -5,7 +5,7 @@ Total submissions: 60
 | # | Student ID | Name | GitHub Repo | Live URL | Notes |
 |---|---|---|---|---|---|
 | 1 | 7751740 | Abisha Deryl Narendra | — | — | Google Drive submission works when run (no live deployment): https://drive.google.com/file/d/1w34qFHYUoT7QyQjl2kwjUL0I7i9wIWsZ/view?usp=sharing |
-| 2 | 7751714 | Adan Belva Bayanaka Abrar | [repo](https://github.com/adanbelvabayanakaabrar-ops/SIGWeb-Adan-BelvaBayanaka-Abrar) | [live](https://adanbelvabayanakaabrar-ops.github.io/SIGWeb-Adan-BelvaBayanaka-Abrar/) | repo derived from Pages URL |
+| 2 | 7751714 | Adan Belva Bayanaka Abrar | [repo](https://github.com/adanbelvabayanakaabrar-ops/SIGWeb-Adan-Belva-Bayanaka-Abrar) | [live](https://adanbelvabayanakaabrar-ops.github.io/SIGWeb-Adan-Belva-Bayanaka-Abrar/) |  |
 | 3 | 7751734 | Aisya Nurul Dzihni | [repo](https://github.com/aisyanuruldzihni/Mini-Assignment-SIGWEB) | — |  |
 | 4 | 7751756 | Almira Tika Maharani Raharjo | — | [live](https://webgis-almira-542016.netlify.app/) |  |
 | 5 | 7751751 | AMANDA MAGHFIROH | [repo](https://github.com/amandanovimaghfiroh1211/Amanda-Novi-Maghfiroh_Tugas-WEBGIS) | [live](https://amandanovimaghfiroh1211.github.io/Amanda-Novi-Maghfiroh_Tugas-WEBGIS/projekku.html) | repo derived from Pages URL |
@@ -17,9 +17,9 @@ Total submissions: 60
 | 11 | 7751717 | Deaputri Shalshabella Ardenti | — | [live](https://animated-dieffenbachia-567eca.netlify.app/) |  |
 | 12 | 7751758 | Devy Iin Anggraini | [repo](https://github.com/devyiin565-maker/sigwebm7) | [live](https://devyiin565-maker.github.io/sigwebm7/) | repo derived from Pages URL |
 | 13 | 7751746 | Elan Fajar Hanifan | — | — | Submitted but PDF is empty |
-| 14 | 7751725 | Erlangga Kharisma Wishnutama | [repo](https://github.com/vishnutama491-creator/ErlanggaKharismaSigWeb) | [live](https://vishnutama491-creator.github.io/ErlanggaKharismaSigWeb/) | both read from gh-pages settings screenshot |
+| 14 | 7751725 | Erlangga Kharisma Wishnutama | [repo](https://github.com/wishnutama491-creator/ErlanggaKharismaSigWeb) | [live](https://wishnutama491-creator.github.io/ErlanggaKharismaSigWeb/) |  |
 | 15 | 7751762 | Faradilla Kusumawardani | [repo](https://github.com/faradillakusuma/M7_WebGIS) | [live](https://faradillakusuma.github.io/M7_WebGIS/) | repo derived from Pages URL |
-| 16 | 7751711 | Farizal Nalendra | [repo](https://github.com/farizalnalendra/final-projects-gweb) | [live](https://farizalnalendra.github.io/final-projects-gweb/) | links from screenshots; live page showed 404 at capture time |
+| 16 | 7751711 | Farizal Nalendra | [repo](https://github.com/farizalnalendra/finalprojectsigweb) | [live](https://farizalnalendra.github.io/finalprojectsigweb/final_project.html) |  |
 | 17 | 7751732 | Farras Haidar Abbad | [repo](https://github.com/farrashaidarabbad/Farras-Haidar-WEBGIS-M7) | [live](https://farrashaidarabbad.github.io/Farras-Haidar-WEBGIS-M7/) | repo derived from Pages URL |
 | 18 | 7751764 | FERA PRIMA RATNAWATY | — | [live](https://tugas-webgis-544890-fera-prima.netlify.app/) |  |
 | 19 | 7751709 | Gita Arifah | [repo](https://github.com/gitaarifah-design/Mini-Webgis-M7-SIGWEB) | [live](https://gitaarifah-design.github.io/Mini-Webgis-M7-SIGWEB/) | repo derived from Pages URL |
@@ -60,7 +60,7 @@ Total submissions: 60
 | 54 | 7751737 | Salomo Hutasoit | [repo](https://github.com/salomotramedbestlyhutasoit2004/Salomo-Tramed-Bestly-Hutasoit/tree/main/M7_SALOMO%20TRAMED%20BESTLY%20HUTASOIT_540453) | [live](https://salomotramedbestlyhutasoit2004.github.io/Salomo-Tramed-Bestly-Hutasoit/M7_Mini%20Assignment/) |  |
 | 55 | 7751728 | Serli Mariani Welmince Selan | — | — | Submitted PDF with screenshots; no repo/live deployment |
 | 56 | 7751743 | Tanaya Nur Anisa Ubadah | [repo](https://github.com/tanayanur/Tugas_MapMarker_Yogyakarta) | [live](https://tanayanur.github.io/Tugas_MapMarker_Yogyakarta/markJogja.html) | repo derived from Pages URL |
-| 57 | 7751719 | tobby arga | [repo](https://github.com/tobbyputraarga-ai/SIGWeb) | [live](https://tobbyputraarga-ai.github.io/SIGWeb/) | repo derived from Pages URL |
+| 57 | 7751719 | tobby arga | [repo](https://github.com/tobbyputraarga-ai/Sistem-Informasi-Geospasial-berbasis-Web) | [live](https://tobbyputraarga-ai.github.io/Sistem-Informasi-Geospasial-berbasis-Web/SIGWeb_Tobby%20Putra_543464.html) |  |
 | 58 | 7751752 | Xavier Algasa | — | — | Google Drive submission works when run (no live deployment): https://drive.google.com/drive/folders/16bZ5pIg6I2zXuCQZ93OLQ0tyJ5wlW0VU?usp=s |
 | 59 | 7751735 | Yoga Dwi Putra | [repo](https://github.com/yogadwiputra19062005-source/yogadwiputrasigweb) | [live](https://yogadwiputra19062005-source.github.io/yogadwiputrasigweb/) | repo derived from Pages URL |
 | 60 | 7751708 | Zahra Fitria Nabila Tsabita | [repo](https://github.com/zahratsaaa/Tugas_M7_Zahra_Fitria_24511) | [live](https://zahratsaaa.github.io/Tugas_M7_Zahra_Fitria_24511/) | repo derived from Pages URL |

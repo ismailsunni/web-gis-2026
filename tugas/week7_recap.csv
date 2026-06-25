@@ -1,6 +1,6 @@
 student_id,name,github_repo,live_url,notes
 7751740,Abisha Deryl Narendra,,,Google Drive submission works when run (no live deployment): https://drive.google.com/file/d/1w34qFHYUoT7QyQjl2kwjUL0I7i9wIWsZ/view?usp=sharing
-7751714,Adan Belva Bayanaka Abrar,https://github.com/adanbelvabayanakaabrar-ops/SIGWeb-Adan-BelvaBayanaka-Abrar,https://adanbelvabayanakaabrar-ops.github.io/SIGWeb-Adan-BelvaBayanaka-Abrar/,repo derived from Pages URL
+7751714,Adan Belva Bayanaka Abrar,https://github.com/adanbelvabayanakaabrar-ops/SIGWeb-Adan-Belva-Bayanaka-Abrar,https://adanbelvabayanakaabrar-ops.github.io/SIGWeb-Adan-Belva-Bayanaka-Abrar/,
 7751734,Aisya Nurul Dzihni,https://github.com/aisyanuruldzihni/Mini-Assignment-SIGWEB,,
 7751756,Almira Tika Maharani Raharjo,,https://webgis-almira-542016.netlify.app/,
 7751751,AMANDA MAGHFIROH,https://github.com/amandanovimaghfiroh1211/Amanda-Novi-Maghfiroh_Tugas-WEBGIS,https://amandanovimaghfiroh1211.github.io/Amanda-Novi-Maghfiroh_Tugas-WEBGIS/projekku.html,repo derived from Pages URL
@@ -12,9 +12,9 @@ student_id,name,github_repo,live_url,notes
 7751717,Deaputri Shalshabella Ardenti,,https://animated-dieffenbachia-567eca.netlify.app/,
 7751758,Devy Iin Anggraini,https://github.com/devyiin565-maker/sigwebm7,https://devyiin565-maker.github.io/sigwebm7/,repo derived from Pages URL
 7751746,Elan Fajar Hanifan,,,Submitted but PDF is empty
-7751725,Erlangga Kharisma Wishnutama,https://github.com/vishnutama491-creator/ErlanggaKharismaSigWeb,https://vishnutama491-creator.github.io/ErlanggaKharismaSigWeb/,both read from gh-pages settings screenshot
+7751725,Erlangga Kharisma Wishnutama,https://github.com/wishnutama491-creator/ErlanggaKharismaSigWeb,https://wishnutama491-creator.github.io/ErlanggaKharismaSigWeb/,
 7751762,Faradilla Kusumawardani,https://github.com/faradillakusuma/M7_WebGIS,https://faradillakusuma.github.io/M7_WebGIS/,repo derived from Pages URL
-7751711,Farizal Nalendra,https://github.com/farizalnalendra/final-projects-gweb,https://farizalnalendra.github.io/final-projects-gweb/,links from screenshots; live page showed 404 at capture time
+7751711,Farizal Nalendra,https://github.com/farizalnalendra/finalprojectsigweb,https://farizalnalendra.github.io/finalprojectsigweb/final_project.html,
 7751732,Farras Haidar Abbad,https://github.com/farrashaidarabbad/Farras-Haidar-WEBGIS-M7,https://farrashaidarabbad.github.io/Farras-Haidar-WEBGIS-M7/,repo derived from Pages URL
 7751764,FERA PRIMA RATNAWATY,,https://tugas-webgis-544890-fera-prima.netlify.app/,
 7751709,Gita Arifah,https://github.com/gitaarifah-design/Mini-Webgis-M7-SIGWEB,https://gitaarifah-design.github.io/Mini-Webgis-M7-SIGWEB/,repo derived from Pages URL
@@ -55,7 +55,7 @@ student_id,name,github_repo,live_url,notes
 7751737,Salomo Hutasoit,https://github.com/salomotramedbestlyhutasoit2004/Salomo-Tramed-Bestly-Hutasoit/tree/main/M7_SALOMO%20TRAMED%20BESTLY%20HUTASOIT_540453,https://salomotramedbestlyhutasoit2004.github.io/Salomo-Tramed-Bestly-Hutasoit/M7_Mini%20Assignment/,
 7751728,Serli Mariani Welmince Selan,,,Submitted PDF with screenshots; no repo/live deployment
 7751743,Tanaya Nur Anisa Ubadah,https://github.com/tanayanur/Tugas_MapMarker_Yogyakarta,https://tanayanur.github.io/Tugas_MapMarker_Yogyakarta/markJogja.html,repo derived from Pages URL
-7751719,tobby arga,https://github.com/tobbyputraarga-ai/SIGWeb,https://tobbyputraarga-ai.github.io/SIGWeb/,repo derived from Pages URL
+7751719,tobby arga,https://github.com/tobbyputraarga-ai/Sistem-Informasi-Geospasial-berbasis-Web,https://tobbyputraarga-ai.github.io/Sistem-Informasi-Geospasial-berbasis-Web/SIGWeb_Tobby%20Putra_543464.html,
 7751752,Xavier Algasa,,,Google Drive submission works when run (no live deployment): https://drive.google.com/drive/folders/16bZ5pIg6I2zXuCQZ93OLQ0tyJ5wlW0VU?usp=s
 7751735,Yoga Dwi Putra,https://github.com/yogadwiputra19062005-source/yogadwiputrasigweb,https://yogadwiputra19062005-source.github.io/yogadwiputrasigweb/,repo derived from Pages URL
 7751708,Zahra Fitria Nabila Tsabita,https://github.com/zahratsaaa/Tugas_M7_Zahra_Fitria_24511,https://zahratsaaa.github.io/Tugas_M7_Zahra_Fitria_24511/,repo derived from Pages URL
