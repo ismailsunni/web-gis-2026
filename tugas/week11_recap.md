@@ -18,7 +18,7 @@ Total submissions: 59
 | 12 | 7751822 | Elan Fajar Hanifan | [repo](https://github.com/elanfajarhanifan/web-gis-2026-ogc-services) | [live](https://elanfajarhanifan.github.io/web-gis-2026-ogc-services/) | repo derived from Pages URL |
 | 13 | 7751800 | Erlangga Kharisma Wishnutama | — | — | Submitted but PDF is empty |
 | 14 | 7751810 | Faradilla Kusumawardani | [repo](https://github.com/faradillakusuma/M11_sigweb) | [live](https://faradillakusuma.github.io/M11_sigweb/) | repo derived from Pages URL |
-| 15 | 7751788 | Farizal Nalendra | [repo](https://github.com/farizalnalendra/sigwebpraktisifarizal) | [live](https://farizalnalendra.github.io/sigwebpraktisifarizal/) | repo derived from Pages URL |
+| 15 | 7751788 | Farizal Nalendra | [repo](https://github.com/farizalnalendra/sigwebpraktisifarizal) | — | Live site tidak bisa diakses (HTTP 404) |
 | 16 | 7751799 | Farras Haidar Abbad | [repo](https://github.com/farrashaidarabbad/M11_WEBGIS_Farras-Haidar-Abbad_25537) | [live](https://farrashaidarabbad.github.io/M11_WEBGIS_Farras-Haidar-Abbad_25537/) |  |
 | 17 | 7751819 | FERA PRIMA RATNAWATY | — | [live](https://fanciful-custard-d99650.netlify.app/) |  |
 | 18 | 7751791 | Gita Arifah | [repo](https://github.com/gitaarifah-design/webgis-yogyakarta-final) | [live](https://gitaarifah-design.github.io/webgis-yogyakarta-final/) | repo URL in PDF was a 'USERNAME' placeholder; corrected from Pages URL |
