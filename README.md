@@ -87,7 +87,14 @@ Catatan: `make all` hanya membangun slide presentasi, bukan demo `index.html` da
 
 ## Rekap Tugas & Nilai
 
-Seluruh data nilai dan submission tersimpan di `homework/grades.csv` (satu baris per mahasiswa). Halaman `homework/*.html` membaca berkas ini lewat `fetch` lalu merender tabelnya. Untuk memperbarui nama, skor, URL, atau catatan, cukup edit `homework/grades.csv` — semua halaman ikut ter-update.
+Halaman `homework/*.html` membaca data dari `homework/grades.csv` lewat `fetch` lalu merender tabelnya — satu baris per mahasiswa.
+
+Field sensitif (NIM, ID submission, dan skor Week 7/11/UAS beserta catatan skornya) **terenkripsi** di `homework/grades.csv`; nama, URL repo/live, dan ruang tetap terbaca. Skor disembunyikan secara default di halaman; klik **“Tampilkan skor”** dan masukkan password untuk mendekripsi di browser. Password tidak disimpan dalam bentuk teks — `homework/table.js` hanya menyimpan hash verifikasi, dan kunci diturunkan dari password saat dimasukkan.
+
+Alur memperbarui nilai:
+1. Edit berkas plaintext lokal `tugas/grades.source.csv` (di-`.gitignore`, tidak ikut ter-commit).
+2. Jalankan `python3 tugas/encrypt_grades.py` dan masukkan password — ini menulis ulang `homework/grades.csv` dengan field sensitif terenkripsi.
+3. Commit `homework/grades.csv` (yang sudah terenkripsi).
 
 Karena memakai `fetch`, halaman rekap perlu dibuka lewat web server (lihat di atas), bukan `file://`.
 

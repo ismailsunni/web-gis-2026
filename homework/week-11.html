@@ -56,19 +56,24 @@
         const stat = (v, l) => `<div class="stat"><b>${v}</b> ${l}</div>`;
         let ROWS = [];
         function renderTable() {
-            const data = ROWS, sub = ROWS.filter(r => r.w11_id);
-            document.getElementById('tbody').innerHTML = data.map((r, i) =>
-                `<tr><td class="num" data-sort="${i + 1}">${i + 1}</td>`
-                + `<td class="sid" data-sort="${esc(r.w11_id)}">${r.w11_id ? esc(r.w11_id) : '<span class="none">—</span>'}</td>`
-                + `<td class="name">${esc(r.name)}</td>`
-                + linkCell(r.w11_repo, 'repo') + linkCell(r.w11_live, 'live')
-                + scoreCell('score', r.w11_score, scoreBadge(r.w11_score), r.w11_note)
-                + '</tr>').join('');
+            const rows = SHOW_SCORES ? ROWS.map(decryptRow) : ROWS;
+            document.getElementById('tbody').innerHTML = rows.map((r, i) => {
+                const idC = SHOW_SCORES
+                    ? `<td class="sid" data-sort="${esc(r.w11_id)}">${r.w11_id ? esc(r.w11_id) : '<span class="none">—</span>'}</td>`
+                    : lockedCell('sid');
+                const scC = SHOW_SCORES
+                    ? badgeCell('score', r.w11_score, scoreBadge(r.w11_score), r.w11_note)
+                    : lockedCell('score');
+                return `<tr><td class="num" data-sort="${i + 1}">${i + 1}</td>` + idC
+                    + `<td class="name">${esc(r.name)}</td>`
+                    + linkCell(r.w11_repo, 'repo') + linkCell(r.w11_live, 'live') + scC + '</tr>';
+            }).join('');
+            const sub = rows.filter(r => r.w11_id);
             const n = sub.length, repo = sub.filter(r => r.w11_repo).length, live = sub.filter(r => r.w11_live).length;
-            const avg = Math.round(sub.reduce((s, r) => s + (+r.w11_score), 0) / n);
+            let extra = '';
+            if (SHOW_SCORES) extra = stat(Math.round(sub.reduce((s, r) => s + (+r.w11_score), 0) / n), 'avg score');
             document.getElementById('stats').innerHTML =
-                stat(n, 'submissions') + stat(repo, 'with repo') + stat(live, 'with live site')
-                + (SHOW_SCORES ? stat(avg, 'avg score') : '');
+                stat(n, 'submissions') + stat(repo, 'with repo') + stat(live, 'with live site') + extra;
             filterRows();
         }
         loadGrades().then(rows => { ROWS = rows; renderTable(); })

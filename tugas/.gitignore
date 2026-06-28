@@ -3,3 +3,6 @@ week-7/
 week-11/
 
 __pycache__/
+
+# Plaintext grade source — edit locally, publish only the encrypted homework/grades.csv
+grades.source.csv
