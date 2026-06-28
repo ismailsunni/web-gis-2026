@@ -40,15 +40,14 @@ Location-Based Services & Mobile GIS — Geolocation API, sumber lokasi, alur ke
 Contoh minimal penempatan marker pada peta.
 
 ### `homework/`
-Rekap submission tugas mahasiswa dalam bentuk halaman web (dapat disortir & difilter):
+Rekap nilai & submission tugas mahasiswa sebagai halaman web (dapat disortir & difilter). Halaman hanya menampilkan tabel; seluruh data dibaca dari satu berkas CSV:
+- `homework/grades.csv` — **sumber data tunggal** (nama, skor, URL repo/live, catatan per minggu, nilai UAS). Untuk memperbarui konten, cukup edit berkas ini.
+- `homework/table.js` — parser CSV + perender tabel bersama
+- `homework/results.html` — rekap nilai gabungan (Week 7, Week 11, UAS)
 - `homework/week-7.html` — tugas Mini WebGIS (ditautkan dari kartu *Web GIS Development*)
 - `homework/week-11.html` — tugas Visualisasi WMS & WFS (ditautkan dari kartu *OGC Services*)
 
 ### `tugas/`
-Perkakas pembuat rekap:
-- `recap_week7.py`, `recap_week11.py` — ekstraksi link GitHub repo & live deployment dari PDF submission, lalu menghasilkan CSV/Markdown dan halaman `homework/week-*.html`
-- `week7_recap.csv` / `.md`, `week11_recap.csv` / `.md` — hasil ekspor rekap
-
 PDF submission mentah (`tugas/week-7/`, `tugas/week-11/`) tidak di-commit (lihat `tugas/.gitignore`).
 
 ## Menjalankan Demo
@@ -86,16 +85,11 @@ Target yang tersedia:
 
 Catatan: `make all` hanya membangun slide presentasi, bukan demo `index.html` dan `app.js`.
 
-## Rekap Tugas
+## Rekap Tugas & Nilai
 
-Untuk membuat ulang rekap submission (CSV, Markdown, dan halaman web):
+Seluruh data nilai dan submission tersimpan di `homework/grades.csv` (satu baris per mahasiswa). Halaman `homework/*.html` membaca berkas ini lewat `fetch` lalu merender tabelnya. Untuk memperbarui nama, skor, URL, atau catatan, cukup edit `homework/grades.csv` — semua halaman ikut ter-update.
 
-```bash
-cd tugas
-python3 recap_week7.py    # atau recap_week11.py
-```
-
-Skrip membaca PDF submission, mengekstrak link GitHub repo & live deployment (dari teks maupun anotasi/hyperlink PDF), lalu menulis `week*_recap.csv`, `week*_recap.md`, dan `homework/week-*.html`.
+Karena memakai `fetch`, halaman rekap perlu dibuka lewat web server (lihat di atas), bukan `file://`.
 
 ## Teknologi yang Dipakai
 
@@ -103,7 +97,6 @@ Skrip membaca PDF submission, mengekstrak link GitHub repo & live deployment (da
 - HTML/CSS/JavaScript vanilla
 - Marp CLI untuk slide
 - Mermaid untuk diagram
-- Python (`pdftotext`, `qpdf`) untuk perkakas rekap tugas
 
 ## Konteks Penggunaan
 
