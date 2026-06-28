@@ -75,6 +75,7 @@ td a:hover { text-decoration: underline; }
 .badge.u80 { background: #dcfce7; color: #15803d; }
 .badge.u60 { background: #fef9c3; color: #a16207; }
 .badge.u0 { background: #fee2e2; color: #b91c1c; }
+.badge.locked { background: #e5e7eb; color: #9ca3af; letter-spacing: 1px; }
 
 .note-btn { width: 1.25rem; height: 1.25rem; flex: none; border-radius: 50%; border: 1px solid #d1d5db;
     background: #fff; color: #6b7280; font-size: 0.72rem; font-family: Georgia, serif; font-style: italic;

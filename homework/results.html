@@ -18,6 +18,7 @@
 
         <div class="controls">
             <input class="search" id="q" type="search" placeholder="Cari nama atau NIM…" oninput="filterRows()">
+            <button id="lockBtn" class="dl-btn" type="button" onclick="toggleScores()">🔓 Tampilkan skor</button>
             <label><input type="checkbox" id="reviewOnly" onchange="filterRows()"> Hanya yang ada skor tugas &lt; 100</label>
             <button type="button" class="dl-btn" onclick="downloadCSV()">⬇ Unduh CSV</button>
         </div>
@@ -54,6 +55,7 @@
         const chip = (c, t) => `<span class="chip ${c}">${t}</span>`;
         const statgrp = (label, chips) => `<div class="statgrp"><div class="statgrp-label">${label}</div>${chips}</div>`;
         function renderStats(rows) {
+            if (!SHOW_SCORES) { document.getElementById('stats').innerHTML = '<p class="legend">🔒 Skor disembunyikan — klik “Tampilkan skor”.</p>'; return; }
             const wk = key => {
                 const c = {};
                 rows.forEach(r => { if (r[key] !== '') c[r[key]] = (c[r[key]] || 0) + 1; });
@@ -68,25 +70,28 @@
                 + statgrp('UAS', chip('c100', `${ge} × ≥80`) + chip('c90', `${mid} × 60–79`) + chip('c0', `${lo} × &lt;60`) + chip('cavg', `rata-rata ${avg}`));
         }
         function downloadCSV() {
+            if (!SHOW_SCORES) { alert('Tampilkan skor dulu (perlu password) sebelum mengunduh.'); return; }
             const head = ['NIM', 'Nama', 'Week7', 'Week11', 'UAS'];
             const lines = [head.join(',')].concat(GRADES.map(r => [r.nim, '"' + r.name.replace(/"/g, '""') + '"', r.w7_score, r.w11_score, r.uas_score].join(',')));
             const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob); a.download = 'rekap-nilai.csv'; a.click();
         }
-        loadGrades().then(rows => {
-            GRADES = rows;
-            document.getElementById('tbody').innerHTML = rows.map((r, i) =>
+        function renderTable() {
+            document.getElementById('tbody').innerHTML = GRADES.map((r, i) =>
                 `<tr><td class="num" data-sort="${i + 1}">${i + 1}</td>`
                 + `<td class="nim" data-sort="${esc(r.nim)}">${esc(r.nim)}</td>`
                 + `<td class="name">${esc(r.name)}</td>`
-                + badgeCell('wk', r.w7_score, scoreBadge(r.w7_score), r.w7_note)
-                + badgeCell('wk', r.w11_score, scoreBadge(r.w11_score), r.w11_note)
-                + (r.uas_score ? badgeCell('uas', r.uas_score, uasBadge(r.uas_score), r.uas_note)
+                + scoreCell('wk', r.w7_score, scoreBadge(r.w7_score), r.w7_note)
+                + scoreCell('wk', r.w11_score, scoreBadge(r.w11_score), r.w11_note)
+                + (r.uas_score ? scoreCell('uas', r.uas_score, uasBadge(r.uas_score), r.uas_note)
                     : '<td class="uas" data-sort="-1"><span class="none">—</span></td>')
                 + '</tr>').join('');
-            renderStats(rows);
-        }).catch(e => { document.getElementById('tbody').innerHTML = `<tr><td colspan="6">${esc(e.message)}</td></tr>`; });
+            renderStats(GRADES);
+            filterRows();
+        }
+        loadGrades().then(rows => { GRADES = rows; renderTable(); })
+            .catch(e => { document.getElementById('tbody').innerHTML = `<tr><td colspan="6">${esc(e.message)}</td></tr>`; });
     </script>
 </body>
 </html>

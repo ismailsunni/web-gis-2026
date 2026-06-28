@@ -18,6 +18,7 @@
 
         <div class="controls">
             <input class="search" id="q" type="search" placeholder="Search name or ID…" oninput="filterRows()">
+            <button id="lockBtn" class="dl-btn" type="button" onclick="toggleScores()">🔓 Tampilkan skor</button>
         </div>
         <p class="legend">Click a column header to sort &nbsp;·&nbsp; click the <i>i</i> button to show/hide a note.</p>
         <div class="rubric">
@@ -53,20 +54,25 @@
                 tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
         }
         const stat = (v, l) => `<div class="stat"><b>${v}</b> ${l}</div>`;
-        loadGrades().then(rows => {
-            const data = rows, sub = rows.filter(r => r.w7_id);
+        let ROWS = [];
+        function renderTable() {
+            const data = ROWS, sub = ROWS.filter(r => r.w7_id);
             document.getElementById('tbody').innerHTML = data.map((r, i) =>
                 `<tr><td class="num" data-sort="${i + 1}">${i + 1}</td>`
                 + `<td class="sid" data-sort="${esc(r.w7_id)}">${r.w7_id ? esc(r.w7_id) : '<span class="none">—</span>'}</td>`
                 + `<td class="name">${esc(r.name)}</td>`
                 + linkCell(r.w7_repo, 'repo') + linkCell(r.w7_live, 'live')
-                + badgeCell('score', r.w7_score, scoreBadge(r.w7_score), r.w7_note)
+                + scoreCell('score', r.w7_score, scoreBadge(r.w7_score), r.w7_note)
                 + '</tr>').join('');
             const n = sub.length, repo = sub.filter(r => r.w7_repo).length, live = sub.filter(r => r.w7_live).length;
             const avg = Math.round(sub.reduce((s, r) => s + (+r.w7_score), 0) / n);
             document.getElementById('stats').innerHTML =
-                stat(n, 'submissions') + stat(repo, 'with repo') + stat(live, 'with live site') + stat(avg, 'avg score');
-        }).catch(e => { document.getElementById('tbody').innerHTML = `<tr><td colspan="6">${esc(e.message)}</td></tr>`; });
+                stat(n, 'submissions') + stat(repo, 'with repo') + stat(live, 'with live site')
+                + (SHOW_SCORES ? stat(avg, 'avg score') : '');
+            filterRows();
+        }
+        loadGrades().then(rows => { ROWS = rows; renderTable(); })
+            .catch(e => { document.getElementById('tbody').innerHTML = `<tr><td colspan="6">${esc(e.message)}</td></tr>`; });
     </script>
 </body>
 </html>
