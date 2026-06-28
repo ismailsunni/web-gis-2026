@@ -18,7 +18,7 @@ Total submissions: 60
 | 12 | 7751758 | Devy Iin Anggraini | [repo](https://github.com/devyiin565-maker/sigwebm7) | [live](https://devyiin565-maker.github.io/sigwebm7/) | repo derived from Pages URL |
 | 13 | 7751746 | Elan Fajar Hanifan | — | — | Submitted but PDF is empty |
 | 14 | 7751725 | Erlangga Kharisma Wishnutama | [repo](https://github.com/wishnutama491-creator/ErlanggaKharismaSigWeb) | [live](https://wishnutama491-creator.github.io/ErlanggaKharismaSigWeb/) |  |
-| 15 | 7751762 | Faradilla Kusumawardani | [repo](https://github.com/faradillakusuma/M7_WebGIS) | — | Live site tidak bisa diakses (HTTP 404) |
+| 15 | 7751762 | Faradilla Kusumawardani | [repo](https://github.com/faradillakusuma/M7_WebGIS) | [live](https://faradillakusuma.github.io/M7_WebGIS/Data%20SIGWeb%20M7/index.html) |  |
 | 16 | 7751711 | Farizal Nalendra | [repo](https://github.com/farizalnalendra/finalprojectsigweb) | [live](https://farizalnalendra.github.io/finalprojectsigweb/final_project.html) |  |
 | 17 | 7751732 | Farras Haidar Abbad | [repo](https://github.com/farrashaidarabbad/Farras-Haidar-WEBGIS-M7) | [live](https://farrashaidarabbad.github.io/Farras-Haidar-WEBGIS-M7/) | repo derived from Pages URL |
 | 18 | 7751764 | FERA PRIMA RATNAWATY | — | [live](https://tugas-webgis-544890-fera-prima.netlify.app/) |  |
@@ -49,7 +49,7 @@ Total submissions: 60
 | 43 | 7751749 | Nawang Nazli | — | — | Submitted PDF with screenshots; no repo/live deployment |
 | 44 | 7751748 | Pipit Amanda | [repo](https://github.com/pipitamanda/M7_SIGWEB_Pipit_Amanda_543019) | [live](https://pipitamanda.github.io/M7_SIGWEB_Pipit_Amanda_543019/) |  |
 | 45 | 7751742 | Radin Jalu | — | — | Submitted PDF with screenshots; no repo/live deployment |
-| 46 | 7751730 | Rahma Syatasabela | [repo](https://github.com/rahmasyatasabela-bot/MiniWeb) | — | Live site tidak bisa diakses (HTTP 404) |
+| 46 | 7751730 | Rahma Syatasabela | [repo](https://github.com/rahmasyatasabela-bot/MiniWeb) | [live](https://rahmasyatasabela-bot.github.io/MiniWeb/miniweb.html) |  |
 | 47 | 7751722 | Rajendra Mahia Adyatma | [repo](https://github.com/mahiaadyatma-lab/Tugas-Sistem-Informasi-Geospasial-berbasis-Web) | [live](https://mahiaadyatma-lab.github.io/Tugas-Sistem-Informasi-Geospasial-berbasis-Web/) |  |
 | 48 | 7751720 | Rasefa Pradana | — | [live](https://m7-sigweb-rasefawirapradana.netlify.app/) |  |
 | 49 | 7751710 | Rayya Ahista | [repo](https://github.com/xenos13k/Rayya-webGIS) | [live](https://xenos13k.github.io/Rayya-webGIS/) | repo derived from Pages URL |
