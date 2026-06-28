@@ -54,16 +54,16 @@
         }
         const stat = (v, l) => `<div class="stat"><b>${v}</b> ${l}</div>`;
         loadGrades().then(rows => {
-            const data = rows.filter(r => r.w7_id);
+            const data = rows, sub = rows.filter(r => r.w7_id);
             document.getElementById('tbody').innerHTML = data.map((r, i) =>
                 `<tr><td class="num" data-sort="${i + 1}">${i + 1}</td>`
-                + `<td class="sid" data-sort="${esc(r.w7_id)}">${esc(r.w7_id)}</td>`
+                + `<td class="sid" data-sort="${esc(r.w7_id)}">${r.w7_id ? esc(r.w7_id) : '<span class="none">—</span>'}</td>`
                 + `<td class="name">${esc(r.name)}</td>`
                 + linkCell(r.w7_repo, 'repo') + linkCell(r.w7_live, 'live')
                 + badgeCell('score', r.w7_score, scoreBadge(r.w7_score), r.w7_note)
                 + '</tr>').join('');
-            const n = data.length, repo = data.filter(r => r.w7_repo).length, live = data.filter(r => r.w7_live).length;
-            const avg = Math.round(data.reduce((s, r) => s + (+r.w7_score), 0) / n);
+            const n = sub.length, repo = sub.filter(r => r.w7_repo).length, live = sub.filter(r => r.w7_live).length;
+            const avg = Math.round(sub.reduce((s, r) => s + (+r.w7_score), 0) / n);
             document.getElementById('stats').innerHTML =
                 stat(n, 'submissions') + stat(repo, 'with repo') + stat(live, 'with live site') + stat(avg, 'avg score');
         }).catch(e => { document.getElementById('tbody').innerHTML = `<tr><td colspan="6">${esc(e.message)}</td></tr>`; });
